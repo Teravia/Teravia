@@ -44,7 +44,7 @@ export default function HomePage() {
       <section className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-950 text-white py-14 sm:py-20 px-4 text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10">
           <span className="inline-block bg-blue-500/20 text-blue-300 text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-blue-400/30">
-             Marketplace Properti Terpadu
+            Marketplace Properti Terpadu
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight leading-tight">
             Cari Properti Impian & Bangun Ekosistemmu
@@ -72,32 +72,49 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Shortcut Ekosistem Teravia */}
+      {/* 2. Shortcut Ekosistem Teravia (4 Menu Sejajar) */}
       <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20">
-        <div className="grid grid-cols-3 gap-3 sm:gap-6 bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-100 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-100 text-center">
+          
+          {/* Menu 1: Jasa Konstruksi */}
           <Link 
             href="/jasa-konstruksi" 
-            className="p-3 rounded-xl hover:bg-blue-50/80 transition-all duration-200 group"
+            className="p-3 rounded-xl hover:bg-blue-50/80 transition-all duration-200 group border border-transparent hover:border-blue-100"
           >
             <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">🏗️</div>
             <div className="text-xs sm:text-sm font-bold text-slate-800">Jasa Konstruksi</div>
           </Link>
 
+          {/* Menu 2: Arsitek & Sipil */}
           <Link 
             href="/jasa-profesional" 
-            className="p-3 rounded-xl hover:bg-purple-50/80 transition-all duration-200 group"
+            className="p-3 rounded-xl hover:bg-purple-50/80 transition-all duration-200 group border border-transparent hover:border-purple-100"
           >
             <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">📐</div>
             <div className="text-xs sm:text-sm font-bold text-slate-800">Arsitek & Sipil</div>
           </Link>
 
+          {/* Menu 3: Kalkulator Budget (FITUR BARU) */}
+          <Link 
+            href="/kalkulator" 
+            className="p-3 rounded-xl hover:bg-amber-50/80 transition-all duration-200 group border border-transparent hover:border-amber-100 relative"
+          >
+            <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-xs">
+              NEW
+            </span>
+            <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">🧮</div>
+            <div className="text-xs sm:text-sm font-bold text-slate-800">Kalkulator Estimasi</div>
+          </Link>
+
+          {/* Menu 4: Mitra Notaris/PPAT */}
           <Link 
             href="/mitra-notaris" 
-            className="p-3 rounded-xl hover:bg-emerald-50/80 transition-all duration-200 group"
+            className="p-3 rounded-xl hover:bg-emerald-50/80 transition-all duration-200 group border border-transparent hover:border-emerald-100"
           >
             <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">⚖️</div>
             <div className="text-xs sm:text-sm font-bold text-slate-800">Mitra Notaris/PPAT</div>
           </Link>
+
         </div>
       </section>
 
@@ -168,4 +185,4 @@ export default function HomePage() {
       </main>
     </div>
   );
-}
+              }
