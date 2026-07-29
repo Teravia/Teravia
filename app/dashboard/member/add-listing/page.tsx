@@ -1,139 +1,82 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
 
-type PropertyCategory = "Hunian" | "Komersial" | "Tanah & Lahan" | "Institusi & Fasilitas";
-
-interface PropertyImage {
+interface ImageFile {
   id: string;
-  originalUrl: string;
-  svgUrl: string;
+  url: string;
   name: string;
   isMain: boolean;
 }
 
-const CATEGORY_TYPES: Record<PropertyCategory, string[]> = {
-  Hunian: ["Rumah", "Apartemen", "Townhouse", "Cluster", "Villa", "Kondominium"],
-  Komersial: ["Ruko", "Rukan", "Kontrakan", "Kost-kostan", "Hotel", "Gedung Perkantoran", "Gudang", "Pabrik", "Kios / Lapak"],
-  "Tanah & Lahan": ["Tanah Kavling", "Lahan Pertanian / Perkebunan", "Lahan Industri", "Tanah Komersial"],
-  "Institusi & Fasilitas": ["Rumah Sakit / Klinik", "Gedung Sekolah / Kampus", "Spbu", "Tempat Ibadah", "Gedung Olahraga"],
-};
-
 export default function AddListingPage() {
-  const [status, setStatus] = useState<"Jual" | "Sewa" | "Take Over" | "Lelang">("Jual");
+  // 1. Status & Informasi Utama
+  const [status, setStatus] = useState("Jual");
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
-  const [rentPeriod, setRentPeriod] = useState("Bulan");
-  const [category, setCategory] = useState<PropertyCategory>("Hunian");
-  const [propertyType, setPropertyType] = useState(CATEGORY_TYPES["Hunian"][0]);
-  const [certificate, setCertificate] = useState("SHM - Sertifikat Hak Milik");
-  const [description, setDescription] = useState("");
+  const [rentPeriod, setRentPeriod] = useState("Tahun");
+  const [certificate, setCertificate] = useState("SHM");
 
+  // 2. Kategori & Jenis Properti
+  const [category, setCategory] = useState("Hunian");
+  const [propertyType, setPropertyType] = useState("Rumah");
+
+  // 3. Detail Properti (Dinamis)
   const [landArea, setLandArea] = useState("");
   const [buildingArea, setBuildingArea] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
   const [floors, setFloors] = useState("");
-  const [electricity, setElectricity] = useState("");
   const [zoning, setZoning] = useState("Kuning (Permukiman)");
   const [facilityCapacity, setFacilityCapacity] = useState("");
+  const [electricity, setElectricity] = useState("");
 
-  const [provinces] = useState<{ id: string; name: string }[]>([
-    { id: "32", name: "Jawa Barat" },
-    { id: "31", name: "DKI Jakarta" },
-    { id: "33", name: "Jawa Tengah" },
-  ]);
-  const [regencies, setRegencies] = useState<{ id: string; name: string }[]>([]);
-  const [districts, setDistricts] = useState<{ id: string; name: string }[]>([]);
-  const [villages, setVillages] = useState<{ id: string; name: string }[]>([]);
+  // 4. Deskripsi & Lokasi
+  const [description, setDescription] = useState("");
+  const [province, setProvince] = useState("");
+  const [city, setCity] = useState("");
+  const [district, setDistrict] = useState("");
+  const [subdistrict, setSubdistrict] = useState("");
 
-  const [selectedProv, setSelectedProv] = useState("");
-  const [selectedReg, setSelectedReg] = useState("");
-  const [selectedDist, setSelectedDist] = useState("");
-  const [selectedVil, setSelectedVil] = useState("");
-
-  const [images, setImages] = useState<PropertyImage[]>([]);
+  // 5. Image Upload & Feature Ads
+  const [images, setImages] = useState<ImageFile[]>([]);
   const [enableAds, setEnableAds] = useState(false);
-  const [adsPackage, setAdsPackage] = useState("highlight");
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const defaultType = CATEGORY_TYPES[category][0];
-    setPropertyType(defaultType);
-  }, [category]);
-
-  const handleProvinceChange = (provId: string) => {
-    setSelectedProv(provId);
-    setSelectedReg("");
-    setSelectedDist("");
-    setSelectedVil("");
-
-    if (provId === "32") {
-      setRegencies([
-        { id: "3273", name: "Kota Bandung" },
-        { id: "3204", name: "Kab. Bandung" },
-        { id: "3277", name: "Kota Cimahi" },
-      ]);
-    } else {
-      setRegencies([{ id: "3171", name: "Jakarta Selatan" }]);
+  // Pilihan Jenis Properti berdasarkan Kategori
+  const getPropertyTypeOptions = () => {
+    switch (category) {
+      case "Hunian":
+        return ["Rumah", "Apartemen", "Town House", "Cluster", "Vila", "Kondominium"];
+      case "Komersial":
+        return ["Ruko", "Rukan", "Kontrakan", "Kost", "Hotel", "Gedung Perkantoran", "Pabrik", "Gudang"];
+      case "Tanah & Lahan":
+        return ["Tanah Matang", "Kavling Siap Bangun", "Lahan Pertanian", "Lahan Industri"];
+      case "Institusi & Fasilitas":
+        return ["Gedung Sekolah/Kampus", "Rumah Sakit/Klinik", "Gedung Olahraga", "Gedung Pertemuan"];
+      default:
+        return [];
     }
   };
 
-  const handleRegencyChange = (regId: string) => {
-    setSelectedReg(regId);
-    setSelectedDist("");
-    setSelectedVil("");
+  // Handler Upload Gambar (Simulasi konversi aman & preview)
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
 
-    if (regId === "3273") {
-      setDistricts([
-        { id: "3273010", name: "Coblong" },
-        { id: "3273020", name: "Buahbatu" },
-      ]);
-    } else {
-      setDistricts([{ id: "3171010", name: "Kebayoran Baru" }]);
-    }
-  };
-
-  const handleDistrictChange = (distId: string) => {
-    setSelectedDist(distId);
-    setSelectedVil("");
-
-    if (distId === "3273010") {
-      setVillages([
-        { id: "1", name: "Dago" },
-        { id: "2", name: "Lebak Siliwangi" },
-      ]);
-    } else {
-      setVillages([{ id: "3", name: "Senayan" }]);
-    }
-  };
-
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64Data = event.target?.result as string;
-        const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%"><image href="${base64Data}" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"/></svg>`;
-        const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
-        const svgUrl = URL.createObjectURL(svgBlob);
-
-        const newImage: PropertyImage = {
-          id: Math.random().toString(36).substring(2, 9),
-          originalUrl: base64Data,
-          svgUrl: svgUrl,
-          name: file.name,
-          isMain: images.length === 0,
-        };
-
-        setImages((prev) => [...prev, newImage]);
+    const newImages: ImageFile[] = files.map((file, index) => {
+      const objectUrl = URL.createObjectURL(file);
+      return {
+        id: Math.random().toString(36).substring(2, 9),
+        url: objectUrl,
+        name: file.name,
+        isMain: images.length === 0 && index === 0,
       };
-      reader.readAsDataURL(file);
     });
+
+    setImages((prev) => [...prev, ...newImages]);
   };
 
   const setMainImage = (id: string) => {
@@ -155,71 +98,68 @@ export default function AddListingPage() {
     });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (images.length === 0) {
-      alert("Harap unggah minimal 1 foto properti.");
-      return;
-    }
-    alert("Iklan berhasil dikirim dan siap ditayangkan!");
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+      alert("Iklan berhasil dipublikasikan!");
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Pasang Iklan Properti Baru
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Lengkapi detail data properti Anda untuk menjangkau jutaan pembeli potensial di Teravia.
-            </p>
+            <h1 className="text-2xl font-bold text-slate-900">Pasang Iklan Properti</h1>
+            <p className="text-sm text-slate-500">Lengkapi data properti Anda untuk mulai memasarkan</p>
           </div>
           <Link
-            href="/dashboard/member/listings"
-            className="text-xs font-semibold text-slate-600 hover:text-blue-600 bg-white border border-slate-200 px-4 py-2 rounded-xl text-center self-start sm:self-auto"
+            href="/dashboard/member"
+            className="text-xs font-semibold text-slate-600 hover:text-blue-600 bg-white border border-slate-200 px-3 py-2 rounded-xl"
           >
             ← Kembali ke Dashboard
           </Link>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 1. INFORMASI UTAMA */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-            <h2 className="text-base font-bold text-slate-900 border-b pb-2">1. Informasi Utama</h2>
+          {/* Status Iklan */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+              Status Iklan <span className="text-red-500">*</span>
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {["Jual", "Sewa", "Take Over", "Lelang"].map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setStatus(item)}
+                  className={`py-3 rounded-xl text-xs font-bold border transition ${
+                    status === item
+                      ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Informasi Utama */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Informasi Utama</h2>
             
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">
-                Status Transaksi <span className="text-red-500">*</span>
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {(["Jual", "Sewa", "Take Over", "Lelang"] as const).map((st) => (
-                  <button
-                    key={st}
-                    type="button"
-                    onClick={() => setStatus(st)}
-                    className={`py-2.5 px-4 rounded-xl text-xs font-bold transition ${
-                      status === st
-                        ? "bg-blue-600 text-white shadow-sm"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
-                  >
-                    {st}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Judul Iklan <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 required
-                placeholder="Contoh: Rumah Minimalis Modern 2 Lantai Cluster Exclusive Kopo"
+                placeholder="Contoh: Rumah Minimalis Modern 2 Lantai Strategis di Dekat Stasiun"
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -228,99 +168,98 @@ export default function AddListingPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Harga Nominal (Rp) <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Harga (Rp) <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="number"
-                  required
-                  placeholder="Contoh: 850000000"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    required
+                    placeholder="Contoh: 850000000"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                  {status === "Sewa" && (
+                    <select
+                      className="px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold bg-white"
+                      value={rentPeriod}
+                      onChange={(e) => setRentPeriod(e.target.value)}
+                    >
+                      <option value="Bulan">/ Bulan</option>
+                      <option value="Tahun">/ Tahun</option>
+                    </select>
+                  )}
+                </div>
               </div>
 
-              {status === "Sewa" && (
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Periode Sewa</label>
-                  <select
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                    value={rentPeriod}
-                    onChange={(e) => setRentPeriod(e.target.value)}
-                  >
-                    <option value="Bulan">Per Bulan</option>
-                    <option value="Tahun">Per Tahun</option>
-                  </select>
-                </div>
-              )}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Legalitas / Sertifikat <span className="text-red-500">*</span>
+                </label>
+                <select
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                  value={certificate}
+                  onChange={(e) => setCertificate(e.target.value)}
+                >
+                  <option value="SHM">SHM (Sertifikat Hak Milik)</option>
+                  <option value="HGB">HGB (Hak Guna Bangunan)</option>
+                  <option value="Girik">Girik / Adat</option>
+                  <option value="PPJB">PPJB</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          {/* 2. UPLOAD FOTO & CONVERTER SVG */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-            <h2 className="text-base font-bold text-slate-900 border-b pb-2">2. Upload Foto Properti</h2>
+          {/* Upload Foto */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+              Foto Properti <span className="text-red-500">*</span>
+            </h2>
             
-            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center hover:bg-slate-50 transition cursor-pointer relative">
+            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center bg-slate-50 hover:bg-slate-100/50 transition cursor-pointer">
               <input
                 type="file"
                 multiple
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="hidden"
+                id="image-upload"
               />
-              <div className="text-3xl mb-2">📸</div>
-              <p className="text-xs sm:text-sm font-semibold text-slate-700">
-                Klik atau tarik beberapa foto properti ke sini
-              </p>
-              <p className="text-[11px] text-slate-400 mt-1">
-                Format didukung: JPG, PNG, WebP. Sistem otomatis memproses ke SVG vector container.
-              </p>
+              <label htmlFor="image-upload" className="cursor-pointer block">
+                <p className="text-sm font-semibold text-blue-600">Klik untuk upload foto properti</p>
+                <p className="text-xs text-slate-400 mt-1">PNG, JPG, WebP (Otomatis teroptimasi)</p>
+              </label>
             </div>
 
-            {/* Image Preview Grid */}
             {images.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
                 {images.map((img) => (
-                  <div
-                    key={img.id}
-                    className={`relative rounded-xl overflow-hidden border-2 bg-slate-100 ${
-                      img.isMain ? "border-blue-600 ring-2 ring-blue-500/20" : "border-slate-200"
-                    }`}
-                  >
-                    <div className="relative h-28 w-full">
-                      <Image
-                        src={img.svgUrl}
-                        alt={img.name}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    </div>
-                    
+                  <div key={img.id} className="relative group rounded-xl overflow-hidden border border-slate-200 aspect-square bg-slate-100">
+                    <img src={img.url} alt="Upload Preview" className="w-full h-full object-cover" />
                     {img.isMain && (
-                      <span className="absolute top-2 left-2 bg-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-md">
-                        FOTO UTAMA
+                      <span className="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow">
+                        Foto Utama
                       </span>
                     )}
-
-                    <div className="p-2 bg-white flex justify-between items-center text-xs">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-2">
+                      <button
+                        type="button"
+                        onClick={() => removeImage(img.id)}
+                        className="self-end bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-md"
+                      >
+                        Hapus
+                      </button>
                       {!img.isMain && (
                         <button
                           type="button"
                           onClick={() => setMainImage(img.id)}
-                          className="text-[10px] font-bold text-blue-600 hover:underline"
+                          className="w-full bg-white text-slate-900 text-[10px] font-bold py-1 rounded-md"
                         >
-                          Jadikan Utama
+                          Set Utama
                         </button>
                       )}
-                      <button
-                        type="button"
-                        onClick={() => removeImage(img.id)}
-                        className="text-[10px] font-bold text-red-500 hover:underline ml-auto"
-                      >
-                        Hapus
-                      </button>
                     </div>
                   </div>
                 ))}
@@ -328,19 +267,23 @@ export default function AddListingPage() {
             )}
           </div>
 
-          {/* 3. KATEGORI & DYNAMIC FIELDS */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-            <h2 className="text-base font-bold text-slate-900 border-b pb-2">3. Kategori & Detail Spesifikasi</h2>
-
+          {/* Kategori & Jenis Properti */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Kategori Properti</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Kategori Properti <span className="text-red-500">*</span>
-                </label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Kategori</label>
                 <select
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as PropertyCategory)}
+                  onChange={(e) => {
+                    const newCat = e.target.value;
+                    setCategory(newCat);
+                    if (newCat === "Hunian") setPropertyType("Rumah");
+                    if (newCat === "Komersial") setPropertyType("Ruko");
+                    if (newCat === "Tanah & Lahan") setPropertyType("Tanah Matang");
+                    if (newCat === "Institusi & Fasilitas") setPropertyType("Gedung Sekolah/Kampus");
+                  }}
                 >
                   <option value="Hunian">Hunian</option>
                   <option value="Komersial">Komersial</option>
@@ -350,15 +293,13 @@ export default function AddListingPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Jenis Properti <span className="text-red-500">*</span>
-                </label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Jenis Properti</label>
                 <select
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
                   value={propertyType}
                   onChange={(e) => setPropertyType(e.target.value)}
                 >
-                  {CATEGORY_TYPES[category].map((type) => (
+                  {getPropertyTypeOptions().map((type) => (
                     <option key={type} value={type}>
                       {type}
                     </option>
@@ -366,111 +307,285 @@ export default function AddListingPage() {
                 </select>
               </div>
             </div>
+          </div>
 
-            {/* DYNAMIC FIELD PER KATEGORI */}
-            <div className="bg-slate-50 p-4 rounded-xl space-y-4 border border-slate-200/60 mt-4">
-              <span className="text-xs font-bold text-blue-700">
-                Spesifikasi Khusus ({category} - {propertyType}):
-              </span>
+          {/* Detail Properti Dinamis */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+              Detail {propertyType}
+            </h2>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {(category === "Hunian" || category === "Komersial" || category === "Institusi & Fasilitas") && (
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Luas Bangunan (m²)</label>
-                    <input
-                      type="number"
-                      placeholder="Contoh: 120"
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
-                      value={buildingArea}
-                      onChange={(e) => setBuildingArea(e.target.value)}
-                    />
-                  </div>
-                )}
-
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {(category === "Hunian" || category === "Komersial" || category === "Tanah & Lahan" || category === "Institusi & Fasilitas") && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Luas Tanah (m²)</label>
                   <input
                     type="number"
-                    placeholder="Contoh: 90"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
+                    placeholder="Contoh: 120"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                     value={landArea}
                     onChange={(e) => setLandArea(e.target.value)}
                   />
                 </div>
+              )}
 
-                {category === "Hunian" && (
-                  <>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Kamar Tidur</label>
-                      <input
-                        type="number"
-                        placeholder="Contoh: 3"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
-                        value={bedrooms}
-                        onChange={(e) => setBedrooms(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Kamar Mandi</label>
-                      <input
-                        type="number"
-                        placeholder="Contoh: 2"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
-                        value={bathrooms}
-                        onChange={(e) => setBathrooms(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Jumlah Lantai</label>
-                      <input
-                        type="number"
-                        placeholder="Contoh: 2"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
-                        value={floors}
-                        onChange={(e) => setFloors(e.target.value)}
-                      />
-                    </div>
-                  </>
-                )}
-
-                {category === "Tanah & Lahan" && (
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Peruntukan (Zoning)</label>
-                    <select
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
-                      value={zoning}
-                      onChange={(e) => setZoning(e.target.value)}
-                    >
-                      <option value="Kuning (Permukiman)">Kuning (Permukiman)</option>
-                      <option value="Merah (Komersial)">Merah (Komersial)</option>
-                      <option value="Hijau (RTH / Pertanian)">Hijau (RTH / Pertanian)</option>
-                      <option value="Industri / Pergudangan">Industri / Pergudangan</option>
-                    </select>
-                  </div>
-                )}
-
-                {category === "Institusi & Fasilitas" && (
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Kapasitas Orang / Mobil</label>
-                    <input
-                      type="text"
-                      placeholder="Contoh: 500 Orang"
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
-                      value={facilityCapacity}
-                      onChange={(e) => setFacilityCapacity(e.target.value)}
-                    />
-                  </div>
-                )}
-
+              {category !== "Tanah & Lahan" && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Daya Listrik (Watt)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Luas Bangunan (m²)</label>
                   <input
                     type="number"
-                    placeholder="Contoh: 2200"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
-                    value={electricity}
-                    onChange={(e) => setElectricity(e.target.value)}
+                    placeholder="Contoh: 90"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={buildingArea}
+                    onChange={(e) => setBuildingArea(e.target.value)}
                   />
                 </div>
+              )}
+
+              {category === "Hunian" && (
+                <>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Kamar Tidur</label>
+                    <input
+                      type="number"
+                      placeholder="Contoh: 3"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                      value={bedrooms}
+                      onChange={(e) => setBedrooms(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Kamar Mandi</label>
+                    <input
+                      type="number"
+                      placeholder="Contoh: 2"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                      value={bathrooms}
+                      onChange={(e) => setBathrooms(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+
+              {category !== "Tanah & Lahan" && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Jumlah Lantai</label>
+                  <input
+                    type="number"
+                    placeholder="Contoh: 2"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={floors}
+                    onChange={(e) => setFloors(e.target.value)}
+                  />
+                </div>
+              )}
+
+              {category === "Tanah & Lahan" && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Peruntukan / Zoning</label>
+                  <select
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                    value={zoning}
+                    onChange={(e) => setZoning(e.target.value)}
+                  >
+                    <option value="Kuning (Permukiman)">Kuning (Permukiman)</option>
+                    <option value="Merah (Komersial)">Merah (Komersial)</option>
+                    <option value="Hijau (RTH / Pertanian)">Hijau (RTH / Pertanian)</option>
+                    <option value="Industri / Pergudangan">Industri / Pergudangan</option>
+                  </select>
+                </div>
+              )}
+
+              {category === "Institusi & Fasilitas" && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Kapasitas Fasilitas</label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: 500 Orang"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={facilityCapacity}
+                    onChange={(e) => setFacilityCapacity(e.target.value)}
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Daya Listrik (VA)</label>
+                <input
+                  type="number"
+                  placeholder="Contoh: 2200"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={electricity}
+                  onChange={(e) => setElectricity(e.target.value)}
+                />
               </div>
-            </di
+            </div>
+          </div>
+
+          {/* Deskripsi & Lokasi */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Deskripsi & Lokasi</h2>
+            
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Lengkap</label>
+              <textarea
+                rows={4}
+                placeholder="Jelaskan keunggulan properti, akses jalan, fasilitas terdekat..."
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Provinsi</label>
+                <input
+                  type="text"
+                  placeholder="Contoh: DKI Jakarta / Jawa Barat"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Kabupaten / Kota</label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Jakarta Selatan / Bandung"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Kecamatan</label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Cilandak"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Kelurahan</label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Cilandak Barat"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={subdistrict}
+                  onChange={(e) => setSubdistrict(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Opsi Fitur Ads */}
+          <div className="bg-amber-50 border border-amber-200 p-6 rounded-2xl flex items-start gap-4">
+            <input
+              type="checkbox"
+              id="enable-ads"
+              className="mt-1 w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+              checked={enableAds}
+              onChange={(e) => setEnableAds(e.target.value === "true" || e.target.checked)}
+            />
+            <div>
+              <label htmlFor="enable-ads" className="text-sm font-bold text-amber-900 cursor-pointer">
+                🚀 Terbitkan Sebagai Iklan Prioritas (Fitur Ads)
+              </label>
+              <p className="text-xs text-amber-700 mt-0.5">
+                Tampilkan listingan Anda di bagian paling atas (Featured Banner) untuk jangkauan pembeli 5x lebih cepat.
+              </p>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setShowPreview(true)}
+              className="w-1/2 bg-white border border-slate-300 text-slate-700 font-bold py-3.5 rounded-xl text-sm hover:bg-slate-50 transition"
+            >
+              👁️ Preview Iklan
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-md shadow-blue-500/20"
+            >
+              {loading ? "Menerbitkan..." : "Publikasikan Sekarang"}
+            </button>
+          </div>
+        </form>
+
+        {/* Modal Preview Iklan */}
+        {showPreview && (
+          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto space-y-4">
+              <div className="flex justify-between items-center border-b pb-3">
+                <h3 className="font-bold text-slate-900">Preview Tampilan Iklan</h3>
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="text-slate-400 hover:text-slate-600 font-bold text-lg"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div className="aspect-video bg-slate-100 rounded-2xl overflow-hidden relative">
+                  {images.length > 0 ? (
+                    <img
+                      src={(images.find((img) => img.isMain) || images[0]).url}
+                      alt="Main Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-slate-400 text-xs">
+                      Belum ada gambar
+                    </div>
+                  )}
+                  <span className="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md">
+                    {status}
+                  </span>
+                </div>
+
+                <div className="text-lg font-black text-blue-600">
+                  Rp {price ? parseInt(price).toLocaleString("id-ID") : "0"}{" "}
+                  {status === "Sewa" ? `/ ${rentPeriod}` : ""}
+                </div>
+
+                <h4 className="font-bold text-slate-800">{title || "Judul Properti Belum Diisi"}</h4>
+
+                <p className="text-xs text-slate-500">
+                  📍 {[subdistrict, district, city, province].filter(Boolean).join(", ") || "Lokasi belum diisi"}
+                </p>
+
+                <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <div>Kategori: <b>{category}</b></div>
+                  <div>Jenis: <b>{propertyType}</b></div>
+                  <div>LT: <b>{landArea || "-"} m²</b></div>
+                  <div>LB: <b>{buildingArea || "-"} m²</b></div>
+                  <div>Sertifikat: <b>{certificate}</b></div>
+                  <div>Listrik: <b>{electricity || "-"} VA</b></div>
+                </div>
+
+                <p className="text-xs text-slate-600 italic line-clamp-3">
+                  "{description || "Belum ada deskripsi."}"
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowPreview(false)}
+                className="w-full bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs mt-2"
+              >
+                Tutup Preview
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
