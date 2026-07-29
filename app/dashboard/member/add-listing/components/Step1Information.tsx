@@ -101,11 +101,13 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
               {category === "Hunian" && (
                 <>
                   <option value="Rumah">Rumah</option>
-                  <option value="Apartemen">Apartemen</option>
-                  <option value="Cluster">Cluster</option>
-                  <option value="Townhouse">Townhouse</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Kost">Kost</option>
+    <option value="Apartemen">Apartemen</option>
+    <option value="Cluster">Cluster</option>
+    <option value="Townhouse">Townhouse</option>
+    <option value="Penthouse">Penthouse</option>
+    <option value="Rusun">Rusun (Rumah Susun)</option>
+    <option value="Kontrakan">Kontrakan</option>
+  </>
                 </>
               )}
               {category === "Komersial" && (
