@@ -15,8 +15,9 @@ export default function AddListingPage() {
   });
 
   const generateAIDescription = async () => {
-    if (!formData.title || !formData.location) {
-      alert("Harap isi Judul dan Lokasi terlebih dahulu!");
+    // 1. Validasi Input
+    if (!formData.title && !formData.location) {
+      alert("Harap isi minimal Judul atau Lokasi terlebih dahulu!");
       return;
     }
 
@@ -33,14 +34,25 @@ export default function AddListingPage() {
         }),
       });
 
+      // 2. Cek apakah response sukses (status 200 OK)
+      if (!res.ok) {
+        // Ambil pesan error JSON dari backend jika ada
+        const errorData = await res.json().catch(() => null);
+        throw new Error(
+          errorData?.error || `Server Error (${res.status}). Cek GEMINI_API_KEY di Vercel.`
+        );
+      }
+
+      // 3. Jika sukses, baca hasil JSON
       const data = await res.json();
       if (data.description) {
         setFormData((prev) => ({ ...prev, description: data.description }));
       } else {
-        alert("Gagal memuat AI. Pastikan GEMINI_API_KEY sudah diset di Vercel.");
+        alert("Deskripsi gagal dihasilkan oleh AI.");
       }
-    } catch (err) {
-      alert("Terjadi kesalahan saat memanggil AI.");
+    } catch (err: any) {
+      // 4. Tangkap error tanpa crash JSON
+      alert("Gagal memuat AI: " + (err.message || "Terjadi kesalahan jaringan."));
     } finally {
       setLoadingAI(false);
     }
