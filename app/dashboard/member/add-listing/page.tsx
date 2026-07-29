@@ -9,7 +9,9 @@ import Step4Preview from "./components/Step4Preview";
 export default function AddListingPage() {
   // --- STATE UTAMA (PARENT) ---
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [transactionType, setTransactionType] = useState<
+  const [transactionType, setTransactionType] = useState("Dijual");
+  const [category, setCategory] = useState("Hunian");
+  const [subCategory, setSubCategory] = useState("Rumah"); 
     "Jual" | "Sewa" | "Take Over" | "Lelang"
   >("Jual");
 
