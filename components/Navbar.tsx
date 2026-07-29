@@ -15,13 +15,13 @@ export default function Navbar() {
           {/* Logo Teravia */}
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logo.png"
-              alt="Teravia Logo"
-              width={140}
-              height={40}
-              className="h-9 w-auto object-contain"
-              priority
-            />
+  src="/logo.png"
+  alt="Teravia Logo"
+  width={180}
+  height={50}
+  className="h-10 sm:h-12 w-auto object-contain"
+  priority
+/>
           </Link>
 
           {/* Desktop Navigation Links */}
