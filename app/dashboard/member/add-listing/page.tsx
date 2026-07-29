@@ -4,7 +4,6 @@ import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// 1. Structural Types
 type PropertyCategory = "Hunian" | "Komersial" | "Tanah & Lahan" | "Institusi & Fasilitas";
 
 interface PropertyImage {
@@ -15,7 +14,6 @@ interface PropertyImage {
   isMain: boolean;
 }
 
-// 2. Dynamic Categories Data
 const CATEGORY_TYPES: Record<PropertyCategory, string[]> = {
   Hunian: ["Rumah", "Apartemen", "Townhouse", "Cluster", "Villa", "Kondominium"],
   Komersial: ["Ruko", "Rukan", "Kontrakan", "Kost-kostan", "Hotel", "Gedung Perkantoran", "Gudang", "Pabrik", "Kios / Lapak"],
@@ -24,7 +22,6 @@ const CATEGORY_TYPES: Record<PropertyCategory, string[]> = {
 };
 
 export default function AddListingPage() {
-  // Form State
   const [status, setStatus] = useState<"Jual" | "Sewa" | "Take Over" | "Lelang">("Jual");
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -34,7 +31,6 @@ export default function AddListingPage() {
   const [certificate, setCertificate] = useState("SHM - Sertifikat Hak Milik");
   const [description, setDescription] = useState("");
 
-  // Dynamic Specifications
   const [landArea, setLandArea] = useState("");
   const [buildingArea, setBuildingArea] = useState("");
   const [bedrooms, setBedrooms] = useState("");
@@ -44,8 +40,7 @@ export default function AddListingPage() {
   const [zoning, setZoning] = useState("Kuning (Permukiman)");
   const [facilityCapacity, setFacilityCapacity] = useState("");
 
-  // Regional Cascading State
-  const [provinces, setProvinces] = useState<{ id: string; name: string }[]>([
+  const [provinces] = useState<{ id: string; name: string }[]>([
     { id: "32", name: "Jawa Barat" },
     { id: "31", name: "DKI Jakarta" },
     { id: "33", name: "Jawa Tengah" },
@@ -59,21 +54,16 @@ export default function AddListingPage() {
   const [selectedDist, setSelectedDist] = useState("");
   const [selectedVil, setSelectedVil] = useState("");
 
-  // Image Upload State
   const [images, setImages] = useState<PropertyImage[]>([]);
-
-  // Ads & Preview Modal State
   const [enableAds, setEnableAds] = useState(false);
   const [adsPackage, setAdsPackage] = useState("highlight");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
-  // Sync Property Type when Category Changes
   useEffect(() => {
     const defaultType = CATEGORY_TYPES[category][0];
     setPropertyType(defaultType);
   }, [category]);
 
-  // Handle Region Cascading Logic
   const handleProvinceChange = (provId: string) => {
     setSelectedProv(provId);
     setSelectedReg("");
@@ -120,7 +110,6 @@ export default function AddListingPage() {
     }
   };
 
-  // Convert Uploaded Image to SVG Embedded Wrapper
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -129,8 +118,6 @@ export default function AddListingPage() {
       const reader = new FileReader();
       reader.onload = (event) => {
         const base64Data = event.target?.result as string;
-
-        // Auto-generate SVG Wrapper holding the exact base64 raster image without quality loss
         const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%"><image href="${base64Data}" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"/></svg>`;
         const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
         const svgUrl = URL.createObjectURL(svgBlob);
@@ -140,7 +127,7 @@ export default function AddListingPage() {
           originalUrl: base64Data,
           svgUrl: svgUrl,
           name: file.name,
-          isMain: images.length === 0, // First uploaded image becomes main automatically
+          isMain: images.length === 0,
         };
 
         setImages((prev) => [...prev, newImage]);
@@ -199,7 +186,7 @@ export default function AddListingPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 1. STATUS TRANSAKSI & JUDUL */}
+          {/* 1. INFORMASI UTAMA */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
             <h2 className="text-base font-bold text-slate-900 border-b pb-2">1. Informasi Utama</h2>
             
@@ -387,7 +374,6 @@ export default function AddListingPage() {
               </span>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {/* Field untuk Hunian & Komersial */}
                 {(category === "Hunian" || category === "Komersial" || category === "Institusi & Fasilitas") && (
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">Luas Bangunan (m²)</label>
@@ -474,4 +460,17 @@ export default function AddListingPage() {
                       onChange={(e) => setFacilityCapacity(e.target.value)}
                     />
                   </div>
-          
+                )}
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Daya Listrik (Watt)</label>
+                  <input
+                    type="number"
+                    placeholder="Contoh: 2200"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
+                    value={electricity}
+                    onChange={(e) => setElectricity(e.target.value)}
+                  />
+                </div>
+              </div>
+            </di
