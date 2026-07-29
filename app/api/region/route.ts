@@ -1,44 +1,51 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-
-export async function POST(request: Request) {
+// 1. Handler GET (Untuk mengambil daftar provinsi / kota / kecamatan)
+export async function GET(req: Request) {
   try {
-    const body = await request.json();
-    const { title, propertyType, price, landArea, buildingArea, bedrooms, bathrooms, locationName } = body;
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get("type"); // contoh: province, regency, district
+    const id = searchParams.get("id");
 
-    if (!title || !propertyType) {
-      return NextResponse.json({ error: "Judul dan Tipe Properti wajib diisi" }, { status: 400 });
-    }
+    // Jika kamu menghubungkan ke database / API External wilayah Indonesia:
+    // Kamu bisa ganti data di bawah ini sesuai kebutuhan DB-mu.
+    const dummyProvinces = [
+      { id: "1", name: "DKI Jakarta" },
+      { id: "2", name: "Jawa Barat" },
+      { id: "3", name: "Jawa Tengah" },
+      { id: "4", name: "Jawa Timur" },
+      { id: "5", name: "Banten" },
+    ];
 
-    // Menggunakan model Gemini 1.5 Flash (Sangat Cepat & Gratis)
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    return NextResponse.json({
+      success: true,
+      data: dummyProvinces,
+    });
+  } catch (error) {
+    console.error("Region GET Error:", error);
+    return NextResponse.json(
+      { success: false, error: "Gagal mengambil data wilayah" },
+      { status: 500 }
+    );
+  }
+}
 
-    const prompt = `
-      Anda adalah seorang ahli Copywriter Properti / Broker Profesional.
-      Buatkan deskripsi penjualan properti yang menarik, persuasif, elegan, dan bernilai jual tinggi berdasarkan data berikut:
-      
-      - Judul: ${title}
-      - Tipe Properti: ${propertyType}
-      - Harga: Rp ${Number(price).toLocaleString('id-ID')}
-      - Lokasi: ${locationName || 'Lokasi Strategis'}
-      - Luas Tanah: ${landArea || 0} m²
-      - Luas Bangunan: ${buildingArea || 0} m²
-      - Fasilitas: ${bedrooms || 0} Kamar Tidur, ${bathrooms || 0} Kamar Mandi
+// 2. Handler POST (Jika frontend kamu juga mengirimkan data lokasi via POST)
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
 
-      Instruksi Penulisan:
-      1. Paragraf 1: Call to Action / Hook yang membuat pembeli tertarik.
-      2. Paragraf 2: Keunggulan lokasi dan kenyamanan hunian.
-      3. Point-by-point fasilitas & spesifikasi utama.
-      4. Penutup: Dorongan untuk segera menjadwalkan survey sebelum terjual.
-    `;
-
-    const result = await model.generateContent(prompt);
-    const aiText = result.response.text();
-
-    return NextResponse.json({ success: true, description: aiText });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    // Logika pencarian / pemrosesan region via POST jika ada
+    return NextResponse.json({
+      success: true,
+      message: "Region query processed",
+      data: body,
+    });
+  } catch (error) {
+    console.error("Region POST Error:", error);
+    return NextResponse.json(
+      { success: false, error: "Gagal memproses data wilayah" },
+      { status: 500 }
+    );
   }
 }
