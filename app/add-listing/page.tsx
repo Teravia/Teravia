@@ -34,25 +34,33 @@ export default function AddListingPage() {
         }),
       });
 
-      // 2. Cek apakah response sukses (status 200 OK)
-      if (!res.ok) {
-        // Ambil pesan error JSON dari backend jika ada
-        const errorData = await res.json().catch(() => null);
+      // 2. Baca respon sebagai teks mentah dulu (agar aman dari error HTML Vercel)
+      const rawText = await res.text();
+
+      let data;
+      try {
+        data = JSON.parse(rawText);
+      } catch (e) {
+        console.error("Non-JSON Response:", rawText);
         throw new Error(
-          errorData?.error || `Server Error (${res.status}). Cek GEMINI_API_KEY di Vercel.`
+          `Server merespons HTML (Status ${res.status}). Kemungkinan GEMINI_API_KEY belum terpasang di Vercel atau belum di-Redeploy.`
         );
       }
 
-      // 3. Jika sukses, baca hasil JSON
-      const data = await res.json();
+      // 3. Cek jika HTTP status bukan 200 OK
+      if (!res.ok) {
+        throw new Error(data.error || `Error status ${res.status}`);
+      }
+
+      // 4. Jika sukses, isi ke state deskripsi
       if (data.description) {
         setFormData((prev) => ({ ...prev, description: data.description }));
       } else {
         alert("Deskripsi gagal dihasilkan oleh AI.");
       }
     } catch (err: any) {
-      // 4. Tangkap error tanpa crash JSON
-      alert("Gagal memuat AI: " + (err.message || "Terjadi kesalahan jaringan."));
+      // 5. Tangkap error dan munculkan pesan yang jelas
+      alert(err.message || "Terjadi kesalahan jaringan.");
     } finally {
       setLoadingAI(false);
     }
