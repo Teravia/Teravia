@@ -8,655 +8,589 @@ interface Step1Props {
 }
 
 export default function Step1Information({ onNext, transactionType }: Step1Props) {
-  // --- STATE STEP 1 ---
+  // --- INFORMASI DASAR ---
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("Komersial");
-  const [propertyType, setPropertyType] = useState("Gedung Perkantoran / Plaza");
+  const [category, setCategory] = useState("Hunian");
+  const [propertyType, setPropertyType] = useState("Rumah");
+  const [propertyCondition, setPropertyCondition] = useState("Sangat Baik");
+  const [ownershipStatus, setOwnershipStatus] = useState("Properti Sendiri");
 
-  // General Specs
+  // --- INFORMASI BANGUNAN ---
   const [landArea, setLandArea] = useState("");
-  const [length, setLength] = useState("");
-  const [width, setWidth] = useState("");
   const [buildingArea, setBuildingArea] = useState("");
-  const [floors, setFloors] = useState("");
-  const [bedrooms, setBedrooms] = useState("");
-  const [bathrooms, setBathrooms] = useState("");
-  const [garage, setGarage] = useState("");
-  const [carport, setCarport] = useState("");
-  const [electricity, setElectricity] = useState("2200 VA");
-  const [waterSource, setWaterSource] = useState("PDAM");
-  const [facing, setFacing] = useState("Utara");
-  const [condition, setCondition] = useState("Baru");
-
-  // Lahan / Tanah
-  const [landZoning, setLandZoning] = useState("Kuning (Permukiman)");
-  const [landTopography, setLandTopography] = useState("Datar Siap Bangun");
-  const [roadWidth, setRoadWidth] = useState("");
   const [frontWidth, setFrontWidth] = useState("");
-
-  // Apartemen / SOHO
-  const [aptType, setAptType] = useState("");
-  const [floorLevel, setFloorLevel] = useState("");
-  const [tower, setTower] = useState("");
-  const [furnished, setFurnished] = useState("Unfurnished");
-  const [iplFee, setIplFee] = useState("");
-  const [view, setView] = useState("");
-
-  // Kost / Hotel / Bisnis
-  const [totalRooms, setTotalRooms] = useState("");
-  const [occupiedRooms, setOccupiedRooms] = useState("");
-  const [monthlyIncome, setMonthlyIncome] = useState("");
-  const [roomBathroomInside, setRoomBathroomInside] = useState("Ada");
-
-  // Komersial General & Industri
-  const [parkingCapacity, setParkingCapacity] = useState("");
+  const [landLength, setLandLength] = useState("");
+  const [floors, setFloors] = useState("1");
   const [ceilingHeight, setCeilingHeight] = useState("");
-  const [floorLoadCapacity, setFloorLoadCapacity] = useState("");
-  const [loadingDock, setLoadingDock] = useState("Ada");
-  const [containerAccess, setContainerAccess] = useState("Kontainer 40ft / Wingbox");
-
-  // --- STATE KHUSUS GEDUNG PERKANTORAN / PLAZA ---
-  const [buildingHeight, setBuildingHeight] = useState("");
   const [builtYear, setBuiltYear] = useState("");
   const [renovatedYear, setRenovatedYear] = useState("");
-  const [internetFiber, setInternetFiber] = useState("Tersedia");
-  const [genset, setGenset] = useState("Ada (100% Backed Up)");
-  const [passengerLifts, setPassengerLifts] = useState("");
-  const [cargoLifts, setCargoLifts] = useState("");
-  const [hasBasement, setHasBasement] = useState("Ada");
-  const [hasPantry, setHasPantry] = useState("Ada");
-  const [hasMeetingRoom, setHasMeetingRoom] = useState("Ada");
-  const [hasServerRoom, setHasServerRoom] = useState("Ada");
-  const [hasMosque, setHasMosque] = useState("Ada");
-  const [buildingGrade, setBuildingGrade] = useState("Grade A");
-  const [security24h, setSecurity24h] = useState("Ada (CCTV & Satpam)");
+  const [buildingConditionState, setBuildingConditionState] = useState("Baik");
+  const [housePosition, setHousePosition] = useState("Tengah");
 
-  // Properti Khusus (SPBU / RS)
-  const [spbuBrand, setSpbuBrand] = useState("Pertamina");
-  const [dispenserCount, setDispenserCount] = useState("");
-  const [tankCount, setTankCount] = useState("");
-  const [hospitalType, setHospitalType] = useState("Tipe B");
-  const [inpatientBeds, setInpatientBeds] = useState("");
-  const [operatingRooms, setOperatingRooms] = useState("");
-  const [icuBeds, setIcuBeds] = useState("");
+  // --- SPESIFIKASI RUANGAN ---
+  const [bedrooms, setBedrooms] = useState("2");
+  const [bathrooms, setBathrooms] = useState("1");
+  const [ensuiteBathrooms, setEnsuiteBathrooms] = useState("0");
+  const [maidBedrooms, setMaidBedrooms] = useState("0");
+  const [maidBathrooms, setMaidBathrooms] = useState("0");
 
-  // Opsi Jenis Properti Berdasarkan Kategori
-  const getPropertyTypeOptions = () => {
-    switch (category) {
-      case "Hunian":
-        return ["Rumah", "Apartemen", "Villa", "Townhouse / Cluster", "Kost", "Kontrakan / Sewa Rumah"];
-      case "Komersial":
-        return ["Ruko", "Gedung Perkantoran / Plaza", "SOHO (Small Office Home Office)", "Kios / Booth / Ruang Usaha", "Hotel / Resort / Guesthouse", "Restoran / Cafe"];
-      case "Industri & Logistik":
-        return ["Gudang", "Pabrik", "Kawasan Industri"];
-      case "Tanah & Lahan":
-        return ["Tanah Kavling Permukiman", "Lahan Komersial", "Lahan Industri", "Pertanian / Perkebunan"];
-      case "Properti Khusus":
-        return ["SPBU", "Rest Area", "Rumah Sakit / Klinik", "Gedung Pertemuan / Event Space"];
-      default:
-        return ["Rumah"];
-    }
+  // Ruangan (Boolean Chip Toggles)
+  const [rooms, setRooms] = useState<Record<string, boolean>>({
+    ruangTamu: true,
+    ruangKeluarga: true,
+    ruangMakan: false,
+    dapurBersih: true,
+    dapurKotor: false,
+    gudang: false,
+    ruangKerja: false,
+    ruangBelajar: false,
+    musholla: false,
+    laundryRoom: false,
+    balkon: false,
+    terasDepan: true,
+    terasBelakang: false,
+  });
+
+  // --- AREA PARKIR & OUTDOOR ---
+  const [carport, setCarport] = useState("1");
+  const [garage, setGarage] = useState("0");
+  const [carCapacity, setCarCapacity] = useState("1");
+  const [motorCapacity, setMotorCapacity] = useState("2");
+
+  const [outdoorFeatures, setOutdoorFeatures] = useState<Record<string, boolean>>({
+    tamanDepan: true,
+    tamanBelakang: false,
+    kolamRenang: false,
+    gazebo: false,
+    kolamIkan: false,
+    halamanSamping: false,
+    areaBBQ: false,
+  });
+
+  // --- UTILITAS & KEAMANAN ---
+  const [electricity, setElectricity] = useState("2200");
+  const [waterSource, setWaterSource] = useState("PDAM");
+  const [acCount, setAcCount] = useState("0");
+
+  const [utilities, setUtilities] = useState<Record<string, boolean>>({
+    internetFiber: true,
+    teleponRumah: false,
+    tvKabel: false,
+    tandonAir: true,
+    pompaAir: true,
+    septicTank: true,
+    waterHeater: false,
+    cctv: false,
+    smartHome: false,
+  });
+
+  const [security, setSecurity] = useState<Record<string, boolean>>({
+    security24h: true,
+    oneGateSystem: true,
+    cctvPerumahan: false,
+    accessCard: false,
+    posSatpam: true,
+  });
+
+  // --- LOKASI, AKSES & LINGKUNGAN ---
+  const [roadWidth, setRoadWidth] = useState("");
+  const [facing, setFacing] = useState("Utara");
+
+  const [access, setAccess] = useState<Record<string, boolean>>({
+    muat1Mobil: true,
+    muat2Mobil: true,
+    jalanAspal: true,
+    jalanBeton: false,
+    hook: false,
+    bebasBanjir: true,
+    dekatTol: false,
+    dekatStasiun: false,
+    dekatMRT: false,
+    dekatLRT: false,
+    dekatHalte: false,
+    dekatSekolah: true,
+    dekatRS: false,
+    dekatMall: false,
+    dekatPasar: true,
+    dekatIbadah: true,
+  });
+
+  const [environment, setEnvironment] = useState<Record<string, boolean>>({
+    dalamPerumahan: true,
+    dalamCluster: true,
+    lingkunganTenang: true,
+    cocokKeluarga: true,
+    cocokInvestasi: true,
+    cocokKantor: false,
+  });
+
+  // --- INFORMASI TAMBAHAN ---
+  const [furnished, setFurnished] = useState("Unfurnished");
+  const [view, setView] = useState("");
+  const [reasonForSale, setReasonForSale] = useState("");
+  const [additionalNotes, setAdditionalNotes] = useState("");
+
+  // Helper Toggle Function untuk State Boolean
+  const toggleFeature = (
+    setState: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
+    key: string
+  ) => {
+    setState((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleCategoryChange = (cat: string) => {
-    setCategory(cat);
-    switch (cat) {
-      case "Hunian": setPropertyType("Rumah"); break;
-      case "Komersial": setPropertyType("Gedung Perkantoran / Plaza"); break;
-      case "Industri & Logistik": setPropertyType("Gudang"); break;
-      case "Tanah & Lahan": setPropertyType("Tanah Kavling Permukiman"); break;
-      case "Properti Khusus": setPropertyType("SPBU"); break;
-      default: setPropertyType("Rumah");
-    }
-  };
-
-  const handleSubmitStep1 = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title) {
-      alert("Silakan isi judul iklan terlebih dahulu.");
+      alert("Silakan isi Judul Iklan terlebih dahulu.");
       return;
     }
     onNext();
   };
 
   return (
-    <form onSubmit={handleSubmitStep1} className="space-y-6">
-      {/* JUDUL & KATEGORI */}
+    <form onSubmit={handleSubmit} className="space-y-6 text-slate-800 text-xs">
+      {/* 1. INFORMASI DASAR */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         <div className="flex justify-between items-center border-b pb-3">
-          <h2 className="text-base font-bold text-slate-900">Informasi Dasar</h2>
-          <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">
+          <h2 className="text-sm font-bold text-slate-900">Informasi Dasar</h2>
+          <span className="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">
             Transaksi: {transactionType}
           </span>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block font-semibold text-slate-700 mb-1">
             Judul Iklan Properti <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             required
-            placeholder="Contoh: Dijual Gedung Perkantoran Grade A Strategis di SCBD Jakarta Pusat"
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition"
+            placeholder="Contoh: Rumah Minimalis Modern 2 Lantai Siap Huni Dalam Cluster Strategis"
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-blue-500 outline-none transition"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Kategori Utama</label>
+            <label className="block font-semibold text-slate-700 mb-1">Kategori Utama</label>
             <select
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-slate-500 cursor-not-allowed"
               value={category}
-              onChange={(e) => handleCategoryChange(e.target.value)}
+              disabled
             >
               <option value="Hunian">Hunian</option>
-              <option value="Komersial">Komersial</option>
-              <option value="Industri & Logistik">Industri & Logistik</option>
-              <option value="Tanah & Lahan">Tanah & Lahan</option>
-              <option value="Properti Khusus">Properti Khusus</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Jenis Properti</label>
+            <label className="block font-semibold text-slate-700 mb-1">Jenis Properti</label>
             <select
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white"
               value={propertyType}
               onChange={(e) => setPropertyType(e.target.value)}
             >
-              {getPropertyTypeOptions().map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
+              <option value="Rumah">Rumah</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Status Kepemilikan</label>
+            <select
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white"
+              value={ownershipStatus}
+              onChange={(e) => setOwnershipStatus(e.target.value)}
+            >
+              <option value="Properti Sendiri">Properti Sendiri (Pemilik)</option>
+              <option value="Kuasa Jual">Kuasa Jual (Agent)</option>
             </select>
           </div>
         </div>
       </div>
 
-      {/* SPESIFIKASI DETAIL DINAMIS */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-        <div className="flex justify-between items-center border-b pb-3">
-          <h2 className="text-base font-bold text-slate-900">Spesifikasi Detail</h2>
-          <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">
-            {propertyType}
-          </span>
+      {/* 2. INFORMASI BANGUNAN */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h2 className="text-sm font-bold text-slate-900 border-b pb-3">Informasi Bangunan</h2>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Luas Tanah (m²) *</label>
+            <input type="number" required placeholder="120" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Luas Bangunan (m²) *</label>
+            <input type="number" required placeholder="150" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingArea} onChange={(e) => setBuildingArea(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Lebar Muka (m)</label>
+            <input type="number" placeholder="8" className="w-full p-2.5 rounded-xl border border-slate-300" value={frontWidth} onChange={(e) => setFrontWidth(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Panjang Tanah (m)</label>
+            <input type="number" placeholder="15" className="w-full p-2.5 rounded-xl border border-slate-300" value={landLength} onChange={(e) => setLandLength(e.target.value)} />
+          </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* KHUSUS GEDUNG PERKANTORAN / PLAZA                                         */}
-        {/* ========================================================================= */}
-        {propertyType === "Gedung Perkantoran / Plaza" ? (
-          <div className="space-y-6 text-xs">
-            {/* 1. INFORMASI BANGUNAN */}
-            <div className="space-y-3">
-              <h3 className="font-bold text-slate-800 text-sm border-b pb-1 text-blue-600">
-                1. Informasi Bangunan
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Tanah (m²)</label>
-                  <input type="number" placeholder="1500" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Bangunan (m²)</label>
-                  <input type="number" placeholder="8000" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingArea} onChange={(e) => setBuildingArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Jumlah Lantai</label>
-                  <input type="number" placeholder="12" className="w-full p-2.5 rounded-xl border border-slate-300" value={floors} onChange={(e) => setFloors(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tinggi Bangunan (m / Lantai)</label>
-                  <input type="text" placeholder="45 m" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingHeight} onChange={(e) => setBuildingHeight(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tahun Dibangun</label>
-                  <input type="number" placeholder="2018" className="w-full p-2.5 rounded-xl border border-slate-300" value={builtYear} onChange={(e) => setBuiltYear(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tahun Renovasi</label>
-                  <input type="number" placeholder="2023 (Optional)" className="w-full p-2.5 rounded-xl border border-slate-300" value={renovatedYear} onChange={(e) => setRenovatedYear(e.target.value)} />
-                </div>
-              </div>
-            </div>
-
-            {/* 2. UTILITAS */}
-            <div className="space-y-3">
-              <h3 className="font-bold text-slate-800 text-sm border-b pb-1 text-blue-600">
-                2. Utilitas
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Daya Listrik (kVA / VA)</label>
-                  <input type="text" placeholder="150 kVA / Custom" className="w-full p-2.5 rounded-xl border border-slate-300" value={electricity} onChange={(e) => setElectricity(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Air</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={waterSource} onChange={(e) => setWaterSource(e.target.value)}>
-                    <option value="PDAM & Sumur Bor">PDAM & Sumur Bor</option>
-                    <option value="PDAM">PDAM</option>
-                    <option value="Sumur Bor / Deep Well">Sumur Bor / Deep Well</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Internet Fiber</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={internetFiber} onChange={(e) => setInternetFiber(e.target.value)}>
-                    <option value="Tersedia (High Speed)">Tersedia (High Speed)</option>
-                    <option value="Belum Tersedia">Belum Tersedia</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Genset</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={genset} onChange={(e) => setGenset(e.target.value)}>
-                    <option value="Ada (100% Backed Up)">Ada (100% Backed Up)</option>
-                    <option value="Ada (Partial)">Ada (Partial)</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. FASILITAS */}
-            <div className="space-y-3">
-              <h3 className="font-bold text-slate-800 text-sm border-b pb-1 text-blue-600">
-                3. Fasilitas
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Jumlah Lift Penumpang</label>
-                  <input type="number" placeholder="3 Unit" className="w-full p-2.5 rounded-xl border border-slate-300" value={passengerLifts} onChange={(e) => setPassengerLifts(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Lift Barang</label>
-                  <input type="number" placeholder="1 Unit" className="w-full p-2.5 rounded-xl border border-slate-300" value={cargoLifts} onChange={(e) => setCargoLifts(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Basement</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={hasBasement} onChange={(e) => setHasBasement(e.target.value)}>
-                    <option value="Ada (2 Lantai Basement)">Ada</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Loading Dock</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={loadingDock} onChange={(e) => setLoadingDock(e.target.value)}>
-                    <option value="Ada">Ada</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Pantry</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={hasPantry} onChange={(e) => setHasPantry(e.target.value)}>
-                    <option value="Ada di Setiap Lantai">Ada di Setiap Lantai</option>
-                    <option value="Ada">Ada</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Ruang Meeting Utama</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={hasMeetingRoom} onChange={(e) => setHasMeetingRoom(e.target.value)}>
-                    <option value="Ada">Ada</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Ruang Server</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={hasServerRoom} onChange={(e) => setHasServerRoom(e.target.value)}>
-                    <option value="Ada (AC Dedicated)">Ada</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Musholla</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={hasMosque} onChange={(e) => setHasMosque(e.target.value)}>
-                    <option value="Ada">Ada</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. OPERASIONAL */}
-            <div className="space-y-3">
-              <h3 className="font-bold text-slate-800 text-sm border-b pb-1 text-blue-600">
-                4. Operasional
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kapasitas Parkir (Mobil/Motor)</label>
-                  <input type="text" placeholder="50 Mobil / 100 Motor" className="w-full p-2.5 rounded-xl border border-slate-300" value={parkingCapacity} onChange={(e) => setParkingCapacity(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Grade Gedung</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={buildingGrade} onChange={(e) => setBuildingGrade(e.target.value)}>
-                    <option value="Grade A">Grade A</option>
-                    <option value="Grade B">Grade B</option>
-                    <option value="Grade C">Grade C</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Security 24 Jam</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={security24h} onChange={(e) => setSecurity24h(e.target.value)}>
-                    <option value="Ada (CCTV & Satpam 24 Jam)">Ada (CCTV & Satpam 24 Jam)</option>
-                    <option value="Ada (Satpam Saja)">Ada (Satpam Saja)</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Jumlah Lantai *</label>
+            <input type="number" required placeholder="2" className="w-full p-2.5 rounded-xl border border-slate-300" value={floors} onChange={(e) => setFloors(e.target.value)} />
           </div>
-        ) : (
-           /* UNTUK PROPERTI LAINNYA */
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-            {/* RUMAH / VILLA / TOWNHOUSE / KONTRAKAN */}
-            {(propertyType === "Rumah" || propertyType === "Villa" || propertyType === "Townhouse / Cluster" || propertyType === "Kontrakan / Sewa Rumah") && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Tanah (m²)</label>
-                  <input type="number" placeholder="120" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Bangunan (m²)</label>
-                  <input type="number" placeholder="90" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingArea} onChange={(e) => setBuildingArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Dimensi Tanah (PxL m)</label>
-                  <div className="flex gap-2">
-                    <input type="number" placeholder="P: 15" className="w-1/2 p-2.5 rounded-xl border border-slate-300" value={length} onChange={(e) => setLength(e.target.value)} />
-                    <input type="number" placeholder="L: 8" className="w-1/2 p-2.5 rounded-xl border border-slate-300" value={width} onChange={(e) => setWidth(e.target.value)} />
-                  </div>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Jumlah Lantai</label>
-                  <input type="number" placeholder="2" className="w-full p-2.5 rounded-xl border border-slate-300" value={floors} onChange={(e) => setFloors(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kamar Tidur</label>
-                  <input type="number" placeholder="3" className="w-full p-2.5 rounded-xl border border-slate-300" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kamar Mandi</label>
-                  <input type="number" placeholder="2" className="w-full p-2.5 rounded-xl border border-slate-300" value={bathrooms} onChange={(e) => setBathrooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Garasi Mobil</label>
-                  <input type="number" placeholder="1" className="w-full p-2.5 rounded-xl border border-slate-300" value={garage} onChange={(e) => setGarage(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Carport Mobil</label>
-                  <input type="number" placeholder="1" className="w-full p-2.5 rounded-xl border border-slate-300" value={carport} onChange={(e) => setCarport(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Daya Listrik</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={electricity} onChange={(e) => setElectricity(e.target.value)}>
-                    {["450 VA", "900 VA", "1300 VA", "2200 VA", "3500 VA", "4400 VA", "5500 VA", "11000 VA"].map((pow) => (
-                      <option key={pow} value={pow}>{pow}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Sumber Air</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={waterSource} onChange={(e) => setWaterSource(e.target.value)}>
-                    <option value="PDAM">PDAM</option>
-                    <option value="Sumur Bor">Sumur Bor</option>
-                    <option value="Sumur Gali">Sumur Gali</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Arah Bangunan</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={facing} onChange={(e) => setFacing(e.target.value)}>
-                    <option value="Utara">Utara</option>
-                    <option value="Timur">Timur</option>
-                    <option value="Selatan">Selatan</option>
-                    <option value="Barat">Barat</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kondisi Properti</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={condition} onChange={(e) => setCondition(e.target.value)}>
-                    <option value="Baru">Baru</option>
-                    <option value="Bekas / Terawat">Bekas / Terawat</option>
-                    <option value="Butuh Renovasi">Butuh Renovasi</option>
-                  </select>
-                </div>
-              </>
-            )}
-                     {/* TANAH & LAHAN */}
-            {category === "Tanah & Lahan" && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Tanah Total (m²)</label>
-                  <input type="number" placeholder="1000" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Lebar Muka Depan (m)</label>
-                  <input type="number" placeholder="25" className="w-full p-2.5 rounded-xl border border-slate-300" value={frontWidth} onChange={(e) => setFrontWidth(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Lebar Akses Jalan (m)</label>
-                  <input type="number" placeholder="8" className="w-full p-2.5 rounded-xl border border-slate-300" value={roadWidth} onChange={(e) => setRoadWidth(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Peruntukan / Zona Lahan</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={landZoning} onChange={(e) => setLandZoning(e.target.value)}>
-                    <option value="Kuning (Permukiman)">Kuning (Permukiman)</option>
-                    <option value="Merah (Komersial/Jasa)">Merah (Komersial/Jasa)</option>
-                    <option value="Abu-Abu / Industri">Abu-Abu / Industri</option>
-                    <option value="Hijau / Pertanian">Hijau / Pertanian</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Topografi Lahan</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={landTopography} onChange={(e) => setLandTopography(e.target.value)}>
-                    <option value="Datar Siap Bangun">Datar Siap Bangun</option>
-                    <option value="Berbukit / Terasering">Berbukit / Terasering</option>
-                    <option value="Butuh Urugan">Butuh Urugan</option>
-                  </select>
-                </div>
-              </>
-            )}
-
-             {/* APARTEMEN & SOHO */}
-            {(propertyType === "Apartemen" || propertyType === "SOHO (Small Office Home Office)") && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tipe Unit</label>
-                  <input type="text" placeholder="Studio / 2BR / 3BR" className="w-full p-2.5 rounded-xl border border-slate-300" value={aptType} onChange={(e) => setAptType(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Unit (m²)</label>
-                  <input type="number" placeholder="45" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingArea} onChange={(e) => setBuildingArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kamar Tidur / Ruang Kerja</label>
-                  <input type="number" placeholder="2" className="w-full p-2.5 rounded-xl border border-slate-300" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kamar Mandi</label>
-                  <input type="number" placeholder="1" className="w-full p-2.5 rounded-xl border border-slate-300" value={bathrooms} onChange={(e) => setBathrooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Lantai Ke-</label>
-                  <input type="number" placeholder="12" className="w-full p-2.5 rounded-xl border border-slate-300" value={floorLevel} onChange={(e) => setFloorLevel(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tower</label>
-                  <input type="text" placeholder="Tower North" className="w-full p-2.5 rounded-xl border border-slate-300" value={tower} onChange={(e) => setTower(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Furnished</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={furnished} onChange={(e) => setFurnished(e.target.value)}>
-                    <option value="Unfurnished">Unfurnished</option>
-                    <option value="Semi Furnished">Semi Furnished</option>
-                    <option value="Full Furnished">Full Furnished</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Service Charge / IPL</label>
-                  <input type="text" placeholder="Rp 750.000 / bln" className="w-full p-2.5 rounded-xl border border-slate-300" value={iplFee} onChange={(e) => setIplFee(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">View Unit</label>
-                  <input type="text" placeholder="City View / Pool View" className="w-full p-2.5 rounded-xl border border-slate-300" value={view} onChange={(e) => setView(e.target.value)} />
-                </div>
-              </>
-            )}
-  
-             {/* KOST / HOTEL / GUESTHOUSE */}
-            {(propertyType === "Kost" || propertyType === "Hotel / Resort / Guesthouse") && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Tanah (m²)</label>
-                  <input type="number" placeholder="300" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Bangunan (m²)</label>
-                  <input type="number" placeholder="500" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingArea} onChange={(e) => setBuildingArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Total Jumlah Kamar</label>
-                  <input type="number" placeholder="20" className="w-full p-2.5 rounded-xl border border-slate-300" value={totalRooms} onChange={(e) => setTotalRooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kamar Terisi Saat Ini</label>
-                  <input type="number" placeholder="16" className="w-full p-2.5 rounded-xl border border-slate-300" value={occupiedRooms} onChange={(e) => setOccupiedRooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Omzet Bulanan (Rp)</label>
-                  <input type="text" placeholder="35.000.000" className="w-full p-2.5 rounded-xl border border-slate-300" value={monthlyIncome} onChange={(e) => setMonthlyIncome(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kamar Mandi Dalam</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={roomBathroomInside} onChange={(e) => setRoomBathroomInside(e.target.value)}>
-                    <option value="Ada">Ada di Setiap Kamar</option>
-                    <option value="Sebagian">Sebagian Kamar</option>
-                    <option value="Luar">Kamar Mandi Luar</option>
-                  </select>
-                </div>
-              </>
-            )}
-
-            {/* RUKO / KIOS / RESTORAN */}
-            {(propertyType === "Ruko" || propertyType === "Kios / Booth / Ruang Usaha" || propertyType === "Restoran / Cafe") && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Tanah (m²)</label>
-                  <input type="number" placeholder="100" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Bangunan (m²)</label>
-                  <input type="number" placeholder="250" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingArea} onChange={(e) => setBuildingArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Lebar Muka (m)</label>
-                  <input type="number" placeholder="5" className="w-full p-2.5 rounded-xl border border-slate-300" value={frontWidth} onChange={(e) => setFrontWidth(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Jumlah Lantai</label>
-                  <input type="number" placeholder="3" className="w-full p-2.5 rounded-xl border border-slate-300" value={floors} onChange={(e) => setFloors(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Jumlah Kamar Mandi</label>
-                  <input type="number" placeholder="3" className="w-full p-2.5 rounded-xl border border-slate-300" value={bathrooms} onChange={(e) => setBathrooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Kapasitas Parkir (Mobil)</label>
-                  <input type="number" placeholder="4" className="w-full p-2.5 rounded-xl border border-slate-300" value={parkingCapacity} onChange={(e) => setParkingCapacity(e.target.value)} />
-                </div>
-              </>
-            )}
-
-            {/* GUDANG / PABRIK / INDUSTRI */}
-            {category === "Industri & Logistik" && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Lahan (m²)</label>
-                  <input type="number" placeholder="2000" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Bangunan Utama (m²)</label>
-                  <input type="number" placeholder="1200" className="w-full p-2.5 rounded-xl border border-slate-300" value={buildingArea} onChange={(e) => setBuildingArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tinggi Plafon (m)</label>
-                  <input type="number" placeholder="9" className="w-full p-2.5 rounded-xl border border-slate-300" value={ceilingHeight} onChange={(e) => setCeilingHeight(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Beban Lantai (ton/m²)</label>
-                  <input type="text" placeholder="5 ton/m²" className="w-full p-2.5 rounded-xl border border-slate-300" value={floorLoadCapacity} onChange={(e) => setFloorLoadCapacity(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Akses Kendaraan Logistik</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={containerAccess} onChange={(e) => setContainerAccess(e.target.value)}>
-                    <option value="Kontainer 40ft / Wingbox">Kontainer 40ft / Wingbox</option>
-                    <option value="Kontainer 20ft">Kontainer 20ft</option>
-                    <option value="Truk Engkel / Fuso">Truk Engkel / Fuso</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Loading Dock</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={loadingDock} onChange={(e) => setLoadingDock(e.target.value)}>
-                    <option value="Ada">Ada</option>
-                    <option value="Tidak Ada">Tidak Ada</option>
-                  </select>
-                </div>
-              </>
-            )}
-
-            {/* SPBU */}
-            {propertyType === "SPBU" && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Luas Lahan (m²)</label>
-                  <input type="number" placeholder="2500" className="w-full p-2.5 rounded-xl border border-slate-300" value={landArea} onChange={(e) => setLandArea(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Merek SPBU</label>
-                  <input type="text" placeholder="Pertamina / Shell / Vivo" className="w-full p-2.5 rounded-xl border border-slate-300" value={spbuBrand} onChange={(e) => setSpbuBrand(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Jumlah Dispenser</label>
-                  <input type="number" placeholder="6" className="w-full p-2.5 rounded-xl border border-slate-300" value={dispenserCount} onChange={(e) => setDispenserCount(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Jumlah Tangki Pendam</label>
-                  <input type="number" placeholder="4" className="w-full p-2.5 rounded-xl border border-slate-300" value={tankCount} onChange={(e) => setTankCount(e.target.value)} />
-                </div>
-              </>
-            )}
-
-            {/* RUMAH SAKIT */}
-            {propertyType === "Rumah Sakit / Klinik" && (
-              <>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tipe Rumah Sakit</label>
-                  <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={hospitalType} onChange={(e) => setHospitalType(e.target.value)}>
-                    <option value="Tipe A">Tipe A</option>
-                    <option value="Tipe B">Tipe B</option>
-                    <option value="Tipe C">Tipe C</option>
-                    <option value="Klinik Utama">Klinik Utama</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tempat Tidur Rawat Inap</label>
-                  <input type="number" placeholder="120" className="w-full p-2.5 rounded-xl border border-slate-300" value={inpatientBeds} onChange={(e) => setInpatientBeds(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Ruang Operasi</label>
-                  <input type="number" placeholder="4" className="w-full p-2.5 rounded-xl border border-slate-300" value={operatingRooms} onChange={(e) => setOperatingRooms(e.target.value)} />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Tempat Tidur ICU</label>
-                  <input type="number" placeholder="10" className="w-full p-2.5 rounded-xl border border-slate-300" value={icuBeds} onChange={(e) => setIcuBeds(e.target.value)} />
-                </div>
-              </>
-            )}
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Tinggi Plafon (m)</label>
+            <input type="number" step="0.1" placeholder="3.5" className="w-full p-2.5 rounded-xl border border-slate-300" value={ceilingHeight} onChange={(e) => setCeilingHeight(e.target.value)} />
           </div>
-        )}
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Tahun Dibangun</label>
+            <input type="number" placeholder="2020" className="w-full p-2.5 rounded-xl border border-slate-300" value={builtYear} onChange={(e) => setBuiltYear(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Tahun Renovasi</label>
+            <input type="number" placeholder="2023" className="w-full p-2.5 rounded-xl border border-slate-300" value={renovatedYear} onChange={(e) => setRenovatedYear(e.target.value)} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Kondisi Bangunan *</label>
+            <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={buildingConditionState} onChange={(e) => setBuildingConditionState(e.target.value)}>
+              <option value="Baru">Baru</option>
+              <option value="Sangat Baik">Sangat Baik</option>
+              <option value="Baik">Baik</option>
+              <option value="Perlu Renovasi Ringan">Perlu Renovasi Ringan</option>
+              <option value="Perlu Renovasi Total">Perlu Renovasi Total</option>
+            </select>
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Posisi Rumah</label>
+            <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={housePosition} onChange={(e) => setHousePosition(e.target.value)}>
+              <option value="Tengah">Tengah</option>
+              <option value="Hook">Hook</option>
+              <option value="Tusuk Sate">Tusuk Sate</option>
+              <option value="Cul-de-sac">Cul-de-sac</option>
+              <option value="Pinggir Jalan Utama">Pinggir Jalan Utama</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. SPESIFIKASI RUANGAN */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h2 className="text-sm font-bold text-slate-900 border-b pb-3">Spesifikasi Ruangan</h2>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Kamar Tidur</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Kamar Mandi</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={bathrooms} onChange={(e) => setBathrooms(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">KM Dalam</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={ensuiteBathrooms} onChange={(e) => setEnsuiteBathrooms(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Kamar ART</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={maidBedrooms} onChange={(e) => setMaidBedrooms(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">KM ART</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={maidBathrooms} onChange={(e) => setMaidBathrooms(e.target.value)} />
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-semibold text-slate-700 mb-2">Fasilitas Ruangan (Klik untuk memilih)</label>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { key: "ruangTamu", label: "Ruang Tamu" },
+              { key: "ruangKeluarga", label: "Ruang Keluarga" },
+              { key: "ruangMakan", label: "Ruang Makan" },
+              { key: "dapurBersih", label: "Dapur Bersih" },
+              { key: "dapurKotor", label: "Dapur Kotor" },
+              { key: "gudang", label: "Gudang" },
+              { key: "ruangKerja", label: "Ruang Kerja" },
+              { key: "ruangBelajar", label: "Ruang Belajar" },
+              { key: "musholla", label: "Musholla" },
+              { key: "laundryRoom", label: "Laundry Room" },
+              { key: "balkon", label: "Balkon" },
+              { key: "terasDepan", label: "Teras Depan" },
+              { key: "terasBelakang", label: "Teras Belakang" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => toggleFeature(setRooms, item.key)}
+                className={`px-3 py-1.5 rounded-xl border text-xs transition font-medium ${
+                  rooms[item.key]
+                    ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                {rooms[item.key] ? "✓ " : "+ "}
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 4. PARKIR & OUTDOOR */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h2 className="text-sm font-bold text-slate-900 border-b pb-3">Parkir & Area Outdoor</h2>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Carport</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={carport} onChange={(e) => setCarport(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Garasi</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={garage} onChange={(e) => setGarage(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Kapasitas Mobil</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={carCapacity} onChange={(e) => setCarCapacity(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Kapasitas Motor</label>
+            <input type="number" className="w-full p-2.5 rounded-xl border border-slate-300" value={motorCapacity} onChange={(e) => setMotorCapacity(e.target.value)} />
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-semibold text-slate-700 mb-2">Fasilitas Outdoor</label>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { key: "tamanDepan", label: "Taman Depan" },
+              { key: "tamanBelakang", label: "Taman Belakang" },
+              { key: "kolamRenang", label: "Kolam Renang" },
+              { key: "gazebo", label: "Gazebo" },
+              { key: "kolamIkan", label: "Kolam Ikan" },
+              { key: "halamanSamping", label: "Halaman Samping" },
+              { key: "areaBBQ", label: "Area BBQ" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => toggleFeature(setOutdoorFeatures, item.key)}
+                className={`px-3 py-1.5 rounded-xl border text-xs transition font-medium ${
+                  outdoorFeatures[item.key]
+                    ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                {outdoorFeatures[item.key] ? "✓ " : "+ "}
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 5. UTILITAS & KEAMANAN */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h2 className="text-sm font-bold text-slate-900 border-b pb-3">Utilitas & Keamanan</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Daya Listrik (Watt)</label>
+            <input type="number" placeholder="2200" className="w-full p-2.5 rounded-xl border border-slate-300" value={electricity} onChange={(e) => setElectricity(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Sumber Air</label>
+            <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={waterSource} onChange={(e) => setWaterSource(e.target.value)}>
+              <option value="PDAM">PDAM</option>
+              <option value="Sumur Bor">Sumur Bor</option>
+              <option value="Sumur Gali">Sumur Gali</option>
+            </select>
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Jumlah AC (Unit)</label>
+            <input type="number" placeholder="2" className="w-full p-2.5 rounded-xl border border-slate-300" value={acCount} onChange={(e) => setAcCount(e.target.value)} />
+          </div>
+        </div>
+
+         <div>
+          <label className="block font-semibold text-slate-700 mb-2">Fitur Utilitas</label>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { key: "internetFiber", label: "Internet Fiber" },
+              { key: "teleponRumah", label: "Telepon Rumah" },
+              { key: "tvKabel", label: "TV Kabel" },
+              { key: "tandonAir", label: "Tandon Air" },
+              { key: "pompaAir", label: "Pompa Air" },
+              { key: "septicTank", label: "Septic Tank" },
+              { key: "waterHeater", label: "Water Heater" },
+              { key: "cctv", label: "CCTV Private" },
+              { key: "smartHome", label: "Smart Home System" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => toggleFeature(setUtilities, item.key)}
+                className={`px-3 py-1.5 rounded-xl border text-xs transition font-medium ${
+                  utilities[item.key]
+                    ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                {utilities[item.key] ? "✓ " : "+ "}
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-semibold text-slate-700 mb-2">Sistem Keamanan Lingkungan</label>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { key: "security24h", label: "Security 24 Jam" },
+              { key: "oneGateSystem", label: "One Gate System" },
+              { key: "cctvPerumahan", label: "CCTV Perumahan" },
+              { key: "accessCard", label: "Access Card Gate" },
+              { key: "posSatpam", label: "Pos Satpam Depan" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => toggleFeature(setSecurity, item.key)}
+                className={`px-3 py-1.5 rounded-xl border text-xs transition font-medium ${
+                  security[item.key]
+                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                {security[item.key] ? "✓ " : "+ "}
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 6. LOKASI, AKSES & LINGKUNGAN */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h2 className="text-sm font-bold text-slate-900 border-b pb-3">Akses Jalan & Lingkungan</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Lebar Jalan Depan (m / Mobil)</label>
+            <input type="text" placeholder="6 meter (Muat 2 mobil)" className="w-full p-2.5 rounded-xl border border-slate-300" value={roadWidth} onChange={(e) => setRoadWidth(e.target.value)} />
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Arah Hadap Rumah</label>
+            <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={facing} onChange={(e) => setFacing(e.target.value)}>
+              <option value="Utara">Utara</option>
+              <option value="Timur Laut">Timur Laut</option>
+              <option value="Timur">Timur</option>
+              <option value="Tenggara">Tenggara</option>
+              <option value="Selatan">Selatan</option>
+              <option value="Barat Daya">Barat Daya</option>
+              <option value="Barat">Barat</option>
+              <option value="Barat Laut">Barat Laut</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-semibold text-slate-700 mb-2">Aksesibilitas & Fasilitas Terdekat</label>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { key: "muat1Mobil", label: "Jalan 1 Mobil" },
+              { key: "muat2Mobil", label: "Jalan 2 Mobil" },
+              { key: "jalanAspal", label: "Jalan Aspal" },
+              { key: "jalanBeton", label: "Jalan Beton" },
+              { key: "bebasBanjir", label: "Bebas Banjir" },
+              { key: "dekatTol", label: "Dekat Gerbang Tol" },
+              { key: "dekatStasiun", label: "Dekat Stasiun KRL" },
+              { key: "dekatMRT", label: "Dekat Stasiun MRT" },
+              { key: "dekatLRT", label: "Dekat Stasiun LRT" },
+              { key: "dekatHalte", label: "Dekat Halte Bus" },
+              { key: "dekatSekolah", label: "Dekat Sekolah/Kampus" },
+              { key: "dekatRS", label: "Dekat Rumah Sakit" },
+              { key: "dekatMall", label: "Dekat Mall/Pusat Belanja" },
+              { key: "dekatPasar", label: "Dekat Pasar" },
+              { key: "dekatIbadah", label: "Dekat Tempat Ibadah" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => toggleFeature(setAccess, item.key)}
+                className={`px-3 py-1.5 rounded-xl border text-xs transition font-medium ${
+                  access[item.key]
+                    ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                {access[item.key] ? "✓ " : "+ "}
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-semibold text-slate-700 mb-2">Karakteristik Lingkungan</label>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { key: "dalamPerumahan", label: "Dalam Perumahan" },
+              { key: "dalamCluster", label: "Dalam Cluster" },
+              { key: "lingkunganTenang", label: "Lingkungan Tenang" },
+              { key: "cocokKeluarga", label: "Cocok untuk Keluarga" },
+              { key: "cocokInvestasi", label: "Cocok untuk Investasi" },
+              { key: "cocokKantor", label: "Bisa untuk Home Office" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => toggleFeature(setEnvironment, item.key)}
+                className={`px-3 py-1.5 rounded-xl border text-xs transition font-medium ${
+                  environment[item.key]
+                    ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                {environment[item.key] ? "✓ " : "+ "}
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 7. INFORMASI TAMBAHAN */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h2 className="text-sm font-bold text-slate-900 border-b pb-3">Informasi Tambahan</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Kondisi Perabotan (Furnished)</label>
+            <select className="w-full p-2.5 rounded-xl border border-slate-300 bg-white" value={furnished} onChange={(e) => setFurnished(e.target.value)}>
+              <option value="Unfurnished">Unfurnished (Kosongan)</option>
+              <option value="Semi Furnished">Semi Furnished</option>
+              <option value="Fully Furnished">Fully Furnished</option>
+            </select>
+          </div>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">Pemandangan / View</label>
+            <input type="text" placeholder="Contoh: City View, Taman, Danau" className="w-full p-2.5 rounded-xl border border-slate-300" value={view} onChange={(e) => setView(e.target.value)} />
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-semibold text-slate-700 mb-1">Alasan Dijual (Opsional)</label>
+          <input type="text" placeholder="Contoh: Pindah tugas luar kota" className="w-full p-2.5 rounded-xl border border-slate-300" value={reasonForSale} onChange={(e) => setReasonForSale(e.target.value)} />
+        </div>
+
+        <div>
+          <label className="block font-semibold text-slate-700 mb-1">Catatan Tambahan</label>
+          <textarea rows={3} placeholder="Tambahkan informasi khusus lainnya..." className="w-full p-2.5 rounded-xl border border-slate-300" value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} />
+        </div>
       </div>
 
       <button
@@ -668,4 +602,3 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     </form>
   );
 }
-            
