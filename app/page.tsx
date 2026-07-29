@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
-// Mock Data Properti untuk Tampilan Awal
+// Mock Data Properti Teravia
 const MOCK_PROPERTIES = [
   {
     id: "1",
@@ -14,8 +15,9 @@ const MOCK_PROPERTIES = [
     beds: 3,
     baths: 2,
     landArea: 90,
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
     badge: "Emerald Member",
+    badgeColor: "bg-emerald-600",
   },
   {
     id: "2",
@@ -26,110 +28,139 @@ const MOCK_PROPERTIES = [
     beds: 1,
     baths: 2,
     landArea: 120,
-    image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=800&q=80",
     badge: "Gold Member",
-  }
+    badgeColor: "bg-amber-500",
+  },
 ];
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Navbar Minimalis */}
-      <nav className="bg-white border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-          <Link href="/" className="text-xl font-black text-blue-600 tracking-tight">
-            PROPERTI<span className="text-purple-600">HUB</span>
-          </Link>
-          <div className="flex gap-2">
-            <Link
-              href="/dashboard/member/add-listing"
-              className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              + Pasang Iklan
-            </Link>
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+      
+      {/* 1. Hero Section & Quick Search */}
+      <section className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-950 text-white py-14 sm:py-20 px-4 text-center relative overflow-hidden">
+        <div className="max-w-4xl mx-auto relative z-10">
+          <span className="inline-block bg-blue-500/20 text-blue-300 text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-blue-400/30">
+             Marketplace Properti Terpadu
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight leading-tight">
+            Cari Properti Impian & Bangun Ekosistemmu
+          </h1>
+          <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+            Platform jual beli properti terlengkap dengan fitur Marketing Ads, AI Copywriter, dan Jasa Konstruksi Profesional.
+          </p>
+
+          {/* Search Box */}
+          <div className="max-w-2xl mx-auto bg-white p-2 sm:p-2.5 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-2">
+            <div className="pl-3 text-slate-400">
+              🔍
+            </div>
+            <input
+              type="text"
+              placeholder="Cari lokasi, kota, atau nama cluster..."
+              className="w-full px-2 py-2 text-slate-800 focus:outline-none text-sm placeholder:text-slate-400"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 text-sm shadow-md shadow-blue-500/20">
+              Cari
+            </button>
           </div>
         </div>
-      </nav>
-
-      {/* Hero Section & Search Bar */}
-      <section className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 text-white py-12 px-4 text-center">
-        <h1 className="text-2xl sm:text-4xl font-extrabold mb-3">
-          Cari Properti Impian & Bangun Ekosistemmu
-        </h1>
-        <p className="text-blue-200 text-sm sm:text-base max-w-2xl mx-auto mb-6">
-          Platform marketplace properti terpadu dilengkapi fitur Marketing Ads, AI Copywriter, dan Jasa Konstruksi Professional.
-        </p>
-
-        {/* Quick Search Box */}
-        <div className="max-w-xl mx-auto bg-white p-2 rounded-xl shadow-lg flex gap-2">
-          <input
-            type="text"
-            placeholder="Cari lokasi, kota, atau nama cluster..."
-            className="w-full px-3 py-2 text-gray-800 focus:outline-none text-sm"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button className="bg-purple-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-purple-700 text-sm">
-            Cari
-          </button>
-        </div>
       </section>
 
-      {/* Shortcut Ekosistem Properti */}
-      <section className="max-w-7xl mx-auto px-4 -mt-6">
-        <div className="grid grid-cols-3 gap-3 bg-white p-4 rounded-xl shadow-md border text-center">
-          <Link href="/jasa-konstruksi" className="p-2 rounded-lg hover:bg-blue-50 transition">
-            <div className="text-2xl mb-1">🏗️</div>
-            <div className="text-xs font-bold text-gray-700">Jasa Konstruksi</div>
+      {/* 2. Shortcut Ekosistem Teravia */}
+      <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20">
+        <div className="grid grid-cols-3 gap-3 sm:gap-6 bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-100 text-center">
+          <Link 
+            href="/jasa-konstruksi" 
+            className="p-3 rounded-xl hover:bg-blue-50/80 transition-all duration-200 group"
+          >
+            <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">🏗️</div>
+            <div className="text-xs sm:text-sm font-bold text-slate-800">Jasa Konstruksi</div>
           </Link>
-          <Link href="/jasa-profesional" className="p-2 rounded-lg hover:bg-purple-50 transition">
-            <div className="text-2xl mb-1">📐</div>
-            <div className="text-xs font-bold text-gray-700">Arsitek & Sipil</div>
+
+          <Link 
+            href="/jasa-profesional" 
+            className="p-3 rounded-xl hover:bg-purple-50/80 transition-all duration-200 group"
+          >
+            <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">📐</div>
+            <div className="text-xs sm:text-sm font-bold text-slate-800">Arsitek & Sipil</div>
           </Link>
-          <Link href="/mitra-notaris" className="p-2 rounded-lg hover:bg-emerald-50 transition">
-            <div className="text-2xl mb-1">⚖️</div>
-            <div className="text-xs font-bold text-gray-700">Mitra Notaris/PPAT</div>
+
+          <Link 
+            href="/mitra-notaris" 
+            className="p-3 rounded-xl hover:bg-emerald-50/80 transition-all duration-200 group"
+          >
+            <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">⚖️</div>
+            <div className="text-xs sm:text-sm font-bold text-slate-800">Mitra Notaris/PPAT</div>
           </Link>
         </div>
       </section>
 
-      {/* Listing Properti Feed */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-gray-800">Properti Terbaru</h2>
-          <span className="text-xs bg-purple-100 text-purple-700 font-semibold px-2.5 py-1 rounded-full">
-            ⚡ Auto-Bump Active
+      {/* 3. Listing Properti Terbaru */}
+      <main className="max-w-6xl mx-auto px-4 py-12">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Properti Terbaru</h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">Pilihan properti paling gres siap huni atau investasi</p>
+          </div>
+          <span className="text-xs bg-purple-50 text-purple-700 border border-purple-200 font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <span>⚡</span> Auto-Bump Active
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {MOCK_PROPERTIES.map((item) => (
-            <div key={item.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition border">
-              <div className="relative h-48 bg-gray-200">
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                <span className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded">
+            <div 
+              key={item.id} 
+              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200/80 flex flex-col group"
+            >
+              {/* Gambar Properti */}
+              <div className="relative h-52 bg-slate-100 overflow-hidden">
+                <Image 
+                  src={item.image} 
+                  alt={item.title} 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                  unoptimized
+                />
+                <span className={`absolute top-3 left-3 ${item.badgeColor} text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md`}>
                   {item.badge}
                 </span>
               </div>
-              <div className="p-4 space-y-2">
-                <div className="text-lg font-extrabold text-blue-600">
-                  Rp {item.price.toLocaleString("id-ID")}
+
+              {/* Detail Properti */}
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                  <div className="text-xl font-extrabold text-blue-600 mb-1">
+                    Rp {item.price.toLocaleString("id-ID")}
+                  </div>
+                  <h3 className="font-bold text-slate-800 text-sm sm:text-base line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    <span>📍</span> {item.location}
+                  </p>
                 </div>
-                <h3 className="font-bold text-gray-800 text-sm line-clamp-1">{item.title}</h3>
-                <p className="text-xs text-gray-500">📍 {item.location}</p>
-                <div className="flex gap-4 pt-2 border-t text-xs text-gray-600 font-medium">
-                  <span>🛏️ {item.beds} KT</span>
-                  <span>🚿 {item.baths} KM</span>
-                  <span>📐 {item.landArea} m²</span>
+
+                <div className="pt-3 border-t border-slate-100">
+                  <div className="flex items-center justify-between text-xs text-slate-600 font-medium mb-3">
+                    <span>🛏️ {item.beds} KT</span>
+                    <span>🚿 {item.baths} KM</span>
+                    <span>📐 {item.landArea} m²</span>
+                  </div>
+
+                  <Link
+                    href={`/listing/${item.id}`}
+                    className="block text-center bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-700 font-semibold text-xs py-2.5 rounded-xl transition-all duration-200 border border-slate-200/80 hover:border-blue-600"
+                  >
+                    Lihat Detail Properti
+                  </Link>
                 </div>
-                <Link
-                  href={`/listing/${item.id}`}
-                  className="block text-center mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-xs py-2 rounded-lg transition"
-                >
-                  Lihat Detail Properti
-                </Link>
               </div>
             </div>
           ))}
@@ -137,4 +168,4 @@ export default function HomePage() {
       </main>
     </div>
   );
-      }
+}
