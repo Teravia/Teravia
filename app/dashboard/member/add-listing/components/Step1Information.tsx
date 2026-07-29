@@ -25,24 +25,32 @@ import FormSPBU from "./step1-forms/komersial/FormSPBU";
 import FormTempatHiburan from "./step1-forms/komersial/FormTempatHiburan";
 
 interface Step1Props {
-  category: string;
-  setCategory: (val: string) => void;
-  subCategory: string;
-  setSubCategory: (val: string) => void;
+  category?: string;
+  setCategory?: (val: string) => void;
+  subCategory?: string;
+  setSubCategory?: (val: string) => void;
   transactionType: string;
-  setTransactionType: (val: string) => void;
+  setTransactionType?: (val: string) => void;
   onNext: () => void;
 }
 
 export default function Step1Information({
-  category,
-  setCategory,
-  subCategory,
-  setSubCategory,
+  category: propCategory,
+  setCategory: propSetCategory,
+  subCategory: propSubCategory,
+  setSubCategory: propSetSubCategory,
   transactionType,
-  setTransactionType,
+  setTransactionType: propSetTransactionType,
   onNext,
 }: Step1Props) {
+  // Local state fallback jika tidak di-pass dari parent
+  const [localCategory, setLocalCategory] = React.useState("Hunian");
+  const [localSubCategory, setLocalSubCategory] = React.useState("Rumah");
+
+  const category = propCategory ?? localCategory;
+  const setCategory = propSetCategory ?? setLocalCategory;
+  const subCategory = propSubCategory ?? localSubCategory;
+  const setSubCategory = propSetSubCategory ?? setLocalSubCategory;
 
   // Switcher Form Komponen berdasarkan Sub-Kategori yang Dipilih
   const renderDynamicForm = () => {
