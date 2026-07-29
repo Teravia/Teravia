@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const { title, location, price, specs } = await req.json();
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
       Buatkan deskripsi iklan properti yang sangat menarik, profesional, dan persuasif untuk marketplace properti Teravia.
