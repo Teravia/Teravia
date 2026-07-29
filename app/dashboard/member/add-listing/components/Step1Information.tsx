@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 // Import Form Hunian
 import FormRumah from "./step1-forms/hunian/FormRumah";
@@ -11,94 +11,167 @@ import FormPenthouse from "./step1-forms/hunian/FormPenthouse";
 import FormRusun from "./step1-forms/hunian/FormRusun";
 import FormKontrakan from "./step1-forms/hunian/FormKontrakan";
 
+// Import Form Komersial
+import FormRuko from "./step1-forms/komersial/FormRuko";
+import FormKiosToko from "./step1-forms/komersial/FormKiosToko";
+import FormGedungPerkantoran from "./step1-forms/komersial/FormGedungPerkantoran";
+import FormCoworkingSpace from "./step1-forms/komersial/FormCoworkingSpace";
+import FormRestoranCafe from "./step1-forms/komersial/FormRestoranCafe";
+import FormHotelResort from "./step1-forms/komersial/FormHotelResort";
+import FormPusatPerbelanjaan from "./step1-forms/komersial/FormPusatPerbelanjaan";
+import FormShowroomBengkel from "./step1-forms/komersial/FormShowroomBengkel";
+import FormKesehatanKecantikan from "./step1-forms/komersial/FormKesehatanKecantikan";
+import FormSPBU from "./step1-forms/komersial/FormSPBU";
+import FormTempatHiburan from "./step1-forms/komersial/FormTempatHiburan";
+
 interface Step1Props {
-  onNext: () => void;
+  category: string;
+  setCategory: (val: string) => void;
+  subCategory: string;
+  setSubCategory: (val: string) => void;
   transactionType: string;
+  setTransactionType: (val: string) => void;
+  onNext: () => void;
 }
 
-export default function Step1Information({ onNext, transactionType }: Step1Props) {
-  const [category, setCategory] = useState("Hunian");
-  const [propertyType, setPropertyType] = useState("Rumah");
+export default function Step1Information({
+  category,
+  setCategory,
+  subCategory,
+  setSubCategory,
+  transactionType,
+  setTransactionType,
+  onNext,
+}: Step1Props) {
 
-  // Handler Ganti Kategori & Reset Jenis Properti Default
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCat = e.target.value;
-    setCategory(selectedCat);
+  // Switcher Form Komponen berdasarkan Sub-Kategori yang Dipilih
+  const renderDynamicForm = () => {
+    // --- KATEGORI HUNIAN ---
+    if (category === "Hunian") {
+      switch (subCategory) {
+        case "Rumah":
+          return <FormRumah onNext={onNext} transactionType={transactionType} />;
+        case "Apartemen":
+          return <FormApartemen onNext={onNext} transactionType={transactionType} />;
+        case "Cluster":
+          return <FormCluster onNext={onNext} transactionType={transactionType} />;
+        case "Townhouse":
+          return <FormTownhouse onNext={onNext} transactionType={transactionType} />;
+        case "Penthouse":
+          return <FormPenthouse onNext={onNext} transactionType={transactionType} />;
+        case "Rusun":
+          return <FormRusun onNext={onNext} transactionType={transactionType} />;
+        case "Kontrakan":
+          return <FormKontrakan onNext={onNext} transactionType={transactionType} />;
+        default:
+          return <FormRumah onNext={onNext} transactionType={transactionType} />;
+      }
+    }
 
-    if (selectedCat === "Hunian") setPropertyType("Rumah");
-    else if (selectedCat === "Komersial") setPropertyType("Ruko");
-    else if (selectedCat === "Industri & Logistik") setPropertyType("Gudang");
-    else if (selectedCat === "Tanah & Lahan") setPropertyType("Tanah");
+    // --- KATEGORI KOMERSIAL ---
+    if (category === "Komersial") {
+      switch (subCategory) {
+        case "Ruko & Rukan":
+          return <FormRuko onNext={onNext} transactionType={transactionType} />;
+        case "Kios & Toko":
+          return <FormKiosToko onNext={onNext} transactionType={transactionType} />;
+        case "Gedung Perkantoran":
+          return <FormGedungPerkantoran onNext={onNext} transactionType={transactionType} />;
+        case "Co-Working Space":
+          return <FormCoworkingSpace onNext={onNext} transactionType={transactionType} />;
+        case "Restoran & Cafe":
+          return <FormRestoranCafe onNext={onNext} transactionType={transactionType} />;
+        case "Hotel & Resort":
+          return <FormHotelResort onNext={onNext} transactionType={transactionType} />;
+        case "Pusat Perbelanjaan / Mall":
+          return <FormPusatPerbelanjaan onNext={onNext} transactionType={transactionType} />;
+        case "Showroom & Bengkel":
+          return <FormShowroomBengkel onNext={onNext} transactionType={transactionType} />;
+        case "Fasilitas Kesehatan & Kecantikan":
+          return <FormKesehatanKecantikan onNext={onNext} transactionType={transactionType} />;
+        case "SPBU & Rest Area":
+          return <FormSPBU onNext={onNext} transactionType={transactionType} />;
+        case "Tempat Hiburan & Rekreasi":
+          return <FormTempatHiburan onNext={onNext} transactionType={transactionType} />;
+        default:
+          return <FormRuko onNext={onNext} transactionType={transactionType} />;
+      }
+    }
+
+    return null;
   };
 
   return (
-    <div className="space-y-6 font-sans">
-      {/* SELEKSI KATEGORI & JENIS PROPERTI UTAMA */}
+    <div className="space-y-6">
+      {/* SELEKSI KATEGORI, SUB-KATEGORI, & TIPE TRANSAKSI */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-        <div className="flex justify-between items-center border-b pb-3">
-          <h2 className="text-sm font-bold text-slate-900">
-            Pilih Kategori & Jenis Properti
-          </h2>
-          <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">
-            Kategori: {category}
-          </span>
-        </div>
+        <h2 className="text-sm font-bold text-slate-900 border-b pb-3">Pilih Kategori Properti</h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Tipe Transaksi */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">
-              Kategori Properti <span className="text-red-500">*</span>
-            </label>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">Tipe Transaksi</label>
             <select
-              value={category}
-              onChange={handleCategoryChange}
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white font-medium"
+              className="w-full text-xs p-2.5 rounded-xl border border-slate-300 bg-white"
+              value={transactionType}
+              onChange={(e) => setTransactionType(e.target.value)}
             >
-              <option value="Hunian">Hunian / Residence</option>
-              <option value="Komersial">Komersial / Usaha</option>
-              <option value="Industri & Logistik">Industri & Logistik</option>
-              <option value="Tanah & Lahan">Tanah & Lahan</option>
+              <option value="Dijual">Dijual</option>
+              <option value="Disewakan">Disewakan</option>
             </select>
           </div>
 
+          {/* Kategori Utama */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">
-              Jenis Properti <span className="text-red-500">*</span>
-            </label>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">Kategori Utama</label>
             <select
-              value={propertyType}
-              onChange={(e) => setPropertyType(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white font-medium"
+              className="w-full text-xs p-2.5 rounded-xl border border-slate-300 bg-white"
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                // Reset default sub-category
+                if (e.target.value === "Hunian") setSubCategory("Rumah");
+                if (e.target.value === "Komersial") setSubCategory("Ruko & Rukan");
+              }}
+            >
+              <option value="Hunian">Hunian</option>
+              <option value="Komersial">Komersial</option>
+            </select>
+          </div>
+
+          {/* Sub-Kategori Dinamis */}
+          <div>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">Sub-Kategori Properti</label>
+            <select
+              className="w-full text-xs p-2.5 rounded-xl border border-slate-300 bg-white"
+              value={subCategory}
+              onChange={(e) => setSubCategory(e.target.value)}
             >
               {category === "Hunian" && (
                 <>
-                  <option value="Rumah">Rumah</option>
+                  <option value="Rumah">Rumah Tapak</option>
                   <option value="Apartemen">Apartemen</option>
                   <option value="Cluster">Cluster</option>
                   <option value="Townhouse">Townhouse</option>
                   <option value="Penthouse">Penthouse</option>
                   <option value="Rusun">Rusun (Rumah Susun)</option>
-                  <option value="Kontrakan">Rumah Kontrakan</option>
+                  <option value="Kontrakan">Kontrakan Tapak</option>
                 </>
               )}
+
               {category === "Komersial" && (
                 <>
-                  <option value="Ruko">Ruko / Rukan</option>
+                  <option value="Ruko & Rukan">Ruko & Rukan</option>
+                  <option value="Kios & Toko">Kios & Toko</option>
                   <option value="Gedung Perkantoran">Gedung Perkantoran</option>
-                  <option value="Hotel">Hotel / Resort</option>
-                  <option value="Kost">Kost / Indekos</option>
-                  <option value="Villa">Villa</option>
-                </>
-              )}
-              {category === "Industri & Logistik" && (
-                <>
-                  <option value="Gudang">Gudang Logistik</option>
-                  <option value="Pabrik">Pabrik</option>
-                </>
-              )}
-              {category === "Tanah & Lahan" && (
-                <>
-                  <option value="Tanah">Tanah Kavling / Lahan</option>
+                  <option value="Co-Working Space">Co-Working Space</option>
+                  <option value="Restoran & Cafe">Restoran & Cafe</option>
+                  <option value="Hotel & Resort">Hotel & Resort</option>
+                  <option value="Pusat Perbelanjaan / Mall">Pusat Perbelanjaan / Mall</option>
+                  <option value="Showroom & Bengkel">Showroom & Bengkel</option>
+                  <option value="Fasilitas Kesehatan & Kecantikan">Fasilitas Kesehatan & Kecantikan</option>
+                  <option value="SPBU & Rest Area">SPBU & Rest Area Tol</option>
+                  <option value="Tempat Hiburan & Rekreasi">Tempat Hiburan & Rekreasi</option>
                 </>
               )}
             </select>
@@ -106,32 +179,8 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
         </div>
       </div>
 
-      {/* DYNAMIC FORM RENDERER BERDASARKAN JENIS PROPERTI */}
-      {propertyType === "Rumah" && <FormRumah onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Apartemen" && <FormApartemen onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Cluster" && <FormCluster onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Townhouse" && <FormTownhouse onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Penthouse" && <FormPenthouse onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Rusun" && <FormRusun onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Kontrakan" && <FormKontrakan onNext={onNext} transactionType={transactionType} />}
-
-      {/* FALLBACK UNTUK PROPERTI YANG BELUM DIBUAT FORM-NYA */}
-      {![
-        "Rumah",
-        "Apartemen",
-        "Cluster",
-        "Townhouse",
-        "Penthouse",
-        "Rusun",
-        "Kontrakan",
-      ].includes(propertyType) && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center text-amber-800 text-xs font-medium space-y-1">
-          <p className="font-bold text-sm">Form Spesifikasi Dalam Pengembangan</p>
-          <p>
-            Form spesifikasi untuk <span className="font-bold underline">{propertyType}</span> sedang disiapkan.
-          </p>
-        </div>
-      )}
+      {/* RENDER FORM SPESIFIK */}
+      {renderDynamicForm()}
     </div>
   );
 }
