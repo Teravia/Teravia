@@ -152,11 +152,16 @@ export default function AddListingPage() {
         {/* ========================================================================= */}
         <div className="transition-all duration-300">
           {currentStep === 1 && (
-            <Step1Information
-              onNext={nextStep}
-              transactionType={transactionType}
-            />
-          )}
+  <Step1Information
+    category={category}
+    setCategory={setCategory}
+    subCategory={subCategory}
+    setSubCategory={setSubCategory}
+    transactionType={transactionType}
+    setTransactionType={setTransactionType}
+    onNext={nextStep}
+  />
+)}
 
           {currentStep === 2 && (
             <Step2Pricing
