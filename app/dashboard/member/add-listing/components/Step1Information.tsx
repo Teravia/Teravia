@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-// --- IMPORT 7 FORM HUNIAN (ADA DI GITHUB) ---
+// --- IMPORT 7 FORM HUNIAN ---
 import FormApartemen from "./step1-forms/hunian/FormApartemen";
 import FormCluster from "./step1-forms/hunian/FormCluster";
 import FormKontrakan from "./step1-forms/hunian/FormKontrakan";
@@ -11,7 +11,7 @@ import FormRumah from "./step1-forms/hunian/FormRumah";
 import FormRusun from "./step1-forms/hunian/FormRusun";
 import FormTownhouse from "./step1-forms/hunian/FormTownhouse";
 
-// --- IMPORT 11 FORM KOMERSIAL (ADA DI GITHUB) ---
+// --- IMPORT 11 FORM KOMERSIAL ---
 import FormCoworkingSpace from "./step1-forms/komersial/FormCoworkingSpace";
 import FormGedungPerkantoran from "./step1-forms/komersial/FormGedungPerkantoran";
 import FormHotelResort from "./step1-forms/komersial/FormHotelResort";
@@ -23,6 +23,17 @@ import FormRuko from "./step1-forms/komersial/FormRuko";
 import FormSPBU from "./step1-forms/komersial/FormSPBU";
 import FormShowroomBengkel from "./step1-forms/komersial/FormShowroomBengkel";
 import FormTempatHiburan from "./step1-forms/komersial/FormTempatHiburan";
+
+// --- IMPORT 9 FORM INDUSTRI & LOGISTIK ---
+import { FormGudang } from "./step1-forms/industri-&-logistik/FormGudang";
+import { FormDistributionCenter } from "./step1-forms/industri-&-logistik/FormDistributionCenter";
+import { FormLogisticsHub } from "./step1-forms/industri-&-logistik/FormLogisticsHub";
+import { FormColdStorage } from "./step1-forms/industri-&-logistik/FormColdStorage";
+import { FormPabrik } from "./step1-forms/industri-&-logistik/FormPabrik";
+import { FormWorkshop } from "./step1-forms/industri-&-logistik/FormWorkshop";
+import { FormHanggar } from "./step1-forms/industri-&-logistik/FormHanggar";
+import { FormDryPort } from "./step1-forms/industri-&-logistik/FormDryPort";
+import { FormKawasanIndustri } from "./step1-forms/industri-&-logistik/FormKawasanIndustri";
 
 interface Step1Props {
   onNext: () => void;
@@ -116,7 +127,14 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
               {category === "Industri & Logistik" && (
                 <>
                   <option value="Gudang">Gudang Logistik</option>
-                  <option value="Pabrik">Pabrik</option>
+                  <option value="Distribution Center">Distribution Center (DC)</option>
+                  <option value="Logistics Hub">Logistics Hub</option>
+                  <option value="Cold Storage">Cold Storage</option>
+                  <option value="Pabrik">Pabrik (Factory / Plant)</option>
+                  <option value="Workshop">Workshop / Bengkel Industri</option>
+                  <option value="Hanggar">Hanggar Pesawat</option>
+                  <option value="Dry Port">Dry Port / ICD</option>
+                  <option value="Kawasan Industri">Lahan / Kawasan Industri</option>
                 </>
               )}
 
@@ -152,8 +170,19 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
       {propertyType === "SPBU" && <FormSPBU onNext={onNext} transactionType={transactionType} />}
       {propertyType === "Tempat Hiburan" && <FormTempatHiburan onNext={onNext} transactionType={transactionType} />}
 
-      {/* FALLBACK UNTUK INDUSTRI/TANAH YANG BELUM MEMILIKI FILE UTAMA */}
-      {(category === "Industri & Logistik" || category === "Tanah & Lahan") && (
+      {/* DYNAMIC FORM RENDERER - INDUSTRI & LOGISTIK */}
+      {propertyType === "Gudang" && <FormGudang onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Distribution Center" && <FormDistributionCenter onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Logistics Hub" && <FormLogisticsHub onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Cold Storage" && <FormColdStorage onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Pabrik" && <FormPabrik onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Workshop" && <FormWorkshop onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Hanggar" && <FormHanggar onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Dry Port" && <FormDryPort onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Kawasan Industri" && <FormKawasanIndustri onNext={onNext} transactionType={transactionType} />}
+
+      {/* FALLBACK UNTUK TANAH & LAHAN */}
+      {category === "Tanah & Lahan" && (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center text-amber-800 text-xs font-medium space-y-2">
           <p className="font-bold text-sm">Form Spesifikasi {propertyType}</p>
           <p>
