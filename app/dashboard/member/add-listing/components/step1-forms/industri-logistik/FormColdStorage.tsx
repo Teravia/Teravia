@@ -43,3 +43,5 @@ export const FormColdStorage: React.FC = () => {
     </div>
   );
 };
+
+export default FormColdStorage;
