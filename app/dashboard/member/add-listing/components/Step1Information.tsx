@@ -163,4 +163,4 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
       )}
     </div>
   );
-}
+}                                                  }
