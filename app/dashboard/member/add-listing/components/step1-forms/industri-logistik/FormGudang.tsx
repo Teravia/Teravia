@@ -61,3 +61,5 @@ export const FormGudang: React.FC = () => {
     </div>
   );
 };
+
+export default FormGudang;
