@@ -40,3 +40,5 @@ export const FormDistributionCenter: React.FC = () => {
     </div>
   );
 };
+
+export default FormDistributionCenter;
