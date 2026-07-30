@@ -35,3 +35,5 @@ export const FormDryPort: React.FC = () => {
     </div>
   );
 };
+
+export default FormDryPort;
