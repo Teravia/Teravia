@@ -2,28 +2,26 @@
 
 import React, { useState } from "react";
 
-// --- IMPORT FORM HUNIAN ---
-import FormRumah from "./step1-forms/hunian/FormRumah";
+// --- IMPORT 7 FORM HUNIAN (ADA DI GITHUB) ---
 import FormApartemen from "./step1-forms/hunian/FormApartemen";
 import FormCluster from "./step1-forms/hunian/FormCluster";
-import FormTownhouse from "./step1-forms/hunian/FormTownhouse";
-import FormPenthouse from "./step1-forms/hunian/FormPenthouse";
-import FormRusun from "./step1-forms/hunian/FormRusun";
 import FormKontrakan from "./step1-forms/hunian/FormKontrakan";
-import FormVilla from "./step1-forms/hunian/FormVilla";
-import FormKost from "./step1-forms/hunian/FormKost";
+import FormPenthouse from "./step1-forms/hunian/FormPenthouse";
+import FormRumah from "./step1-forms/hunian/FormRumah";
+import FormRusun from "./step1-forms/hunian/FormRusun";
+import FormTownhouse from "./step1-forms/hunian/FormTownhouse";
 
-// --- IMPORT FORM KOMERSIAL ---
-import FormRuko from "./step1-forms/komersial/FormRuko";
-import FormKiosToko from "./step1-forms/komersial/FormKiosToko";
-import FormGedungPerkantoran from "./step1-forms/komersial/FormGedungPerkantoran";
+// --- IMPORT 11 FORM KOMERSIAL (ADA DI GITHUB) ---
 import FormCoworkingSpace from "./step1-forms/komersial/FormCoworkingSpace";
-import FormRestoranCafe from "./step1-forms/komersial/FormRestoranCafe";
+import FormGedungPerkantoran from "./step1-forms/komersial/FormGedungPerkantoran";
 import FormHotelResort from "./step1-forms/komersial/FormHotelResort";
-import FormPusatPerbelanjaan from "./step1-forms/komersial/FormPusatPerbelanjaan";
-import FormShowroomBengkel from "./step1-forms/komersial/FormShowroomBengkel";
 import FormKesehatanKecantikan from "./step1-forms/komersial/FormKesehatanKecantikan";
+import FormKiosToko from "./step1-forms/komersial/FormKiosToko";
+import FormPusatPerbelanjaan from "./step1-forms/komersial/FormPusatPerbelanjaan";
+import FormRestoranCafe from "./step1-forms/komersial/FormRestoranCafe";
+import FormRuko from "./step1-forms/komersial/FormRuko";
 import FormSPBU from "./step1-forms/komersial/FormSPBU";
+import FormShowroomBengkel from "./step1-forms/komersial/FormShowroomBengkel";
 import FormTempatHiburan from "./step1-forms/komersial/FormTempatHiburan";
 
 interface Step1Props {
@@ -35,7 +33,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
   const [category, setCategory] = useState("Hunian");
   const [propertyType, setPropertyType] = useState("Rumah");
 
-  // Handler Ganti Kategori
+  // Handler Ganti Kategori & Reset Jenis Properti Default
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCat = e.target.value;
     setCategory(selectedCat);
@@ -60,6 +58,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          {/* PILIHAN KATEGORI */}
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
               Kategori Properti <span className="text-red-500">*</span>
@@ -76,6 +75,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
             </select>
           </div>
 
+          {/* PILIHAN JENIS PROPERTI */}
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
               Jenis Properti <span className="text-red-500">*</span>
@@ -92,8 +92,6 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
                   <option value="Cluster">Cluster</option>
                   <option value="Townhouse">Townhouse</option>
                   <option value="Penthouse">Penthouse</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Kost">Kost / Homestay</option>
                   <option value="Rusun">Rusun (Rumah Susun)</option>
                   <option value="Kontrakan">Rumah Kontrakan</option>
                 </>
@@ -106,7 +104,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
                   <option value="Gedung Perkantoran">Gedung Perkantoran</option>
                   <option value="Coworking Space">Co-Working Space</option>
                   <option value="Restoran Cafe">Restoran / Cafe / F&B</option>
-                  <option value="Hotel Resort">Hotel / Resort / Villa</option>
+                  <option value="Hotel Resort">Hotel / Resort</option>
                   <option value="Pusat Perbelanjaan">Pusat Perbelanjaan / Mall</option>
                   <option value="Showroom Bengkel">Showroom / Bengkel</option>
                   <option value="Kesehatan Kecantikan">Klinik / Spa / Salon</option>
@@ -138,8 +136,6 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
       {propertyType === "Cluster" && <FormCluster onNext={onNext} transactionType={transactionType} />}
       {propertyType === "Townhouse" && <FormTownhouse onNext={onNext} transactionType={transactionType} />}
       {propertyType === "Penthouse" && <FormPenthouse onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Villa" && <FormVilla onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Kost" && <FormKost onNext={onNext} transactionType={transactionType} />}
       {propertyType === "Rusun" && <FormRusun onNext={onNext} transactionType={transactionType} />}
       {propertyType === "Kontrakan" && <FormKontrakan onNext={onNext} transactionType={transactionType} />}
 
@@ -156,6 +152,22 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
       {propertyType === "SPBU" && <FormSPBU onNext={onNext} transactionType={transactionType} />}
       {propertyType === "Tempat Hiburan" && <FormTempatHiburan onNext={onNext} transactionType={transactionType} />}
 
+      {/* FALLBACK UNTUK INDUSTRI/TANAH YANG BELUM MEMILIKI FILE UTAMA */}
+      {(category === "Industri & Logistik" || category === "Tanah & Lahan") && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center text-amber-800 text-xs font-medium space-y-2">
+          <p className="font-bold text-sm">Form Spesifikasi {propertyType}</p>
+          <p>
+            Form spesifikasi untuk <span className="font-bold underline">{propertyType}</span> sedang disiapkan.
+          </p>
+          <button
+            type="button"
+            onClick={onNext}
+            className="mt-2 px-4 py-2 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition"
+          >
+            Lanjut ke Step 2 (Legalitas & Harga) →
+          </button>
+        </div>
+      )}
     </div>
   );
-}
+                  }
