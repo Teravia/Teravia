@@ -45,3 +45,5 @@ export const FormKawasanIndustri: React.FC = () => {
     </div>
   );
 };
+
+export default FormKawasanIndustri;
