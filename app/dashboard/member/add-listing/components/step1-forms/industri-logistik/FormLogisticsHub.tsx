@@ -33,3 +33,5 @@ export const FormLogisticsHub: React.FC = () => {
     </div>
   );
 };
+
+export default FormLogisticsHub;
