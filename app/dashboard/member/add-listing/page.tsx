@@ -9,11 +9,7 @@ import Step4Preview from "./components/Step4Preview";
 export default function AddListingPage() {
   // --- STATE UTAMA (PARENT) ---
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [transactionType, setTransactionType] = useState("Dijual");
-  const [category, setCategory] = useState("Hunian");
-  const [subCategory, setSubCategory] = useState("Rumah"); 
-    "Jual" | "Sewa" | "Take Over" | "Lelang"
-  >("Jual");
+  const [transactionType, setTransactionType] = useState<"Jual" | "Sewa" | "Take Over" | "Lelang">("Jual");
 
   // --- HANDLER NAVIGASI STEP ---
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
@@ -23,9 +19,7 @@ export default function AddListingPage() {
     <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-6">
 
-        {/* ========================================================================= */}
-        {/* HEADER / CONTAINER STATUS TRANSAKSI (STICKY)                              */}
-        {/* ========================================================================= */}
+        {/* STATUS TRANSAKSI (STICKY) */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-3 sticky top-4 z-30 backdrop-blur-md bg-white/95">
           <div className="flex flex-wrap gap-2 justify-between items-center">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider px-2">
@@ -50,9 +44,7 @@ export default function AddListingPage() {
           </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* STEPPER BAR NAVIGASI                                                     */}
-        {/* ========================================================================= */}
+        {/* STEPPER BAR NAVIGASI */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
           <div className="grid grid-cols-4 gap-2 text-center">
             
@@ -149,21 +141,14 @@ export default function AddListingPage() {
           </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* CONDITIONAL RENDERING KONTEN STEP ACTIVE                                  */}
-        {/* ========================================================================= */}
+        {/* RENDERING KONTEN STEP */}
         <div className="transition-all duration-300">
           {currentStep === 1 && (
-  <Step1Information
-    category={category}
-    setCategory={setCategory}
-    subCategory={subCategory}
-    setSubCategory={setSubCategory}
-    transactionType={transactionType}
-    setTransactionType={setTransactionType}
-    onNext={nextStep}
-  />
-)}
+            <Step1Information
+              transactionType={transactionType}
+              onNext={nextStep}
+            />
+          )}
 
           {currentStep === 2 && (
             <Step2Pricing
