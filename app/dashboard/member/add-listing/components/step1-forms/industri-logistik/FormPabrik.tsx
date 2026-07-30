@@ -61,3 +61,5 @@ export const FormPabrik: React.FC = () => {
     </div>
   );
 };
+
+export default FormPabrik;
