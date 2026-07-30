@@ -1,4 +1,4 @@
-// app/dashboard/member/add-listing/components/step1-forms/industri-&-logistik/index.tsx
+'use client';
 
 import React from 'react';
 import { FormGudang } from './FormGudang';
@@ -23,48 +23,70 @@ export type TipePropertiIndustri =
   | 'kawasan_industri';
 
 interface IndustriLogistikFormProps {
-  selectedSubCategory: TipePropertiIndustri;
-  // Tambahkan props lain jika butuh integrasi state global / React Hook Form dari parent
-  // formRegister?: any;
-  // errors?: any;
+  selectedSubCategory: TipePropertiIndustri | string;
+  // Menyiapkan props opsional jika parent memakai React Hook Form
+  register?: any;
+  errors?: any;
+  setValue?: any;
+  watch?: any;
 }
 
 export const IndustriLogistikStep1Form: React.FC<IndustriLogistikFormProps> = ({
   selectedSubCategory,
+  register,
+  errors,
+  setValue,
+  watch,
 }) => {
-  // Fungsi Pemanggil Komponen Spesifik
+  // Grouping props untuk ditumpahkan ke sub-komponen jika dibutuhkan
+  const formProps = { register, errors, setValue, watch };
+
   const renderSubForm = () => {
     switch (selectedSubCategory) {
       case 'gudang':
-        return <FormGudang />;
+        return <FormGudang {...formProps} />;
       case 'distribution_center':
-        return <FormDistributionCenter />;
+        return <FormDistributionCenter {...formProps} />;
       case 'logistics_hub':
-        return <FormLogisticsHub />;
+        return <FormLogisticsHub {...formProps} />;
       case 'cold_storage':
-        return <FormColdStorage />;
+        return <FormColdStorage {...formProps} />;
       case 'pabrik':
-        return <FormPabrik />;
+        return <FormPabrik {...formProps} />;
       case 'workshop':
-        return <FormWorkshop />;
+        return <FormWorkshop {...formProps} />;
       case 'hanggar':
-        return <FormHanggar />;
+        return <FormHanggar {...formProps} />;
       case 'dry_port':
-        return <FormDryPort />;
+        return <FormDryPort {...formProps} />;
       case 'kawasan_industri':
-        return <FormKawasanIndustri />;
+        return <FormKawasanIndustri {...formProps} />;
       default:
         return (
-          <div className="p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-sm">
-            Silakan pilih sub-kategori properti industri terlebih dahulu.
+          <div className="p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-sm flex items-center space-x-2">
+            <svg
+              className="w-5 h-5 text-amber-600 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <span>
+              Silakan pilih sub-kategori properti industri & logistik terlebih dahulu.
+            </span>
           </div>
         );
     }
   };
 
   return (
-    <div className="w-full space-y-4">
-      {/* Dynamic Sub-Form Render */}
+    <div className="w-full space-y-4 animate-fadeIn">
       {renderSubForm()}
     </div>
   );
