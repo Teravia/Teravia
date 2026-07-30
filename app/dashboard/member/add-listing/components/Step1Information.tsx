@@ -25,15 +25,15 @@ import FormShowroomBengkel from "./step1-forms/komersial/FormShowroomBengkel";
 import FormTempatHiburan from "./step1-forms/komersial/FormTempatHiburan";
 
 // --- IMPORT 9 FORM INDUSTRI & LOGISTIK ---
-import { FormGudang } from "./step1-forms/industri-&-logistik/FormGudang";
-import { FormDistributionCenter } from "./step1-forms/industri-&-logistik/FormDistributionCenter";
-import { FormLogisticsHub } from "./step1-forms/industri-&-logistik/FormLogisticsHub";
-import { FormColdStorage } from "./step1-forms/industri-&-logistik/FormColdStorage";
-import { FormPabrik } from "./step1-forms/industri-&-logistik/FormPabrik";
-import { FormWorkshop } from "./step1-forms/industri-&-logistik/FormWorkshop";
-import { FormHanggar } from "./step1-forms/industri-&-logistik/FormHanggar";
-import { FormDryPort } from "./step1-forms/industri-&-logistik/FormDryPort";
-import { FormKawasanIndustri } from "./step1-forms/industri-&-logistik/FormKawasanIndustri";
+import FormGudang from "./step1-forms/industri-&-logistik/FormGudang";
+import FormDistributionCenter from "./step1-forms/industri-&-logistik/FormDistributionCenter";
+import FormLogisticsHub from "./step1-forms/industri-&-logistik/FormLogisticsHub";
+import FormColdStorage from "./step1-forms/industri-&-logistik/FormColdStorage";
+import FormPabrik from "./step1-forms/industri-&-logistik/FormPabrik";
+import FormWorkshop from "./step1-forms/industri-&-logistik/FormWorkshop";
+import FormHanggar from "./step1-forms/industri-&-logistik/FormHanggar";
+import FormDryPort from "./step1-forms/industri-&-logistik/FormDryPort";
+import FormKawasanIndustri from "./step1-forms/industri-&-logistik/FormKawasanIndustri";
 
 interface Step1Props {
   onNext: () => void;
