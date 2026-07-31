@@ -14,10 +14,11 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
+    // Reset jenis properti saat kategori berubah
     setPropertyType("");
   };
 
-  // Validasi: Pastikan SEMUA input required sudah terisi (tidak kosong/hanya spasi)
+  // Validasi: Pastikan semua input bertanda (*) / required sudah terisi
   const isFormValid =
     listingTitle.trim() !== "" &&
     category.trim() !== "" &&
@@ -33,7 +34,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     <div className="space-y-6 font-sans">
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         
-        {/* KOLOM JUDUL LISTINGAN (REQUIRED) */}
+        {/* INPUT 1: JUDUL LISTINGAN (REQUIRED) */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
             Judul Listingan <span className="text-red-500">*</span>
@@ -48,7 +49,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
           />
         </div>
 
-        {/* DROPDOWN KATEGORI & JENIS PROPERTI */}
+        {/* INPUT 2 & 3: DROPDOWN KATEGORI & JENIS PROPERTI */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           
           {/* DROP-DOWN 1: KATEGORI PROPERTI (REQUIRED) */}
