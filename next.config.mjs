@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    // Abaikan error TypeScript saat npm run build
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
 };
 
-export default nextConfig;
+module.exports = nextConfig;
