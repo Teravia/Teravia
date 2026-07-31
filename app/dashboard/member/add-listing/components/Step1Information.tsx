@@ -54,7 +54,6 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
   const [category, setCategory] = useState("Hunian");
   const [propertyType, setPropertyType] = useState("Rumah");
 
-  // Handler Ganti Kategori & Reset Jenis Properti Default
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCat = e.target.value;
     setCategory(selectedCat);
@@ -63,6 +62,11 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     else if (selectedCat === "Komersial") setPropertyType("Ruko");
     else if (selectedCat === "Industri & Logistik") setPropertyType("Gudang");
     else if (selectedCat === "Tanah & Lahan") setPropertyType("Tanah Kavling");
+  };
+
+  // Helper function untuk merender komponen secara fleksibel tanpa memicu error TypeScript
+  const renderForm = (Component: React.ComponentType<any>) => {
+    return <Component onNext={onNext} transactionType={transactionType} />;
   };
 
   return (
@@ -166,47 +170,47 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
       </div>
 
       {/* DYNAMIC FORM RENDERER - HUNIAN */}
-      {propertyType === "Rumah" && <FormRumah onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Apartemen" && <FormApartemen onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Cluster" && <FormCluster onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Townhouse" && <FormTownhouse onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Penthouse" && <FormPenthouse onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Rusun" && <FormRusun onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Kontrakan" && <FormKontrakan onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Rumah" && renderForm(FormRumah)}
+      {propertyType === "Apartemen" && renderForm(FormApartemen)}
+      {propertyType === "Cluster" && renderForm(FormCluster)}
+      {propertyType === "Townhouse" && renderForm(FormTownhouse)}
+      {propertyType === "Penthouse" && renderForm(FormPenthouse)}
+      {propertyType === "Rusun" && renderForm(FormRusun)}
+      {propertyType === "Kontrakan" && renderForm(FormKontrakan)}
 
       {/* DYNAMIC FORM RENDERER - KOMERSIAL */}
-      {propertyType === "Ruko" && <FormRuko onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Kios" && <FormKiosToko onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Gedung Perkantoran" && <FormGedungPerkantoran onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Coworking Space" && <FormCoworkingSpace onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Restoran Cafe" && <FormRestoranCafe onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Hotel Resort" && <FormHotelResort onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Pusat Perbelanjaan" && <FormPusatPerbelanjaan onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Showroom Bengkel" && <FormShowroomBengkel onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Kesehatan Kecantikan" && <FormKesehatanKecantikan onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "SPBU" && <FormSPBU onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tempat Hiburan" && <FormTempatHiburan onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Ruko" && renderForm(FormRuko)}
+      {propertyType === "Kios" && renderForm(FormKiosToko)}
+      {propertyType === "Gedung Perkantoran" && renderForm(FormGedungPerkantoran)}
+      {propertyType === "Coworking Space" && renderForm(FormCoworkingSpace)}
+      {propertyType === "Restoran Cafe" && renderForm(FormRestoranCafe)}
+      {propertyType === "Hotel Resort" && renderForm(FormHotelResort)}
+      {propertyType === "Pusat Perbelanjaan" && renderForm(FormPusatPerbelanjaan)}
+      {propertyType === "Showroom Bengkel" && renderForm(FormShowroomBengkel)}
+      {propertyType === "Kesehatan Kecantikan" && renderForm(FormKesehatanKecantikan)}
+      {propertyType === "SPBU" && renderForm(FormSPBU)}
+      {propertyType === "Tempat Hiburan" && renderForm(FormTempatHiburan)}
 
       {/* DYNAMIC FORM RENDERER - INDUSTRI & LOGISTIK */}
-      {propertyType === "Gudang" && <FormGudang onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Distribution Center" && <FormDistributionCenter onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Logistics Hub" && <FormLogisticsHub onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Cold Storage" && <FormColdStorage onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Pabrik" && <FormPabrik onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Workshop" && <FormWorkshop onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Hanggar" && <FormHanggar onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Dry Port" && <FormDryPort onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Kawasan Industri" && <FormKawasanIndustri onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Gudang" && renderForm(FormGudang)}
+      {propertyType === "Distribution Center" && renderForm(FormDistributionCenter)}
+      {propertyType === "Logistics Hub" && renderForm(FormLogisticsHub)}
+      {propertyType === "Cold Storage" && renderForm(FormColdStorage)}
+      {propertyType === "Pabrik" && renderForm(FormPabrik)}
+      {propertyType === "Workshop" && renderForm(FormWorkshop)}
+      {propertyType === "Hanggar" && renderForm(FormHanggar)}
+      {propertyType === "Dry Port" && renderForm(FormDryPort)}
+      {propertyType === "Kawasan Industri" && renderForm(FormKawasanIndustri)}
 
       {/* DYNAMIC FORM RENDERER - TANAH & LAHAN */}
-      {propertyType === "Tanah Kavling" && <FormTanahKavling onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tanah Komersial" && <FormTanahKomersial onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tanah Industri" && <FormTanahIndustri onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tanah Pertanian" && <FormTanahPertanian onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tanah Perkebunan" && <FormTanahPerkebunan onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tanah Peternakan" && <FormTanahPeternakan onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tanah Perikanan" && <FormTanahPerikanan onNext={onNext} transactionType={transactionType} />}
-      {propertyType === "Tanah Perumahan" && <FormTanahPerumahan onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Kavling" && renderForm(FormTanahKavling)}
+      {propertyType === "Tanah Komersial" && renderForm(FormTanahKomersial)}
+      {propertyType === "Tanah Industri" && renderForm(FormTanahIndustri)}
+      {propertyType === "Tanah Pertanian" && renderForm(FormTanahPertanian)}
+      {propertyType === "Tanah Perkebunan" && renderForm(FormTanahPerkebunan)}
+      {propertyType === "Tanah Peternakan" && renderForm(FormTanahPeternakan)}
+      {propertyType === "Tanah Perikanan" && renderForm(FormTanahPerikanan)}
+      {propertyType === "Tanah Perumahan" && renderForm(FormTanahPerumahan)}
     </div>
   );
-}
+      }
