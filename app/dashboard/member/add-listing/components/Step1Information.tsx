@@ -35,6 +35,16 @@ import FormHanggar from "./step1-forms/industri-logistik/FormHanggar";
 import FormDryPort from "./step1-forms/industri-logistik/FormDryPort";
 import FormKawasanIndustri from "./step1-forms/industri-logistik/FormKawasanIndustri";
 
+// --- IMPORT 8 FORM TANAH & LAHAN ---
+import FormTanahIndustri from "./step1-forms/tanah-lahan/FormTanahIndustri";
+import FormTanahKavling from "./step1-forms/tanah-lahan/FormTanahKavling";
+import FormTanahKomersial from "./step1-forms/tanah-lahan/FormTanahKomersial";
+import FormTanahPerikanan from "./step1-forms/tanah-lahan/FormTanahPerikanan";
+import FormTanahPerkebunan from "./step1-forms/tanah-lahan/FormTanahPerkebunan";
+import FormTanahPertanian from "./step1-forms/tanah-lahan/FormTanahPertanian";
+import FormTanahPerumahan from "./step1-forms/tanah-lahan/FormTanahPerumahan";
+import FormTanahPeternakan from "./step1-forms/tanah-lahan/FormTanahPeternakan";
+
 interface Step1Props {
   onNext: () => void;
   transactionType: string;
@@ -52,7 +62,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     if (selectedCat === "Hunian") setPropertyType("Rumah");
     else if (selectedCat === "Komersial") setPropertyType("Ruko");
     else if (selectedCat === "Industri & Logistik") setPropertyType("Gudang");
-    else if (selectedCat === "Tanah & Lahan") setPropertyType("Tanah");
+    else if (selectedCat === "Tanah & Lahan") setPropertyType("Tanah Kavling");
   };
 
   return (
@@ -140,7 +150,14 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
 
               {category === "Tanah & Lahan" && (
                 <>
-                  <option value="Tanah">Tanah Kavling / Lahan</option>
+                  <option value="Tanah Kavling">Tanah Kavling / Residensial</option>
+                  <option value="Tanah Komersial">Tanah Komersial</option>
+                  <option value="Tanah Industri">Tanah Industri</option>
+                  <option value="Tanah Pertanian">Tanah Pertanian</option>
+                  <option value="Tanah Perkebunan">Tanah Perkebunan</option>
+                  <option value="Tanah Peternakan">Tanah Peternakan</option>
+                  <option value="Tanah Perikanan">Tanah Perikanan</option>
+                  <option value="Tanah Perumahan">Tanah Perumahan / Developer</option>
                 </>
               )}
             </select>
@@ -181,22 +198,15 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
       {propertyType === "Dry Port" && <FormDryPort onNext={onNext} transactionType={transactionType} />}
       {propertyType === "Kawasan Industri" && <FormKawasanIndustri onNext={onNext} transactionType={transactionType} />}
 
-      {/* FALLBACK UNTUK TANAH & LAHAN */}
-      {category === "Tanah & Lahan" && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center text-amber-800 text-xs font-medium space-y-2">
-          <p className="font-bold text-sm">Form Spesifikasi {propertyType}</p>
-          <p>
-            Form spesifikasi untuk <span className="font-bold underline">{propertyType}</span> sedang disiapkan.
-          </p>
-          <button
-            type="button"
-            onClick={onNext}
-            className="mt-2 px-4 py-2 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition"
-          >
-            Lanjut ke Step 2 (Legalitas & Harga) →
-          </button>
-        </div>
-      )}
+      {/* DYNAMIC FORM RENDERER - TANAH & LAHAN */}
+      {propertyType === "Tanah Kavling" && <FormTanahKavling onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Komersial" && <FormTanahKomersial onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Industri" && <FormTanahIndustri onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Pertanian" && <FormTanahPertanian onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Perkebunan" && <FormTanahPerkebunan onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Peternakan" && <FormTanahPeternakan onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Perikanan" && <FormTanahPerikanan onNext={onNext} transactionType={transactionType} />}
+      {propertyType === "Tanah Perumahan" && <FormTanahPerumahan onNext={onNext} transactionType={transactionType} />}
     </div>
   );
-                  }
+}
