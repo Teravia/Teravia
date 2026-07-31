@@ -13,7 +13,6 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
-    // Reset jenis properti saat kategori diubah
     setPropertyType("");
   };
 
@@ -30,9 +29,11 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
             <select
               value={category}
               onChange={handleCategoryChange}
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white font-medium focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white font-medium text-center focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
             >
-              <option value="">&lt;====pilih kategori====&gt;</option>
+              <option value="" disabled hidden className="text-slate-400">
+                Pilih Kategori Properti
+              </option>
               <option value="Hunian">Hunian</option>
               <option value="Komersial">Komersial</option>
               <option value="Tanah / Lahan">Tanah / Lahan</option>
@@ -49,14 +50,16 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
             <select
               value={propertyType}
               onChange={(e) => setPropertyType(e.target.value)}
-              disabled={!category} // Menyala hanya ketika kategori sudah dipilih
-              className={`w-full px-3 py-2.5 rounded-xl border font-medium outline-none transition-all ${
+              disabled={!category}
+              className={`w-full px-3 py-2.5 rounded-xl border font-medium text-center outline-none transition-all ${
                 !category
                   ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed"
-                  : "bg-white border-slate-300 text-slate-900 focus:ring-2 focus:ring-blue-500"
+                  : "bg-white border-slate-300 text-slate-900 focus:ring-2 focus:ring-blue-500 cursor-pointer"
               }`}
             >
-              <option value="">&lt;===Pilih jenis properti===&gt;</option>
+              <option value="" disabled hidden className="text-slate-400">
+                Pilih Jenis Properti
+              </option>
               <option value="Rumah">Rumah</option>
               <option value="Apartemen">Apartemen</option>
               <option value="Penthouse">Penthouse</option>
