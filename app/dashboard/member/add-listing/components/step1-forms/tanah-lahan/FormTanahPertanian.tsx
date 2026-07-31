@@ -602,5 +602,3 @@ export const FormTanahPertanian: React.FC = () => {
     </form>
   );
 };
-
-export default FormTanahPertanian;
