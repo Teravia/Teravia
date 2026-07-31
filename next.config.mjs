@@ -1,11 +1,5 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  }
+  /* konfigurasi Anda */
 };
 
-module.exports = nextConfig;
+module.exports = nextConfig; // <-- Penyebab error
