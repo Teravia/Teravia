@@ -4,27 +4,27 @@ import React, { useState } from "react";
 
 interface Step1Props {
   onNext: () => void;
-  transactionType: string;
+  transactionType?: string;
 }
 
-export default function Step1Information({ onNext, transactionType }: Step1Props) {
+export default function Step1Information({ onNext }: Step1Props) {
   const [listingTitle, setListingTitle] = useState("");
   const [category, setCategory] = useState("");
   const [propertyType, setPropertyType] = useState("");
 
   // ==========================================
-  // STATE SPESIFIKASI RUMAH
+  // STATE SPESIFIKASI RUMAH (LENGKAP)
   // ==========================================
   const [houseForm, setHouseForm] = useState<Record<string, any>>({
-    // Informasi Dasar
+    // 1. Informasi Dasar
     tipeRumah: "",
     kondisiProperti: "",
     statusKepemilikan: "",
     tahunDibangun: "",
     tahunRenovasi: "",
     statusListing: "",
-    
-    // Informasi Bangunan
+
+    // 2. Informasi Bangunan
     luasTanah: "",
     luasBangunan: "",
     jumlahLantai: "",
@@ -44,13 +44,13 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     terasDepan: false,
     terasBelakang: false,
 
-    // Garasi & Parkir
+    // 3. Garasi & Parkir
     garasiMobil: "",
     carport: "",
     parkirMotor: "",
     chargingEV: false,
 
-    // Spesifikasi Bangunan
+    // 4. Spesifikasi Bangunan
     dayaListrik: "",
     sumberAir: "",
     airPanas: false,
@@ -63,7 +63,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     materialDinding: "",
     plafon: "",
 
-    // Fasilitas Rumah
+    // 5. Fasilitas Rumah
     tamanDepan: false,
     tamanBelakang: false,
     kolamRenangPribadi: false,
@@ -77,7 +77,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     ruangKerja: false,
     ruangHobi: false,
 
-    // Keamanan
+    // 6. Keamanan
     oneGateSystem: false,
     security24Jam: false,
     cctv: false,
@@ -86,7 +86,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     smokeDetector: false,
     fireExtinguisher: false,
 
-    // Lingkungan
+    // 7. Lingkungan
     dalamCluster: false,
     dalamPerumahan: false,
     bebasBanjir: false,
@@ -97,7 +97,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     dekatJalanTol: false,
     dekatTransportasiUmum: false,
 
-    // Legalitas
+    // 8. Legalitas
     sertifikat: "",
     shm: false,
     shgb: false,
@@ -106,13 +106,11 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     ajb: false,
     siapKpr: false,
 
-    // Informasi Investasi
+    // 9. Informasi Investasi & Tambahan
     cocokInvestasi: false,
     cocokDisewakan: false,
     potensiCapitalGain: false,
     potensiRentalYield: false,
-
-    // Informasi Tambahan
     furnished: "",
     hadap: "",
     hook: false,
@@ -137,7 +135,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     setPropertyType("");
   };
 
-  // Validasi: Pastikan semua input bertanda (*) / required terisi
+  // Validasi input required
   const isHouseFormValid =
     propertyType === "Rumah"
       ? houseForm.tipeRumah !== "" &&
@@ -158,11 +156,27 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
     }
   };
 
+  // Helper render checkbox aman untuk SWC / JSX Parser
+  const renderCheckbox = (key: string, label: string) => {
+    return (
+      <label key={key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
+        <input
+          type="checkbox"
+          name={key}
+          checked={Boolean(houseForm[key])}
+          onChange={handleHouseFormChange}
+          className="rounded"
+        />
+        <span>{label}</span>
+      </label>
+    );
+  };
+
   return (
     <div className="space-y-6 font-sans">
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         
-        {/* INPUT 1: JUDUL LISTINGAN (REQUIRED) */}
+        {/* INPUT 1: JUDUL LISTINGAN */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
             Judul Listingan <span className="text-red-500">*</span>
@@ -180,7 +194,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
         {/* INPUT 2 & 3: DROPDOWN KATEGORI & JENIS PROPERTI */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           
-          {/* DROP-DOWN 1: KATEGORI PROPERTI (REQUIRED) */}
+          {/* KATEGORI */}
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
               Kategori Properti <span className="text-red-500">*</span>
@@ -191,7 +205,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
               className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white font-medium text-center focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
               required
             >
-              <option value="" disabled hidden className="text-slate-400">
+              <option value="" disabled hidden>
                 Pilih Kategori Properti
               </option>
               <option value="Hunian">Hunian</option>
@@ -202,7 +216,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
             </select>
           </div>
 
-          {/* DROP-DOWN 2: JENIS PROPERTI (REQUIRED) */}
+          {/* JENIS PROPERTI */}
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
               Jenis Properti <span className="text-red-500">*</span>
@@ -218,7 +232,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
               }`}
               required
             >
-              <option value="" disabled hidden className="text-slate-400">
+              <option value="" disabled hidden>
                 Pilih Jenis Properti
               </option>
               <option value="Rumah">Rumah</option>
@@ -232,9 +246,9 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
         </div>
       </div>
 
-      {/* ------------------------------------------------
-                    Spesifikasi Rumah
-      ------------------------------------------------ */}
+      {/* ================================================
+                    SPESIFIKASI DETAIL RUMAH
+      ================================================ */}
       {propertyType === "Rumah" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 text-xs">
           <h3 className="text-sm font-bold text-slate-900 border-b pb-3">
@@ -282,7 +296,7 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
                   <option value="">Pilih Status</option>
                   <option value="Milik Sendiri">Milik Sendiri</option>
                   <option value="Warisan">Warisan</option>
-                  <option value="Dalam Jamina Bank">Dalam Jaminan Bank</option>
+                  <option value="Dalam Jaminan Bank">Dalam Jaminan Bank</option>
                 </select>
               </div>
               <div>
@@ -342,24 +356,17 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
 
             <p className="font-medium mt-2">Ruangan Tersedia:</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { key: "ruangTamu", label: "Ruang Tamu" },
-                { key: "ruangKeluarga", label: "Ruang Keluarga" },
-                { key: "ruangMakan", label: "Ruang Makan" },
-                { key: "dapurBersih", label: "Dapur Bersih" },
-                { key: "dapurKotor", label: "Dapur Kotor" },
-                { key: "gudang", label: "Gudang" },
-                { key: "loteng", label: "Loteng" },
-                { key: "basement", label: "Basement" },
-                { key: "balkon", label: "Balkon" },
-                { key: "terasDepan", label: "Teras Depan" },
-                { key: "terasBelakang", label: "Teras Belakang" },
-              ].map((item) => (
-                <label key={item.key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-                  <input type="checkbox" name={item.key} checked={Boolean(houseForm[item.key])} onChange={handleHouseFormChange} className="rounded" />
-                  <span>{item.label}</span>
-                </label>
-              ))}
+              {renderCheckbox("ruangTamu", "Ruang Tamu")}
+              {renderCheckbox("ruangKeluarga", "Ruang Keluarga")}
+              {renderCheckbox("ruangMakan", "Ruang Makan")}
+              {renderCheckbox("dapurBersih", "Dapur Bersih")}
+              {renderCheckbox("dapurKotor", "Dapur Kotor")}
+              {renderCheckbox("gudang", "Gudang")}
+              {renderCheckbox("loteng", "Loteng")}
+              {renderCheckbox("basement", "Basement")}
+              {renderCheckbox("balkon", "Balkon")}
+              {renderCheckbox("terasDepan", "Teras Depan")}
+              {renderCheckbox("terasBelakang", "Teras Belakang")}
             </div>
           </div>
 
@@ -380,13 +387,10 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
                 <input type="number" name="parkirMotor" value={houseForm.parkirMotor} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl" />
               </div>
             </div>
-            <label className="flex items-center space-x-2 border p-2 rounded-lg w-fit cursor-pointer">
-              <input type="checkbox" name="chargingEV" checked={Boolean(houseForm.chargingEV)} onChange={handleHouseFormChange} className="rounded" />
-              <span>Pengisian Daya Kendaraan Listrik (Charging EV)</span>
-            </label>
+            {renderCheckbox("chargingEV", "Pengisian Daya Kendaraan Listrik (Charging EV)")}
           </div>
 
-          {/* 4. SPESIFIKASI BANGUNAN */}
+          {/* 4. SPESIFIKASI BANGUNAN & MATERIAL */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">4. Spesifikasi Bangunan & Material</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -441,18 +445,11 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { key: "airPanas", label: "Air Panas" },
-                { key: "internetFiber", label: "Internet Fiber" },
-                { key: "tvKabel", label: "TV Kabel" },
-                { key: "teleponRumah", label: "Telepon Rumah" },
-              ].map((item) => (
-                <label key={item.key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-                  <input type="checkbox" name={item.key} checked={Boolean(houseForm[item.key])} onChange={handleHouseFormChange} className="rounded" />
-                  <span>{item.label}</span>
-                </label>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+              {renderCheckbox("airPanas", "Air Panas")}
+              {renderCheckbox("internetFiber", "Internet Fiber")}
+              {renderCheckbox("tvKabel", "TV Kabel")}
+              {renderCheckbox("teleponRumah", "Telepon Rumah")}
             </div>
           </div>
 
@@ -460,25 +457,18 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">5. Fasilitas Rumah</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { key: "tamanDepan", label: "Taman Depan" },
-                { key: "tamanBelakang", label: "Taman Belakang" },
-                { key: "kolamRenangPribadi", label: "Kolam Renang Pribadi" },
-                { key: "gazebo", label: "Gazebo" },
-                { key: "bbqArea", label: "BBQ Area" },
-                { key: "rooftop", label: "Rooftop" },
-                { key: "mushola", label: "Mushola" },
-                { key: "walkInCloset", label: "Walk-in Closet" },
-                { key: "pantry", label: "Pantry" },
-                { key: "laundryRoom", label: "Laundry Room" },
-                { key: "ruangKerja", label: "Ruang Kerja" },
-                { key: "ruangHobi", label: "Ruang Hobi" },
-              ].map((item) => (
-                <label key={item.key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-                  <input type="checkbox" name={item.key} checked={Boolean(houseForm[item.key])} onChange={handleHouseFormChange} className="rounded" />
-                  <span>{item.label}</span>
-                </label>
-              ))}
+              {renderCheckbox("tamanDepan", "Taman Depan")}
+              {renderCheckbox("tamanBelakang", "Taman Belakang")}
+              {renderCheckbox("kolamRenangPribadi", "Kolam Renang Pribadi")}
+              {renderCheckbox("gazebo", "Gazebo")}
+              {renderCheckbox("bbqArea", "BBQ Area")}
+              {renderCheckbox("rooftop", "Rooftop")}
+              {renderCheckbox("mushola", "Mushola")}
+              {renderCheckbox("walkInCloset", "Walk-in Closet")}
+              {renderCheckbox("pantry", "Pantry")}
+              {renderCheckbox("laundryRoom", "Laundry Room")}
+              {renderCheckbox("ruangKerja", "Ruang Kerja")}
+              {renderCheckbox("ruangHobi", "Ruang Hobi")}
             </div>
           </div>
 
@@ -486,63 +476,42 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">6. Keamanan</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { key: "oneGateSystem", label: "One Gate System" },
-                { key: "security24Jam", label: "Security 24 Jam" },
-                { key: "cctv", label: "CCTV" },
-                { key: "smartLock", label: "Smart Lock" },
-                { key: "alarm", label: "Alarm" },
-                { key: "smokeDetector", label: "Smoke Detector" },
-                { key: "fireExtinguisher", label: "Fire Extinguisher" },
-              ].map((item) => (
-                <label key={item.key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-                  <input type="checkbox" name={item.key} checked={Boolean(houseForm[item.key])} onChange={handleHouseFormChange} className="rounded" />
-                  <span>{item.label}</span>
-                </label>
-              ))}
+              {renderCheckbox("oneGateSystem", "One Gate System")}
+              {renderCheckbox("security24Jam", "Security 24 Jam")}
+              {renderCheckbox("cctv", "CCTV")}
+              {renderCheckbox("smartLock", "Smart Lock")}
+              {renderCheckbox("alarm", "Alarm")}
+              {renderCheckbox("smokeDetector", "Smoke Detector")}
+              {renderCheckbox("fireExtinguisher", "Fire Extinguisher")}
             </div>
           </div>
 
-          {/* 7. LINGKUNGAN */}
+          {/* 7. LINGKUNGAN SEKITAR */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">7. Lingkungan Sekitar</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {[
-                { key: "dalamCluster", label: "Dalam Cluster" },
-                { key: "dalamPerumahan", label: "Dalam Perumahan" },
-                { key: "bebasBanjir", label: "Bebas Banjir" },
-                { key: "dekatTaman", label: "Dekat Taman" },
-                { key: "dekatSekolah", label: "Dekat Sekolah" },
-                { key: "dekatRumahSakit", label: "Dekat Rumah Sakit" },
-                { key: "dekatMall", label: "Dekat Mall" },
-                { key: "dekatJalanTol", label: "Dekat Jalan Tol" },
-                { key: "dekatTransportasiUmum", label: "Dekat Transportasi Umum" },
-              ].map((item) => (
-                <label key={item.key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-                  <input type="checkbox" name={item.key} checked={Boolean(houseForm[item.key])} onChange={handleHouseFormChange} className="rounded" />
-                  <span>{item.label}</span>
-                </label>
-              ))}
+              {renderCheckbox("dalamCluster", "Dalam Cluster")}
+              {renderCheckbox("dalamPerumahan", "Dalam Perumahan")}
+              {renderCheckbox("bebasBanjir", "Bebas Banjir")}
+              {renderCheckbox("dekatTaman", "Dekat Taman")}
+              {renderCheckbox("dekatSekolah", "Dekat Sekolah")}
+              {renderCheckbox("dekatRumahSakit", "Dekat Rumah Sakit")}
+              {renderCheckbox("dekatMall", "Dekat Mall")}
+              {renderCheckbox("dekatJalanTol", "Dekat Jalan Tol")}
+              {renderCheckbox("dekatTransportasiUmum", "Dekat Transportasi Umum")}
             </div>
           </div>
 
-          {/* 8. LEGALITAS */}
+          {/* 8. LEGALITAS & DOKUMEN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">8. Legalitas & Dokumen</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { key: "shm", label: "SHM" },
-                { key: "shgb", label: "SHGB" },
-                { key: "imbPbg", label: "IMB / PBG" },
-                { key: "pbb", label: "PBB" },
-                { key: "ajb", label: "AJB" },
-                { key: "siapKpr", label: "Siap KPR" },
-              ].map((item) => (
-                <label key={item.key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-                  <input type="checkbox" name={item.key} checked={Boolean(houseForm[item.key])} onChange={handleHouseFormChange} className="rounded" />
-                  <span>{item.label}</span>
-                </label>
-              ))}
+              {renderCheckbox("shm", "SHM")}
+              {renderCheckbox("shgb", "SHGB")}
+              {renderCheckbox("imbPbg", "IMB / PBG")}
+              {renderCheckbox("pbb", "PBB")}
+              {renderCheckbox("ajb", "AJB")}
+              {renderCheckbox("siapKpr", "Siap KPR")}
             </div>
           </div>
 
@@ -570,64 +539,44 @@ export default function Step1Information({ onNext, transactionType }: Step1Props
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { key: "hook", label: "Posisi Hook" },
-                { key: "smartHome", label: "Fitur Smart Home" },
-                { key: "cocokInvestasi", label: "Cocok Investasi" },
-                { key: "cocokDisewakan", label: "Cocok Disewakan" },
-              ].map((item) => (
-                <label key={item.key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-                  <input type="checkbox" name={item.key} checked={Boolean(houseForm[item.key])} onChange={handleHouseFormChange} className="rounded" />
-                  <span>{item.label}</span>
-                </label>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+              {renderCheckbox("hook", "Posisi Hook")}
+              {renderCheckbox("smartHome", "Fitur Smart Home")}
+              {renderCheckbox("cocokInvestasi", "Cocok Investasi")}
+              {renderCheckbox("cocokDisewakan", "Cocok Disewakan")}
             </div>
-            <div>
+            <div className="mt-2">
               <label className="block font-medium mb-1">Catatan Tambahan</label>
               <textarea name="catatanTambahan" value={houseForm.catatanTambahan} onChange={handleHouseFormChange} rows={3} placeholder="Tambahkan deskripsi atau informasi penting lainnya..." className="w-full p-2.5 border rounded-xl" />
             </div>
           </div>
+
         </div>
       )}
 
-      {/* ------------------------------------------------
-                    Spesifikasi Apartemen
-      ------------------------------------------------ */}
+      {/* OTHER PROPERTY PLACEHOLDERS */}
       {propertyType === "Apartemen" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Apartemen (Siap diisi script)
+          Form Spesifikasi Apartemen
         </div>
       )}
-
-      {/* ------------------------------------------------
-                    Spesifikasi Penthouse
-      ------------------------------------------------ */}
       {propertyType === "Penthouse" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Penthouse (Siap diisi script)
+          Form Spesifikasi Penthouse
         </div>
       )}
-
-      {/* ------------------------------------------------
-                    Spesifikasi Cluster
-      ------------------------------------------------ */}
       {propertyType === "Cluster" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Cluster (Siap diisi script)
+          Form Spesifikasi Cluster
         </div>
       )}
-
-      {/* ------------------------------------------------
-                    Spesifikasi Townhouse
-      ------------------------------------------------ */}
       {propertyType === "Townhouse" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Townhouse (Siap diisi script)
+          Form Spesifikasi Townhouse
         </div>
       )}
 
-      {/* TOMBOL LANJUT DI PALING BAWAH */}
+      {/* BUTTON NEXT */}
       <div className="flex justify-end">
         <button
           type="button"
