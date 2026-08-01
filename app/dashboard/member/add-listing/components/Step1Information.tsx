@@ -7,11 +7,38 @@ interface Step1Props {
   transactionType?: string;
 }
 
+// HELPER FUNCTION DITAROH DI LUAR KOMPONEN (AMAN UNTUK PARSER JSX)
+function RenderCheckboxItem({
+  nameKey,
+  label,
+  checked,
+  onChange,
+}: {
+  nameKey: string;
+  label: string;
+  checked: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <label className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
+      <input
+        type="checkbox"
+        name={nameKey}
+        checked={checked}
+        onChange={onChange}
+        className="rounded"
+      />
+      <span>{label}</span>
+    </label>
+  );
+}
+
 export default function Step1Information({ onNext }: Step1Props) {
   const [listingTitle, setListingTitle] = useState("");
   const [category, setCategory] = useState("");
   const [propertyType, setPropertyType] = useState("");
 
+  // STATE SPESIFIKASI RUMAH
   const [houseForm, setHouseForm] = useState<Record<string, any>>({
     tipeRumah: "",
     kondisiProperti: "",
@@ -135,24 +162,22 @@ export default function Step1Information({ onNext }: Step1Props) {
     }
   };
 
-  const renderCheckbox = (key: string, label: string) => {
-    return (
-      <label key={key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
-        <input
-          type="checkbox"
-          name={key}
-          checked={Boolean(houseForm[key])}
-          onChange={handleHouseFormChange}
-          className="rounded"
-        />
-        <span>{label}</span>
-      </label>
-    );
-  };
+  // Helper pemanggil komponen Checkbox agar sintaks ringkas
+  const chk = (key: string, label: string) => (
+    <RenderCheckboxItem
+      key={key}
+      nameKey={key}
+      label={label}
+      checked={Boolean(houseForm[key])}
+      onChange={handleHouseFormChange}
+    />
+  );
 
   return (
     <div className="space-y-6 font-sans">
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        
+        {/* INPUT 1: JUDUL LISTINGAN */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
             Judul Listingan <span className="text-red-500">*</span>
@@ -167,6 +192,7 @@ export default function Step1Information({ onNext }: Step1Props) {
           />
         </div>
 
+        {/* INPUT 2 & 3: DROPDOWN KATEGORI & JENIS PROPERTI */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
@@ -216,12 +242,15 @@ export default function Step1Information({ onNext }: Step1Props) {
           </div>
         </div>
       </div>
-{propertyType === "Rumah" && (
+
+      {/* SPESIFIKASI DETAIL RUMAH */}
+      {propertyType === "Rumah" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 text-xs">
           <h3 className="text-sm font-bold text-slate-900 border-b pb-3">
             Spesifikasi Detail Rumah
           </h3>
 
+          {/* 1. INFORMASI DASAR */}
           <div className="space-y-3">
             <h4 className="font-semibold text-blue-600">1. Informasi Dasar</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -286,6 +315,7 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
+          {/* 2. INFORMASI BANGUNAN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">2. Informasi Bangunan</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -321,20 +351,21 @@ export default function Step1Information({ onNext }: Step1Props) {
 
             <p className="font-medium mt-2">Ruangan Tersedia:</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {renderCheckbox("ruangTamu", "Ruang Tamu")}
-              {renderCheckbox("ruangKeluarga", "Ruang Keluarga")}
-              {renderCheckbox("ruangMakan", "Ruang Makan")}
-              {renderCheckbox("dapurBersih", "Dapur Bersih")}
-              {renderCheckbox("dapurKotor", "Dapur Kotor")}
-              {renderCheckbox("gudang", "Gudang")}
-              {renderCheckbox("loteng", "Loteng")}
-              {renderCheckbox("basement", "Basement")}
-              {renderCheckbox("balkon", "Balkon")}
-              {renderCheckbox("terasDepan", "Teras Depan")}
-              {renderCheckbox("terasBelakang", "Teras Belakang")}
+              {chk("ruangTamu", "Ruang Tamu")}
+              {chk("ruangKeluarga", "Ruang Keluarga")}
+              {chk("ruangMakan", "Ruang Makan")}
+              {chk("dapurBersih", "Dapur Bersih")}
+              {chk("dapurKotor", "Dapur Kotor")}
+              {chk("gudang", "Gudang")}
+              {chk("loteng", "Loteng")}
+              {chk("basement", "Basement")}
+              {chk("balkon", "Balkon")}
+              {chk("terasDepan", "Teras Depan")}
+              {chk("terasBelakang", "Teras Belakang")}
             </div>
           </div>
 
+          {/* 3. GARASI & PARKIR */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">3. Garasi & Parkir</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -351,9 +382,10 @@ export default function Step1Information({ onNext }: Step1Props) {
                 <input type="number" name="parkirMotor" value={houseForm.parkirMotor} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl" />
               </div>
             </div>
-            {renderCheckbox("chargingEV", "Pengisian Daya Kendaraan Listrik (Charging EV)")}
+            {chk("chargingEV", "Pengisian Daya Kendaraan Listrik (Charging EV)")}
           </div>
 
+          {/* 4. SPESIFIKASI BANGUNAN & MATERIAL */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">4. Spesifikasi Bangunan & Material</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -374,73 +406,111 @@ export default function Step1Information({ onNext }: Step1Props) {
                 <label className="block font-medium mb-1">Jumlah AC</label>
                 <input type="number" name="ac" value={houseForm.ac} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl" />
               </div>
+              <div>
+                <label className="block font-medium mb-1">Material Atap</label>
+                <select name="materialAtap" value={houseForm.materialAtap} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl">
+                  <option value="">Pilih Atap</option>
+                  <option value="Genteng Beton">Genteng Beton</option>
+                  <option value="Genteng Keramik">Genteng Keramik</option>
+                  <option value="Baja Ringan">Baja Ringan</option>
+                  <option value="Metal">Metal</option>
+                  <option value="Dak Beton">Dak Beton</option>
+                </select>
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Material Lantai</label>
+                <select name="materialLantai" value={houseForm.materialLantai} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl">
+                  <option value="">Pilih Lantai</option>
+                  <option value="Keramik">Keramik</option>
+                  <option value="Granit">Granit</option>
+                  <option value="Marmer">Marmer</option>
+                  <option value="Vinyl">Vinyl</option>
+                  <option value="Parket">Parket</option>
+                  <option value="Homogeneous Tile">Homogeneous Tile</option>
+                </select>
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Material Dinding</label>
+                <select name="materialDinding" value={houseForm.materialDinding} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl">
+                  <option value="">Pilih Dinding</option>
+                  <option value="Bata Merah">Bata Merah</option>
+                  <option value="Bata Ringan">Bata Ringan</option>
+                  <option value="Beton">Beton</option>
+                  <option value="Precast">Precast</option>
+                </select>
+              </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
-              {renderCheckbox("airPanas", "Air Panas")}
-              {renderCheckbox("internetFiber", "Internet Fiber")}
-              {renderCheckbox("tvKabel", "TV Kabel")}
-              {renderCheckbox("teleponRumah", "Telepon Rumah")}
+              {chk("airPanas", "Air Panas")}
+              {chk("internetFiber", "Internet Fiber")}
+              {chk("tvKabel", "TV Kabel")}
+              {chk("teleponRumah", "Telepon Rumah")}
             </div>
           </div>
 
+          {/* 5. FASILITAS RUMAH */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">5. Fasilitas Rumah</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {renderCheckbox("tamanDepan", "Taman Depan")}
-              {renderCheckbox("tamanBelakang", "Taman Belakang")}
-              {renderCheckbox("kolamRenangPribadi", "Kolam Renang Pribadi")}
-              {renderCheckbox("gazebo", "Gazebo")}
-              {renderCheckbox("bbqArea", "BBQ Area")}
-              {renderCheckbox("rooftop", "Rooftop")}
-              {renderCheckbox("mushola", "Mushola")}
-              {renderCheckbox("walkInCloset", "Walk-in Closet")}
-              {renderCheckbox("pantry", "Pantry")}
-              {renderCheckbox("laundryRoom", "Laundry Room")}
-              {renderCheckbox("ruangKerja", "Ruang Kerja")}
-              {renderCheckbox("ruangHobi", "Ruang Hobi")}
+              {chk("tamanDepan", "Taman Depan")}
+              {chk("tamanBelakang", "Taman Belakang")}
+              {chk("kolamRenangPribadi", "Kolam Renang Pribadi")}
+              {chk("gazebo", "Gazebo")}
+              {chk("bbqArea", "BBQ Area")}
+              {chk("rooftop", "Rooftop")}
+              {chk("mushola", "Mushola")}
+              {chk("walkInCloset", "Walk-in Closet")}
+              {chk("pantry", "Pantry")}
+              {chk("laundryRoom", "Laundry Room")}
+              {chk("ruangKerja", "Ruang Kerja")}
+              {chk("ruangHobi", "Ruang Hobi")}
             </div>
           </div>
 
+          {/* 6. KEAMANAN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">6. Keamanan</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {renderCheckbox("oneGateSystem", "One Gate System")}
-              {renderCheckbox("security24Jam", "Security 24 Jam")}
-              {renderCheckbox("cctv", "CCTV")}
-              {renderCheckbox("smartLock", "Smart Lock")}
-              {renderCheckbox("alarm", "Alarm")}
-              {renderCheckbox("smokeDetector", "Smoke Detector")}
-              {renderCheckbox("fireExtinguisher", "Fire Extinguisher")}
+              {chk("oneGateSystem", "One Gate System")}
+              {chk("security24Jam", "Security 24 Jam")}
+              {chk("cctv", "CCTV")}
+              {chk("smartLock", "Smart Lock")}
+              {chk("alarm", "Alarm")}
+              {chk("smokeDetector", "Smoke Detector")}
+              {chk("fireExtinguisher", "Fire Extinguisher")}
             </div>
           </div>
 
+          {/* 7. LINGKUNGAN SEKITAR */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">7. Lingkungan Sekitar</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {renderCheckbox("dalamCluster", "Dalam Cluster")}
-              {renderCheckbox("dalamPerumahan", "Dalam Perumahan")}
-              {renderCheckbox("bebasBanjir", "Bebas Banjir")}
-              {renderCheckbox("dekatTaman", "Dekat Taman")}
-              {renderCheckbox("dekatSekolah", "Dekat Sekolah")}
-              {renderCheckbox("dekatRumahSakit", "Dekat Rumah Sakit")}
-              {renderCheckbox("dekatMall", "Dekat Mall")}
-              {renderCheckbox("dekatJalanTol", "Dekat Jalan Tol")}
-              {renderCheckbox("dekatTransportasiUmum", "Dekat Transportasi Umum")}
+              {chk("dalamCluster", "Dalam Cluster")}
+              {chk("dalamPerumahan", "Dalam Perumahan")}
+              {chk("bebasBanjir", "Bebas Banjir")}
+              {chk("dekatTaman", "Dekat Taman")}
+              {chk("dekatSekolah", "Dekat Sekolah")}
+              {chk("dekatRumahSakit", "Dekat Rumah Sakit")}
+              {chk("dekatMall", "Dekat Mall")}
+              {chk("dekatJalanTol", "Dekat Jalan Tol")}
+              {chk("dekatTransportasiUmum", "Dekat Transportasi Umum")}
             </div>
           </div>
 
+          {/* 8. LEGALITAS & DOKUMEN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">8. Legalitas & Dokumen</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {renderCheckbox("shm", "SHM")}
-              {renderCheckbox("shgb", "SHGB")}
-              {renderCheckbox("imbPbg", "IMB / PBG")}
-              {renderCheckbox("pbb", "PBB")}
-              {renderCheckbox("ajb", "AJB")}
-              {renderCheckbox("siapKpr", "Siap KPR")}
+              {chk("shm", "SHM")}
+              {chk("shgb", "SHGB")}
+              {chk("imbPbg", "IMB / PBG")}
+              {chk("pbb", "PBB")}
+              {chk("ajb", "AJB")}
+              {chk("siapKpr", "Siap KPR")}
             </div>
           </div>
 
+          {/* 9. INFORMASI INVESTASI & TAMBAHAN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">9. Informasi Investasi & Tambahan</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -465,19 +535,43 @@ export default function Step1Information({ onNext }: Step1Props) {
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
-              {renderCheckbox("hook", "Posisi Hook")}
-              {renderCheckbox("smartHome", "Fitur Smart Home")}
-              {renderCheckbox("cocokInvestasi", "Cocok Investasi")}
-              {renderCheckbox("cocokDisewakan", "Cocok Disewakan")}
+              {chk("hook", "Posisi Hook")}
+              {chk("smartHome", "Fitur Smart Home")}
+              {chk("cocokInvestasi", "Cocok Investasi")}
+              {chk("cocokDisewakan", "Cocok Disewakan")}
             </div>
             <div className="mt-2">
               <label className="block font-medium mb-1">Catatan Tambahan</label>
               <textarea name="catatanTambahan" value={houseForm.catatanTambahan} onChange={handleHouseFormChange} rows={3} placeholder="Tambahkan deskripsi atau informasi penting lainnya..." className="w-full p-2.5 border rounded-xl" />
             </div>
           </div>
+
         </div>
       )}
 
+      {/* PLACEHOLDERS UNTUK PROPERTI LAIN */}
+      {propertyType === "Apartemen" && (
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
+          Form Spesifikasi Apartemen
+        </div>
+      )}
+      {propertyType === "Penthouse" && (
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
+          Form Spesifikasi Penthouse
+        </div>
+      )}
+      {propertyType === "Cluster" && (
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
+          Form Spesifikasi Cluster
+        </div>
+      )}
+      {propertyType === "Townhouse" && (
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
+          Form Spesifikasi Townhouse
+        </div>
+      )}
+
+      {/* TOMBOL NEXT */}
       <div className="flex justify-end">
         <button
           type="button"
