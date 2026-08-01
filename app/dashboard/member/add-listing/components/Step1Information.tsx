@@ -199,7 +199,12 @@ export default function Step1Information({
               }`}
             >
               <option value="">-- Pilih Jenis --</option>
-              {kategori === "Hunian" && <option value="Rumah">Rumah</option>}
+              {kategori === "Hunian" && (
+                <>
+                  <option value="Rumah">Rumah</option>
+                  <option value="Apartemen">Apartemen</option>
+                </>
+              )}
             </select>
             {errors.jenisProperti && (
               <p className="text-red-500 text-[10px] font-medium mt-1">
