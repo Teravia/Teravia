@@ -74,7 +74,8 @@ export default function Step1Information({
   };
 
   // Ambil struktur section detail dari configs/index.ts
-  const dynamicSections: SectionConfig[] | undefined = CONFIG[jenisProperti];
+  const dynamicSections: SectionConfig[] | undefined =
+    CONFIG[kategori]?.[jenisProperti];
 
   return (
     <div className="space-y-6 font-sans">
@@ -365,4 +366,4 @@ function DynamicFieldRenderer({
       )}
     </div>
   );
-  }
+}
