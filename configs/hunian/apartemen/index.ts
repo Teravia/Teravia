@@ -14,7 +14,6 @@ import utilitas from "./utilitas";
 import biayaRutin from "./biaya-rutin";
 import investasi from "./investasi";
 import lingkungan from "./lingkungan";
-import media from "./media";
 import informasiTambahan from "./informasi-tambahan";
 
 const apartemen = [
@@ -32,9 +31,9 @@ const apartemen = [
   ...(Array.isArray(biayaRutin) ? biayaRutin : [biayaRutin]),
   ...(Array.isArray(investasi) ? investasi : [investasi]),
   ...(Array.isArray(lingkungan) ? lingkungan : [lingkungan]),
-  ...(Array.isArray(media) ? media : [media]),
   ...(Array.isArray(informasiTambahan) ? informasiTambahan : [informasiTambahan]),
 ].filter(Boolean);
 
 export default apartemen;
+
 
