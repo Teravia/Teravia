@@ -33,6 +33,16 @@ export default function Step1Information({
   // State Error Validation
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // State Accordion - section pertama terbuka secara default
+  const [openSections, setOpenSections] = useState<Record<number, boolean>>({ 0: true });
+
+  const toggleSection = (idx: number) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [idx]: !(prev[idx] ?? idx === 0),
+    }));
+  };
+
   // Reset Jenis Properti jika Kategori diubah
   const handleKategoriChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
@@ -176,6 +186,7 @@ export default function Step1Information({
               disabled={!kategori}
               onChange={(e) => {
                 setJenisProperti(e.target.value);
+                setOpenSections({ 0: true });
                 if (errors.jenisProperti)
                   setErrors((prev) => ({ ...prev, jenisProperti: "" }));
               }}
@@ -199,34 +210,66 @@ export default function Step1Information({
         </div>
       </div>
 
-      {/* 4. DETAIL SPESIFIKASI DINAMIS DARI CONFIG */}
+      {/* 4. DETAIL SPESIFIKASI DINAMIS DARI CONFIG (ACCORDION) */}
       {jenisProperti && dynamicSections && dynamicSections.length > 0 && (
-        <div className="space-y-6">
-          {dynamicSections.map((section, sectionIdx) => (
-            <div
-              key={sectionIdx}
-              className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4"
-            >
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b pb-2">
-                {section.title}
-              </h3>
+        <div className="space-y-4">
+          {dynamicSections.map((section, sectionIdx) => {
+            const isOpen = openSections[sectionIdx] ?? sectionIdx === 0;
+            return (
+              <div
+                key={sectionIdx}
+                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleSection(sectionIdx)}
+                  className="w-full flex items-center justify-between text-left pb-2 border-b border-slate-100"
+                >
+                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                    {section.title}
+                  </h3>
+                  <svg
+                    className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-300 ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {section.fields?.map((field, fieldIdx) => {
-                  const fieldKey = `s${sectionIdx}_f${fieldIdx}`;
-                  return (
-                    <DynamicFieldRenderer
-                      key={fieldKey}
-                      fieldKey={fieldKey}
-                      field={field}
-                      value={detailData[fieldKey]}
-                      onChange={(val) => handleDetailFieldChange(fieldKey, val)}
-                    />
-                  );
-                })}
+                <div
+                  className={`grid transition-all duration-300 ease-in-out ${
+                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div
+                      className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ${
+                        isOpen ? "pt-4" : ""
+                      }`}
+                    >
+                      {section.fields?.map((field, fieldIdx) => {
+                        const fieldKey = `s${sectionIdx}_f${fieldIdx}`;
+                        return (
+                          <DynamicFieldRenderer
+                            key={fieldKey}
+                            fieldKey={fieldKey}
+                            field={field}
+                            value={detailData[fieldKey]}
+                            onChange={(val) => handleDetailFieldChange(fieldKey, val)}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -510,4 +553,4 @@ function DynamicFieldRenderer({
     </div>
   );
 }
-            
+      
