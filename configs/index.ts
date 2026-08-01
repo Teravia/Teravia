@@ -1,16 +1,11 @@
 // configs/index.ts
 
 import hunian from "./hunian";
-import komersial from "./komersial";
-import industri from "./industri";
-import tanah from "./tanah";
+
 
 const propertyConfigs = {
   categories: [
     hunian,
-    komersial,
-    industri,
-    tanah,
   ],
 
   getCategory(categoryId: string) {
