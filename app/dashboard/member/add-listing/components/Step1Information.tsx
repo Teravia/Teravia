@@ -291,11 +291,17 @@ function DynamicFieldRenderer({
           className={baseInputClass}
         >
           <option value="">Pilih {field.label}</option>
-          {(field.options || []).map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
+{(field.options || []).map((opt, optIdx) => {
+  const optValue = typeof opt === "object" && opt !== null ? opt.value : opt;
+  const optLabel = typeof opt === "object" && opt !== null ? opt.label : opt;
+  const optKey = `${optValue}_${optIdx}`;
+
+  return (
+    <option key={optKey} value={optValue}>
+      {optLabel}
+    </option>
+  );
+})}
         </select>
       )}
 
