@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  swcMinify: false, // Mematikan SWC Minifier agar tidak Segmentation fault di Termux
+  swcMinify: true, // Mematikan SWC Minifier agar tidak Segmentation fault di Termux
   /* konfigurasi kamu yang lain jika ada */
 };
 
