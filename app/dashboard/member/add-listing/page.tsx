@@ -52,15 +52,13 @@ export default function AddListingPage() {
           </div>
         </div>
 
-        {/* STEPPER BAR NAVIGASI */}
+        {/* STEPPER BAR NAVIGASI (READ-ONLY INDICATOR) */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
           <div className="grid grid-cols-4 gap-2 text-center">
             
             {/* Step 1 Indicator */}
-            <button
-              type="button"
-              onClick={() => setCurrentStep(1)}
-              className={`flex flex-col items-center cursor-pointer transition-all focus:outline-none ${
+            <div
+              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
                 currentStep >= 1 ? "opacity-100" : "opacity-40"
               }`}
             >
@@ -78,13 +76,11 @@ export default function AddListingPage() {
               <span className={`text-[11px] mt-1 ${currentStep === 1 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
                 Informasi & Detail
               </span>
-            </button>
+            </div>
 
             {/* Step 2 Indicator */}
-            <button
-              type="button"
-              onClick={() => setCurrentStep(2)}
-              className={`flex flex-col items-center cursor-pointer transition-all focus:outline-none ${
+            <div
+              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
                 currentStep >= 2 ? "opacity-100" : "opacity-40"
               }`}
             >
@@ -102,13 +98,11 @@ export default function AddListingPage() {
               <span className={`text-[11px] mt-1 ${currentStep === 2 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
                 Legalitas & Harga
               </span>
-            </button>
+            </div>
 
             {/* Step 3 Indicator */}
-            <button
-              type="button"
-              onClick={() => setCurrentStep(3)}
-              className={`flex flex-col items-center cursor-pointer transition-all focus:outline-none ${
+            <div
+              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
                 currentStep >= 3 ? "opacity-100" : "opacity-40"
               }`}
             >
@@ -126,13 +120,11 @@ export default function AddListingPage() {
               <span className={`text-[11px] mt-1 ${currentStep === 3 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
                 Lokasi & Peta
               </span>
-            </button>
+            </div>
 
             {/* Step 4 Indicator */}
-            <button
-              type="button"
-              onClick={() => setCurrentStep(4)}
-              className={`flex flex-col items-center cursor-pointer transition-all focus:outline-none ${
+            <div
+              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
                 currentStep === 4 ? "opacity-100" : "opacity-40"
               }`}
             >
@@ -148,7 +140,7 @@ export default function AddListingPage() {
               <span className={`text-[11px] mt-1 ${currentStep === 4 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
                 Full Preview
               </span>
-            </button>
+            </div>
 
           </div>
         </div>
@@ -188,4 +180,4 @@ export default function AddListingPage() {
       </div>
     </div>
   );
-                }
+}
