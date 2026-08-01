@@ -1009,10 +1009,358 @@ const handleApartmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelec
   {/* 10. LEGALITAS */}
   <div className="space-y-4 pt-4 border-t">
     <h4 className="font-semibold text-blue-600 text-base">10. Legalitas</h4>
+{/* ======================================================================== */}
+{/* SPESIFIKASI DETAIL APARTEMEN                                             */}
+{/* ======================================================================== */}
+<div className="space-y-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+  <h3 className="text-xl font-bold text-gray-800 border-b pb-3">Spesifikasi Detail Apartemen</h3>
+
+  {/* 1. INFORMASI DASAR */}
+  <div className="space-y-4">
+    <h4 className="font-semibold text-blue-600 text-base">1. Informasi Dasar</h4>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Judul Iklan *</label>
+        <input type="text" name="judulIklan" value={apartmentForm.judulIklan} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Jenis Transaksi *</label>
+        <select name="jenisTransaksi" value={apartmentForm.jenisTransaksi} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required>
+          <option value="" disabled>Pilih Jenis Transaksi</option>
+          <option value="Jual">Jual</option>
+          <option value="Sewa">Sewa</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Nama Apartemen *</label>
+        <input type="text" name="namaApartemen" value={apartmentForm.namaApartemen} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Tower *</label>
+        <input type="text" name="tower" value={apartmentForm.tower} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Nomor Unit *</label>
+        <input type="text" name="nomorUnit" value={apartmentForm.nomorUnit} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Developer</label>
+        <input type="text" name="developer" value={apartmentForm.developer} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Kondisi Properti *</label>
+        <select name="kondisiProperti" value={apartmentForm.kondisiProperti} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required>
+          <option value="" disabled>Pilih Kondisi Properti</option>
+          <option value="Baru">Baru</option>
+          <option value="Sangat Baik">Sangat Baik</option>
+          <option value="Baik">Baik</option>
+          <option value="Perlu Renovasi Ringan">Perlu Renovasi Ringan</option>
+          <option value="Perlu Renovasi Total">Perlu Renovasi Total</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Status Kepemilikan *</label>
+        <select name="statusKepemilikan" value={apartmentForm.statusKepemilikan} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required>
+          <option value="" disabled>Pilih Status Kepemilikan</option>
+          <option value="Milik Sendiri">Milik Sendiri</option>
+          <option value="Sewa">Sewa</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  {/* 2. INFORMASI UNIT */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">2. Informasi Unit</h4>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Luas Unit (m²) *</label>
+        <input type="number" name="luasUnit" value={apartmentForm.luasUnit} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Tipe Unit *</label>
+        <select name="tipeUnit" value={apartmentForm.tipeUnit} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required>
+          <option value="" disabled>Pilih Tipe Unit</option>
+          <option value="Studio">Studio</option>
+          <option value="1 Bedroom">1 Bedroom</option>
+          <option value="2 Bedroom">2 Bedroom</option>
+          <option value="3 Bedroom">3 Bedroom</option>
+          <option value="4 Bedroom">4 Bedroom</option>
+          <option value="Penthouse">Penthouse</option>
+          <option value="Duplex">Duplex</option>
+          <option value="Loft">Loft</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Lantai *</label>
+        <input type="number" name="lantai" value={apartmentForm.lantai} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Jumlah Kamar Tidur *</label>
+        <input type="number" name="kamarTidur" value={apartmentForm.kamarTidur} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Jumlah Kamar Mandi *</label>
+        <input type="number" name="kamarMandi" value={apartmentForm.kamarMandi} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Kamar Mandi Dalam</label>
+        <input type="number" name="kamarMandiDalam" value={apartmentForm.kamarMandiDalam} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Ceiling Height (m)</label>
+        <input type="number" step="0.1" name="ceilingHeight" value={apartmentForm.ceilingHeight} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Luas Balkon (m²)</label>
+        <input type="number" name="luasBalkon" value={apartmentForm.luasBalkon} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Arah Hadap</label>
+        <select name="arahHadap" value={apartmentForm.arahHadap} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled>Pilih Arah Hadap</option>
+          <option value="Utara">Utara</option>
+          <option value="Selatan">Selatan</option>
+          <option value="Timur">Timur</option>
+          <option value="Barat">Barat</option>
+          <option value="Barat Daya">Barat Daya</option>
+          <option value="Barat Laut">Barat Laut</option>
+          <option value="Tenggara">Tenggara</option>
+          <option value="Timur Laut">Timur Laut</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">View Unit</label>
+        <select name="viewUnit" value={apartmentForm.viewUnit} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled>Pilih View Unit</option>
+          <option value="City View">City View</option>
+          <option value="Pool View">Pool View</option>
+          <option value="Garden View">Garden View</option>
+          <option value="Mountain View">Mountain View</option>
+          <option value="Sea View">Sea View</option>
+          <option value="Lake View">Lake View</option>
+          <option value="River View">River View</option>
+          <option value="Golf View">Golf View</option>
+        </select>
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-3 pt-2">
+      <CheckboxItem label="Balkon" name="balkon" checked={apartmentForm.balkon} onChange={handleApartmentChange} />
+      <CheckboxItem label="Corner Unit" name="cornerUnit" checked={apartmentForm.cornerUnit} onChange={handleApartmentChange} />
+    </div>
+  </div>
+
+  {/* 3. RUANGAN */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">3. Ruangan</h4>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Living Room", name: "livingRoom" },
+        { label: "Dining Area", name: "diningArea" },
+        { label: "Pantry", name: "pantry" },
+        { label: "Kitchen Set", name: "kitchenSetRuangan" },
+        { label: "Walk-in Closet", name: "walkInCloset" },
+        { label: "Storage Room", name: "storageRoom" },
+        { label: "Laundry Area", name: "laundryArea" },
+        { label: "Maid Room", name: "maidRoom" },
+        { label: "Maid Bathroom", name: "maidBathroom" },
+        { label: "Workspace", name: "workspace" },
+        { label: "Study Room", name: "studyRoom" },
+      ].map((item) => (
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
+      ))}
+    </div>
+  </div>
+
+  {/* 4. FURNITUR & INTERIOR */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">4. Furnitur & Interior</h4>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Furnished</label>
+        <select name="furnished" value={apartmentForm.furnished} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled>Pilih Furnished</option>
+          <option value="Fully Furnished">Fully Furnished</option>
+          <option value="Semi Furnished">Semi Furnished</option>
+          <option value="Unfurnished">Unfurnished</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">AC (Jumlah)</label>
+        <input type="number" name="ac" value={apartmentForm.ac} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Water Heater", name: "waterHeater" },
+        { label: "Kitchen Set", name: "kitchenSetFurniture" },
+        { label: "Lemari Built-in", name: "lemariBuiltIn" },
+        { label: "Sofa", name: "sofa" },
+        { label: "Dining Set", name: "diningSet" },
+        { label: "Tempat Tidur", name: "tempatTidur" },
+        { label: "Kulkas", name: "kulkas" },
+        { label: "Mesin Cuci", name: "mesinCuci" },
+        { label: "Microwave", name: "microwave" },
+        { label: "TV", name: "tv" },
+        { label: "Smart Home", name: "smartHome" },
+        { label: "Smart Door Lock", name: "smartDoorLock" },
+      ].map((item) => (
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
+      ))}
+    </div>
+  </div>
+
+  {/* 5. FASILITAS APARTEMEN */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">5. Fasilitas Apartemen</h4>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Lobby", name: "lobby" },
+        { label: "Reception", name: "reception" },
+        { label: "Lift Penumpang", name: "liftPenumpang" },
+        { label: "Lift Service", name: "liftService" },
+        { label: "Swimming Pool", name: "swimmingPool" },
+        { label: "Children's Pool", name: "childrensPool" },
+        { label: "Gym", name: "gym" },
+        { label: "Sauna", name: "sauna" },
+        { label: "Jacuzzi", name: "jacuzzi" },
+        { label: "Playground", name: "playground" },
+        { label: "Jogging Track", name: "joggingTrack" },
+        { label: "Tennis Court", name: "tennisCourt" },
+        { label: "Basketball Court", name: "basketballCourt" },
+        { label: "Function Hall", name: "functionHall" },
+        { label: "Meeting Room", name: "meetingRoom" },
+        { label: "Co-Working Space", name: "coWorkingSpace" },
+        { label: "Mini Market", name: "miniMarket" },
+        { label: "ATM Center", name: "atmCenter" },
+        { label: "Laundry Service", name: "laundryService" },
+        { label: "Cafe", name: "cafe" },
+        { label: "Restaurant", name: "restaurant" },
+        { label: "Sky Garden", name: "skyGarden" },
+        { label: "Rooftop Garden", name: "rooftopGarden" },
+        { label: "BBQ Area", name: "bbqArea" },
+      ].map((item) => (
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
+      ))}
+    </div>
+  </div>
+
+  {/* 6. PARKIR */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">6. Parkir</h4>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Jumlah Slot Parkir</label>
+        <input type="number" name="jumlahSlotParkir" value={apartmentForm.jumlahSlotParkir} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div className="grid grid-cols-1 gap-2">
+        <CheckboxItem label="Hak Parkir" name="hakParkir" checked={apartmentForm.hakParkir} onChange={handleApartmentChange} />
+        <CheckboxItem label="Parkir Motor" name="parkirMotor" checked={apartmentForm.parkirMotor} onChange={handleApartmentChange} />
+        <CheckboxItem label="Parkir Tamu" name="parkirTamu" checked={apartmentForm.parkirTamu} onChange={handleApartmentChange} />
+      </div>
+    </div>
+  </div>
+
+  {/* 7. UTILITAS */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">7. Utilitas</h4>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Daya Listrik (Watt)</label>
+        <input type="number" name="dayaListrik" value={apartmentForm.dayaListrik} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+    </div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Air PDAM", name: "airPdam" },
+        { label: "Internet Fiber", name: "internetFiber" },
+        { label: "TV Kabel", name: "tvKabel" },
+        { label: "Interkom", name: "interkom" },
+        { label: "Smoke Detector", name: "smokeDetector" },
+        { label: "Sprinkler", name: "sprinkler" },
+        { label: "Fire Alarm", name: "fireAlarm" },
+        { label: "Genset", name: "genset" },
+      ].map((item) => (
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
+      ))}
+    </div>
+  </div>
+
+  {/* 8. KEAMANAN */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">8. Keamanan</h4>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {[
+        { label: "Security 24 Jam", name: "security24Jam" },
+        { label: "CCTV", name: "cctv" },
+        { label: "Access Card", name: "accessCard" },
+        { label: "Face Recognition", name: "faceRecognition" },
+        { label: "Visitor Management", name: "visitorManagement" },
+        { label: "Video Intercom", name: "videoIntercom" },
+        { label: "Emergency Exit", name: "emergencyExit" },
+      ].map((item) => (
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
+      ))}
+    </div>
+  </div>
+
+  {/* 9. BIAYA PENGELOLAAN */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">9. Biaya Pengelolaan</h4>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">IPL / Service Charge (Rp/Bulan)</label>
+        <input type="number" name="iplServiceCharge" value={apartmentForm.iplServiceCharge} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Sinking Fund (Rp/Bulan)</label>
+        <input type="number" name="sinkingFund" value={apartmentForm.sinkingFund} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Biaya Parkir (Rp/Bulan)</label>
+        <input type="number" name="biayaParkir" value={apartmentForm.biayaParkir} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" />
+      </div>
+    </div>
+  </div>
+
+  {/* 10. LEGALITAS */}
+  <div className="space-y-4 pt-4 border-t">
+    <h4 className="font-semibold text-blue-600 text-base">10. Legalitas</h4>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
       <div>
         <label className="block text-sm font-medium text-gray-700">Sertifikat</label>
-        <select className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" defaultValue="">
+        <select name="sertifikat" value={apartmentForm.sertifikat} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500">
           <option value="" disabled>Pilih Sertifikat</option>
           <option value="SHMSRS">SHMSRS</option>
           <option value="PPJB">PPJB</option>
@@ -1023,11 +1371,19 @@ const handleApartmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelec
       </div>
     </div>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {["SHMSRS", "PPJB", "AJB", "Bisa KPA"].map((item) => (
-        <label key={item} className="flex items-center space-x-2 border rounded p-2 text-sm cursor-pointer hover:bg-gray-50">
-          <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-          <span className="text-gray-700">{item}</span>
-        </label>
+      {[
+        { label: "SHMSRS", name: "shmsrs" },
+        { label: "PPJB", name: "ppjb" },
+        { label: "AJB", name: "ajb" },
+        { label: "Bisa KPA", name: "bisaKpa" },
+      ].map((item) => (
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
       ))}
     </div>
   </div>
@@ -1037,14 +1393,26 @@ const handleApartmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelec
     <h4 className="font-semibold text-blue-600 text-base">11. Lokasi & Akses</h4>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {[
-        "Dekat MRT", "Dekat LRT", "Dekat Stasiun", "Dekat Halte Bus",
-        "Dekat Jalan Tol", "Dekat Bandara", "Dekat Mall", "Dekat Rumah Sakit",
-        "Dekat Sekolah", "Dekat Universitas", "Dekat Perkantoran", "Dekat Pusat Bisnis"
+        { label: "Dekat MRT", name: "dekatMrt" },
+        { label: "Dekat LRT", name: "dekatLrt" },
+        { label: "Dekat Stasiun", name: "dekatStasiun" },
+        { label: "Dekat Halte Bus", name: "dekatHalteBus" },
+        { label: "Dekat Jalan Tol", name: "dekatJalanTol" },
+        { label: "Dekat Bandara", name: "dekatBandara" },
+        { label: "Dekat Mall", name: "dekatMall" },
+        { label: "Dekat Rumah Sakit", name: "dekatRumahSakit" },
+        { label: "Dekat Sekolah", name: "dekatSekolah" },
+        { label: "Dekat Universitas", name: "dekatUniversitas" },
+        { label: "Dekat Perkantoran", name: "dekatPerkantoran" },
+        { label: "Dekat Pusat Bisnis", name: "dekatPusatBisnis" },
       ].map((item) => (
-        <label key={item} className="flex items-center space-x-2 border rounded p-2 text-sm cursor-pointer hover:bg-gray-50">
-          <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-          <span className="text-gray-700">{item}</span>
-        </label>
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
       ))}
     </div>
   </div>
@@ -1054,13 +1422,20 @@ const handleApartmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelec
     <h4 className="font-semibold text-blue-600 text-base">12. Informasi Lingkungan</h4>
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
       {[
-        "Pet Friendly", "Bebas Banjir", "Kawasan Premium",
-        "Cocok untuk Investasi", "Cocok untuk Disewakan", "Cocok untuk Tinggal"
+        { label: "Pet Friendly", name: "petFriendly" },
+        { label: "Bebas Banjir", name: "bebasBanjir" },
+        { label: "Kawasan Premium", name: "kawasanPremium" },
+        { label: "Cocok untuk Investasi", name: "cocokInvestasi" },
+        { label: "Cocok untuk Disewakan", name: "cocokDisewakan" },
+        { label: "Cocok untuk Tinggal", name: "cocokTinggal" },
       ].map((item) => (
-        <label key={item} className="flex items-center space-x-2 border rounded p-2 text-sm cursor-pointer hover:bg-gray-50">
-          <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-          <span className="text-gray-700">{item}</span>
-        </label>
+        <CheckboxItem
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          checked={apartmentForm[item.name]}
+          onChange={handleApartmentChange}
+        />
       ))}
     </div>
   </div>
@@ -1071,7 +1446,7 @@ const handleApartmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelec
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
       <div>
         <label className="block text-sm font-medium text-gray-700">Status Unit</label>
-        <select className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" defaultValue="">
+        <select name="statusUnit" value={apartmentForm.statusUnit} onChange={handleApartmentChange} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500">
           <option value="" disabled>Pilih Status Unit</option>
           <option value="Kosong">Kosong</option>
           <option value="Siap Huni">Siap Huni</option>
@@ -1080,25 +1455,19 @@ const handleApartmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelec
           <option value="Booking">Booking</option>
         </select>
       </div>
-      <div className="flex items-center space-x-4 pt-6">
-        <label className="flex items-center space-x-2 cursor-pointer">
-          <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-          <span className="text-sm text-gray-700">Sedang Disewakan</span>
-        </label>
-        <label className="flex items-center space-x-2 cursor-pointer">
-          <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-          <span className="text-sm text-gray-700">Siap Huni</span>
-        </label>
+      <div className="grid grid-cols-2 gap-3 pt-6">
+        <CheckboxItem label="Sedang Disewakan" name="sedangDisewakan" checked={apartmentForm.sedangDisewakan} onChange={handleApartmentChange} />
+        <CheckboxItem label="Siap Huni" name="siapHuni" checked={apartmentForm.siapHuni} onChange={handleApartmentChange} />
       </div>
     </div>
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700">Alasan Dijual</label>
-        <textarea rows={3} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" placeholder="Masukkan alasan dijual..."></textarea>
+        <textarea name="alasanDijual" value={apartmentForm.alasanDijual} onChange={handleApartmentChange} rows={3} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" placeholder="Masukkan alasan dijual..."></textarea>
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">Catatan Tambahan</label>
-        <textarea rows={3} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" placeholder="Masukkan catatan tambahan..."></textarea>
+        <textarea name="catatanTambahan" value={apartmentForm.catatanTambahan} onChange={handleApartmentChange} rows={3} className="mt-1 w-full rounded-md border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500" placeholder="Masukkan catatan tambahan..."></textarea>
       </div>
     </div>
   </div>
