@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
 // 1. TAMBAHKAN IMPORT NAVBAR DI SINI
 import Navbar from "@/components/Navbar"; 
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Teravia - Marketplace Properti Terpercaya",
@@ -19,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={inter.className}>
+      <body className="font-sans antialiased">
         
         {/* 2. PASANG NAVBAR DI SINI (Di atas {children}) */}
         <Navbar />
