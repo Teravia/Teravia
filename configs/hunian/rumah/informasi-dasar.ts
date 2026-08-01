@@ -7,27 +7,6 @@ const informasiDasar = {
 
   fields: [
     {
-      id: "listing_title",
-      label: "Judul Iklan",
-      type: "text",
-      required: true,
-      placeholder: "Contoh: Dijual Rumah Minimalis Siap Huni di Bogor",
-      maxLength: 120,
-    },
-
-    {
-      id: "listing_type",
-      label: "Tujuan Listing",
-      type: "radio",
-      required: true,
-      options: [
-        "Dijual",
-        "Disewakan",
-        "Dijual & Disewakan",
-      ],
-    },
-
-    {
       id: "property_category",
       label: "Kategori Properti",
       type: "hidden",
@@ -108,14 +87,6 @@ const informasiDasar = {
         "PPJB",
         "Lainnya",
       ],
-    },
-
-    {
-      id: "property_code",
-      label: "Kode Properti",
-      type: "text",
-      required: false,
-      placeholder: "Auto Generate / Manual",
     },
 
     {
