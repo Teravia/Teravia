@@ -12,19 +12,13 @@ export default function Step1Information({ onNext }: Step1Props) {
   const [category, setCategory] = useState("");
   const [propertyType, setPropertyType] = useState("");
 
-  // ==========================================
-  // STATE SPESIFIKASI RUMAH (LENGKAP)
-  // ==========================================
   const [houseForm, setHouseForm] = useState<Record<string, any>>({
-    // 1. Informasi Dasar
     tipeRumah: "",
     kondisiProperti: "",
     statusKepemilikan: "",
     tahunDibangun: "",
     tahunRenovasi: "",
     statusListing: "",
-
-    // 2. Informasi Bangunan
     luasTanah: "",
     luasBangunan: "",
     jumlahLantai: "",
@@ -43,14 +37,10 @@ export default function Step1Information({ onNext }: Step1Props) {
     balkon: false,
     terasDepan: false,
     terasBelakang: false,
-
-    // 3. Garasi & Parkir
     garasiMobil: "",
     carport: "",
     parkirMotor: "",
     chargingEV: false,
-
-    // 4. Spesifikasi Bangunan
     dayaListrik: "",
     sumberAir: "",
     airPanas: false,
@@ -62,8 +52,6 @@ export default function Step1Information({ onNext }: Step1Props) {
     materialLantai: "",
     materialDinding: "",
     plafon: "",
-
-    // 5. Fasilitas Rumah
     tamanDepan: false,
     tamanBelakang: false,
     kolamRenangPribadi: false,
@@ -76,8 +64,6 @@ export default function Step1Information({ onNext }: Step1Props) {
     laundryRoom: false,
     ruangKerja: false,
     ruangHobi: false,
-
-    // 6. Keamanan
     oneGateSystem: false,
     security24Jam: false,
     cctv: false,
@@ -85,8 +71,6 @@ export default function Step1Information({ onNext }: Step1Props) {
     alarm: false,
     smokeDetector: false,
     fireExtinguisher: false,
-
-    // 7. Lingkungan
     dalamCluster: false,
     dalamPerumahan: false,
     bebasBanjir: false,
@@ -96,8 +80,6 @@ export default function Step1Information({ onNext }: Step1Props) {
     dekatMall: false,
     dekatJalanTol: false,
     dekatTransportasiUmum: false,
-
-    // 8. Legalitas
     sertifikat: "",
     shm: false,
     shgb: false,
@@ -105,8 +87,6 @@ export default function Step1Information({ onNext }: Step1Props) {
     pbb: false,
     ajb: false,
     siapKpr: false,
-
-    // 9. Informasi Investasi & Tambahan
     cocokInvestasi: false,
     cocokDisewakan: false,
     potensiCapitalGain: false,
@@ -135,7 +115,6 @@ export default function Step1Information({ onNext }: Step1Props) {
     setPropertyType("");
   };
 
-  // Validasi input required
   const isHouseFormValid =
     propertyType === "Rumah"
       ? houseForm.tipeRumah !== "" &&
@@ -156,7 +135,6 @@ export default function Step1Information({ onNext }: Step1Props) {
     }
   };
 
-  // Helper render checkbox aman untuk SWC / JSX Parser
   const renderCheckbox = (key: string, label: string) => {
     return (
       <label key={key} className="flex items-center space-x-2 border p-2 rounded-lg cursor-pointer hover:bg-slate-50">
@@ -175,8 +153,6 @@ export default function Step1Information({ onNext }: Step1Props) {
   return (
     <div className="space-y-6 font-sans">
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-        
-        {/* INPUT 1: JUDUL LISTINGAN */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
             Judul Listingan <span className="text-red-500">*</span>
@@ -191,10 +167,7 @@ export default function Step1Information({ onNext }: Step1Props) {
           />
         </div>
 
-        {/* INPUT 2 & 3: DROPDOWN KATEGORI & JENIS PROPERTI */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          
-          {/* KATEGORI */}
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
               Kategori Properti <span className="text-red-500">*</span>
@@ -216,7 +189,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </select>
           </div>
 
-          {/* JENIS PROPERTI */}
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
               Jenis Properti <span className="text-red-500">*</span>
@@ -242,20 +214,14 @@ export default function Step1Information({ onNext }: Step1Props) {
               <option value="Townhouse">Townhouse</option>
             </select>
           </div>
-
         </div>
       </div>
-
-      {/* ================================================
-                    SPESIFIKASI DETAIL RUMAH
-      ================================================ */}
-      {propertyType === "Rumah" && (
+{propertyType === "Rumah" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 text-xs">
           <h3 className="text-sm font-bold text-slate-900 border-b pb-3">
             Spesifikasi Detail Rumah
           </h3>
 
-          {/* 1. INFORMASI DASAR */}
           <div className="space-y-3">
             <h4 className="font-semibold text-blue-600">1. Informasi Dasar</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -320,7 +286,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
-          {/* 2. INFORMASI BANGUNAN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">2. Informasi Bangunan</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -370,7 +335,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
-          {/* 3. GARASI & PARKIR */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">3. Garasi & Parkir</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -390,7 +354,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             {renderCheckbox("chargingEV", "Pengisian Daya Kendaraan Listrik (Charging EV)")}
           </div>
 
-          {/* 4. SPESIFIKASI BANGUNAN & MATERIAL */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">4. Spesifikasi Bangunan & Material</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -411,39 +374,6 @@ export default function Step1Information({ onNext }: Step1Props) {
                 <label className="block font-medium mb-1">Jumlah AC</label>
                 <input type="number" name="ac" value={houseForm.ac} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl" />
               </div>
-              <div>
-                <label className="block font-medium mb-1">Material Atap</label>
-                <select name="materialAtap" value={houseForm.materialAtap} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl">
-                  <option value="">Pilih Atap</option>
-                  <option value="Genteng Beton">Genteng Beton</option>
-                  <option value="Genteng Keramik">Genteng Keramik</option>
-                  <option value="Baja Ringan">Baja Ringan</option>
-                  <option value="Metal">Metal</option>
-                  <option value="Dak Beton">Dak Beton</option>
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Material Lantai</label>
-                <select name="materialLantai" value={houseForm.materialLantai} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl">
-                  <option value="">Pilih Lantai</option>
-                  <option value="Keramik">Keramik</option>
-                  <option value="Granit">Granit</option>
-                  <option value="Marmer">Marmer</option>
-                  <option value="Vinyl">Vinyl</option>
-                  <option value="Parket">Parket</option>
-                  <option value="Homogeneous Tile">Homogeneous Tile</option>
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Material Dinding</label>
-                <select name="materialDinding" value={houseForm.materialDinding} onChange={handleHouseFormChange} className="w-full p-2.5 border rounded-xl">
-                  <option value="">Pilih Dinding</option>
-                  <option value="Bata Merah">Bata Merah</option>
-                  <option value="Bata Ringan">Bata Ringan</option>
-                  <option value="Beton">Beton</option>
-                  <option value="Precast">Precast</option>
-                </select>
-              </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
               {renderCheckbox("airPanas", "Air Panas")}
@@ -453,7 +383,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
-          {/* 5. FASILITAS RUMAH */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">5. Fasilitas Rumah</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -472,7 +401,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
-          {/* 6. KEAMANAN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">6. Keamanan</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -486,7 +414,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
-          {/* 7. LINGKUNGAN SEKITAR */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">7. Lingkungan Sekitar</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -502,7 +429,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
-          {/* 8. LEGALITAS & DOKUMEN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">8. Legalitas & Dokumen</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -515,7 +441,6 @@ export default function Step1Information({ onNext }: Step1Props) {
             </div>
           </div>
 
-          {/* 9. INFORMASI INVESTASI & TAMBAHAN */}
           <div className="space-y-3 pt-3 border-t">
             <h4 className="font-semibold text-blue-600">9. Informasi Investasi & Tambahan</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -550,33 +475,9 @@ export default function Step1Information({ onNext }: Step1Props) {
               <textarea name="catatanTambahan" value={houseForm.catatanTambahan} onChange={handleHouseFormChange} rows={3} placeholder="Tambahkan deskripsi atau informasi penting lainnya..." className="w-full p-2.5 border rounded-xl" />
             </div>
           </div>
-
         </div>
       )}
 
-      {/* OTHER PROPERTY PLACEHOLDERS */}
-      {propertyType === "Apartemen" && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Apartemen
-        </div>
-      )}
-      {propertyType === "Penthouse" && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Penthouse
-        </div>
-      )}
-      {propertyType === "Cluster" && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Cluster
-        </div>
-      )}
-      {propertyType === "Townhouse" && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500 text-center py-8">
-          Form Spesifikasi Townhouse
-        </div>
-      )}
-
-      {/* BUTTON NEXT */}
       <div className="flex justify-end">
         <button
           type="button"
