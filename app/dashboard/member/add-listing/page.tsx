@@ -4,30 +4,39 @@ import React, { useState } from "react";
 import Step1Information from "./components/Step1Information";
 import Step2Pricing from "./components/Step2Pricing";
 import Step3Location from "./components/Step3Location";
-import Step4Preview from "./components/Step4Preview";
+import Step4Media from "./components/Step4Media";
+import Step5Preview from "./components/Step5Preview";
+
+const STEPS = [
+  { number: 1, label: "Informasi Properti" },
+  { number: 2, label: "Harga" },
+  { number: 3, label: "Lokasi" },
+  { number: 4, label: "Upload Media" },
+  { number: 5, label: "Preview" },
+];
 
 export default function AddListingPage() {
-  // --- STATE UTAMA (PARENT) ---
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [transactionType, setTransactionType] = useState<"Jual" | "Sewa" | "Take Over" | "Lelang">("Jual");
-
-  // State terpusat untuk menyimpan seluruh payload listing dari Step 1 - 3 (Siap dikirim saat submit di Step 4)
   const [formData, setFormData] = useState<Record<string, any>>({});
 
-  // --- HANDLER NAVIGASI STEP ---
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 5));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
-  // Handler update data dari sub-form
   const updateFormData = (newData: Record<string, any>) => {
     setFormData((prev) => ({ ...prev, ...newData }));
+  };
+
+  const handlePublish = () => {
+    console.log("Submit Payload ke API:", formData);
+    alert("Listing Berhasil Dipublikasikan!");
   };
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-6">
 
-        {/* STATUS TRANSAKSI (STICKY) */}
+        {/* STATUS TRANSAKSI */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-3 sticky top-4 z-30 backdrop-blur-md bg-white/95 transition-all">
           <div className="flex flex-wrap gap-2 justify-between items-center">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider px-2">
@@ -52,113 +61,62 @@ export default function AddListingPage() {
           </div>
         </div>
 
-        {/* STEPPER BAR NAVIGASI (READ-ONLY INDICATOR) */}
+        {/* STEPPER BAR (5 STEPS - READ ONLY) */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-          <div className="grid grid-cols-4 gap-2 text-center">
-            
-            {/* Step 1 Indicator */}
-            <div
-              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
-                currentStep >= 1 ? "opacity-100" : "opacity-40"
-              }`}
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
-                  currentStep === 1
-                    ? "bg-blue-600 text-white ring-4 ring-blue-100"
-                    : currentStep > 1
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 text-slate-600"
-                }`}
-              >
-                {currentStep > 1 ? "✓" : "1"}
-              </div>
-              <span className={`text-[11px] mt-1 ${currentStep === 1 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
-                Informasi & Detail
-              </span>
-            </div>
+          <div className="grid grid-cols-5 gap-1 sm:gap-2 text-center">
+            {STEPS.map((step) => {
+              const isActive = currentStep === step.number;
+              const isPassed = currentStep > step.number;
 
-            {/* Step 2 Indicator */}
-            <div
-              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
-                currentStep >= 2 ? "opacity-100" : "opacity-40"
-              }`}
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
-                  currentStep === 2
-                    ? "bg-blue-600 text-white ring-4 ring-blue-100"
-                    : currentStep > 2
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 text-slate-600"
-                }`}
-              >
-                {currentStep > 2 ? "✓" : "2"}
-              </div>
-              <span className={`text-[11px] mt-1 ${currentStep === 2 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
-                Legalitas & Harga
-              </span>
-            </div>
-
-            {/* Step 3 Indicator */}
-            <div
-              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
-                currentStep >= 3 ? "opacity-100" : "opacity-40"
-              }`}
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
-                  currentStep === 3
-                    ? "bg-blue-600 text-white ring-4 ring-blue-100"
-                    : currentStep > 3
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 text-slate-600"
-                }`}
-              >
-                {currentStep > 3 ? "✓" : "3"}
-              </div>
-              <span className={`text-[11px] mt-1 ${currentStep === 3 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
-                Lokasi & Peta
-              </span>
-            </div>
-
-            {/* Step 4 Indicator */}
-            <div
-              className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
-                currentStep === 4 ? "opacity-100" : "opacity-40"
-              }`}
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
-                  currentStep === 4
-                    ? "bg-blue-600 text-white ring-4 ring-blue-100"
-                    : "bg-slate-200 text-slate-600"
-                }`}
-              >
-                4
-              </div>
-              <span className={`text-[11px] mt-1 ${currentStep === 4 ? "font-bold text-blue-600" : "font-medium text-slate-600"}`}>
-                Full Preview
-              </span>
-            </div>
-
+              return (
+                <div
+                  key={step.number}
+                  className={`flex flex-col items-center select-none pointer-events-none cursor-default transition-all ${
+                    currentStep >= step.number ? "opacity-100" : "opacity-40"
+                  }`}
+                >
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all ${
+                      isActive
+                        ? "bg-blue-600 text-white ring-4 ring-blue-100"
+                        : isPassed
+                        ? "bg-emerald-600 text-white"
+                        : "bg-slate-200 text-slate-600"
+                    }`}
+                  >
+                    {isPassed ? "✓" : step.number}
+                  </div>
+                  <span
+                    className={`text-[10px] sm:text-[11px] mt-1 text-center leading-tight ${
+                      isActive ? "font-bold text-blue-600" : "font-medium text-slate-600"
+                    }`}
+                  >
+                    {step.label}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* RENDERING KONTEN STEP */}
+        {/* RENDER STEP */}
         <div className="transition-all duration-300">
           {currentStep === 1 && (
             <Step1Information
               transactionType={transactionType}
               onNext={nextStep}
+              updateFormData={updateFormData}
+              initialData={formData}
             />
           )}
 
           {currentStep === 2 && (
             <Step2Pricing
+              transactionType={transactionType}
               onNext={nextStep}
               onPrev={prevStep}
-              transactionType={transactionType}
+              updateFormData={updateFormData}
+              initialData={formData}
             />
           )}
 
@@ -166,12 +124,25 @@ export default function AddListingPage() {
             <Step3Location
               onNext={nextStep}
               onPrev={prevStep}
+              updateFormData={updateFormData}
+              initialData={formData}
             />
           )}
 
           {currentStep === 4 && (
-            <Step4Preview
+            <Step4Media
+              onNext={nextStep}
               onPrev={prevStep}
+              updateFormData={updateFormData}
+              initialData={formData}
+            />
+          )}
+
+          {currentStep === 5 && (
+            <Step5Preview
+              onPrev={prevStep}
+              onPublish={handlePublish}
+              formData={formData}
               transactionType={transactionType}
             />
           )}
