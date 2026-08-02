@@ -1,0 +1,80 @@
+// configs/hunian/cluster/spesifikasi-bangunan.ts
+
+const spesifikasiBangunan = {
+  id: "spesifikasi-bangunan",
+  title: "Spesifikasi Bangunan",
+  description: "Detail ukuran, ruangan, dan material rumah cluster.",
+
+  fields: [
+    { id: "land_area", label: "Luas Tanah", type: "number", required: true, suffix: "m2" },
+    { id: "building_area", label: "Luas Bangunan", type: "number", required: true, suffix: "m2" },
+    { id: "building_width", label: "Lebar Bangunan", type: "number", required: false, suffix: "m" },
+    { id: "building_length", label: "Panjang Bangunan", type: "number", required: false, suffix: "m" },
+    { id: "facade_width", label: "Lebar Muka", type: "number", required: false, suffix: "m" },
+    { id: "land_length", label: "Panjang Tanah", type: "number", required: false, suffix: "m" },
+    { id: "floor_count", label: "Jumlah Lantai", type: "select", required: true, options: ["1", "2", "3", "4+"] },
+    { id: "bedroom_count", label: "Kamar Tidur", type: "number", required: true },
+    { id: "maid_bedroom_count", label: "Kamar Tidur Pembantu", type: "number", required: false },
+    { id: "bathroom_count", label: "Kamar Mandi", type: "number", required: true },
+    { id: "maid_bathroom_count", label: "Kamar Mandi Pembantu", type: "number", required: false },
+
+    { id: "living_room", label: "Ruang Tamu", type: "checkbox", required: false },
+    { id: "family_room", label: "Ruang Keluarga", type: "checkbox", required: false },
+    { id: "dining_room", label: "Ruang Makan", type: "checkbox", required: false },
+    { id: "office_room", label: "Ruang Kerja", type: "checkbox", required: false },
+    { id: "prayer_room", label: "Ruang Ibadah", type: "checkbox", required: false },
+    { id: "clean_kitchen", label: "Dapur Bersih", type: "checkbox", required: false },
+    { id: "dirty_kitchen", label: "Dapur Kotor", type: "checkbox", required: false },
+    { id: "pantry", label: "Pantry", type: "checkbox", required: false },
+    { id: "laundry_room", label: "Laundry Room", type: "checkbox", required: false },
+    { id: "storage_room", label: "Gudang", type: "checkbox", required: false },
+    { id: "walk_in_closet", label: "Walk In Closet", type: "checkbox", required: false },
+    { id: "balcony", label: "Balkon", type: "checkbox", required: false },
+    { id: "front_terrace", label: "Teras Depan", type: "checkbox", required: false },
+    { id: "back_terrace", label: "Teras Belakang", type: "checkbox", required: false },
+    { id: "front_garden", label: "Taman Depan", type: "checkbox", required: false },
+    { id: "back_garden", label: "Taman Belakang", type: "checkbox", required: false },
+    { id: "private_pool", label: "Kolam Renang Pribadi", type: "checkbox", required: false },
+    { id: "gazebo", label: "Gazebo", type: "checkbox", required: false },
+
+    { id: "electrical_power", label: "Daya Listrik", type: "number", required: true, suffix: "Watt" },
+    {
+      id: "water_source",
+      label: "Sumber Air",
+      type: "select",
+      required: false,
+      options: ["PDAM", "Sumur Bor", "Tandon Cluster"],
+    },
+    {
+      id: "roof_material",
+      label: "Material Atap",
+      type: "select",
+      required: false,
+      options: ["Genteng Beton", "Genteng Keramik", "Genteng Metal", "Asbes", "Spandek"],
+    },
+    {
+      id: "wall_material",
+      label: "Material Dinding",
+      type: "select",
+      required: false,
+      options: ["Bata Merah", "Bata Ringan (Hebel)", "Panel Beton"],
+    },
+    {
+      id: "floor_material",
+      label: "Material Lantai",
+      type: "select",
+      required: false,
+      options: ["Keramik", "Granit", "Marmer", "Vinyl", "Parket"],
+    },
+    {
+      id: "ceiling_material",
+      label: "Material Plafon",
+      type: "select",
+      required: false,
+      options: ["Gypsum", "GRC", "Triplek", "PVC"],
+    },
+    { id: "ceiling_height", label: "Tinggi Plafon", type: "number", required: false, suffix: "m" },
+  ],
+};
+
+export default spesifikasiBangunan;
