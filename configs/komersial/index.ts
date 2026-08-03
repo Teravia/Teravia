@@ -7,4 +7,3 @@ const komersial: Record<string, any> = {
 };
 
 export default komersial;
-
