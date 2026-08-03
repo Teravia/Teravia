@@ -170,6 +170,7 @@ export default function Step1Information({
             >
               <option value="">-- Pilih Kategori --</option>
               <option value="Hunian">Hunian</option>
+              <option value="Komersial">Komersial</option>
             </select>
             {errors.kategori && (
               <p className="text-red-500 text-[10px] font-medium mt-1">{errors.kategori}</p>
@@ -209,6 +210,11 @@ export default function Step1Information({
                   <option value="Rusun">Rusun</option>
                   <option value="Kost">Kost</option>
                   <option value="Villa">Villa</option>
+                </>
+              )}
+              {kategori === "Komersial" && (
+                <>
+                  <option value="Ruko/Rukan">Ruko / Rukan</option>
                 </>
               )}
             </select>
