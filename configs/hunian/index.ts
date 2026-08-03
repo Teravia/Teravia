@@ -3,6 +3,7 @@ import apartemen from "./apartemen";
 import cluster from "./cluster";
 import kontrakan from "./kontrakan";
 import penthouse from "./penthouse";
+import rusun from "./rusun";
 
 const hunian: Record<string, any> = {
   Rumah: rumah,
@@ -10,6 +11,7 @@ const hunian: Record<string, any> = {
   Cluster: cluster,
   Kontrakan: kontrakan,
   Penthouse: penthouse,
+  Rusun: rusun,
 };
 
 export default hunian;
