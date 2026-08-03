@@ -207,6 +207,7 @@ export default function Step1Information({
                   <option value="Kontrakan">Kontrakan</option>
                   <option value="Penthouse">Penthouse</option>
                   <option value="Rusun">Rusun</option>
+                  <option value="Kost">Kost</option>
                 </>
               )}
             </select>
