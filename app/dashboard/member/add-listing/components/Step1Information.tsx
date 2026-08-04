@@ -215,6 +215,7 @@ export default function Step1Information({
               {kategori === "Komersial" && (
                 <>
                   <option value="Ruko/Rukan">Ruko / Rukan</option>
+                  <option value="Office Space">Office Space</option>
                 </>
               )}
             </select>
