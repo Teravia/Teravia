@@ -216,6 +216,7 @@ export default function Step1Information({
                 <>
                   <option value="Ruko/Rukan">Ruko / Rukan</option>
                   <option value="Office Space">Office Space</option>
+                  <option value="Toko/Kios">Toko / Kios</option>
                 </>
               )}
             </select>
