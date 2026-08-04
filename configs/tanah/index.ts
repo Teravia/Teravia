@@ -1,9 +1,9 @@
 // configs/tanah/index.ts
 
-import kavling from "./tanah-kavling";
+import kavling from "./kavling";
 
 const tanah: Record<string, any> = {
-  Tanah-Kavling: tanah-kavling,
+  Kavling: kavling,
 };
 
 export default tanah;
