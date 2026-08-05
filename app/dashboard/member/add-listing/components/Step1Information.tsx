@@ -84,8 +84,10 @@ export default function Step1Information({
   };
 
   // Ambil struktur section detail dari configs/index.ts
-  const dynamicSections: SectionConfig[] | undefined =
-    CONFIG[kategori]?.[jenisProperti];
+  const dynamicConfig = CONFIG[kategori]?.[jenisProperti];
+  const dynamicSections: SectionConfig[] | undefined = Array.isArray(dynamicConfig)
+    ? dynamicConfig
+    : dynamicConfig?.sections;
 
   return (
     <div className="space-y-6 font-sans">
@@ -218,6 +220,7 @@ export default function Step1Information({
                   <option value="Ruko/Rukan">Ruko / Rukan</option>
                   <option value="Office Space">Office Space</option>
                   <option value="Toko/Kios">Toko / Kios</option>
+                  <option value="Gedung Perkantoran">Gedung Perkantoran</option>
                 </>
               )}
               {kategori === "Tanah" && (
@@ -281,7 +284,7 @@ export default function Step1Information({
                       }`}
                     >
                       {section.fields?.map((field, fieldIdx) => {
-                        const fieldKey = `s${sectionIdx}_f${fieldIdx}`;
+                        const fieldKey = field.id || `s${sectionIdx}_f${fieldIdx}`;
                         return (
                           <DynamicFieldRenderer
                             key={fieldKey}
@@ -339,7 +342,7 @@ function DynamicFieldRenderer({
     return null;
   }
 
-  // Field Boolean / Checkbox (dukung kedua nama type)
+  // Field Boolean / Checkbox Tunggal
   if (field.type === "boolean" || field.type === "checkbox") {
     return (
       <div className="flex items-center gap-2 pt-6 min-h-[2.5rem]">
@@ -395,8 +398,8 @@ function DynamicFieldRenderer({
     );
   }
 
-  // Field Multiselect (pilih lebih dari satu, mis. Sumber Air, Material Lantai)
-  if (field.type === "multiselect") {
+  // Field Multiselect & Checkbox Group (Pilihan Banyak)
+  if (field.type === "multiselect" || field.type === "checkbox_group") {
     const options = field.options || [];
     const selected: string[] = Array.isArray(value) ? value : [];
     const toggleOption = (optValue: string) => {
@@ -424,7 +427,7 @@ function DynamicFieldRenderer({
                 onClick={() => toggleOption(optValue)}
                 className={`px-3 py-1.5 rounded-lg border text-[11px] font-semibold transition-all ${
                   active
-                    ? "bg-blue-50 border-blue-600 text-blue-600"
+                    ? "bg-blue-50 border-blue-600 text-blue-600 shadow-sm"
                     : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -506,17 +509,17 @@ function DynamicFieldRenderer({
           className={baseInputClass}
         >
           <option value="">Pilih {field.label}</option>
-{(field.options || []).map((opt, optIdx) => {
-  const optValue = typeof opt === "object" && opt !== null ? opt.value : opt;
-  const optLabel = typeof opt === "object" && opt !== null ? opt.label : opt;
-  const optKey = `${optValue}_${optIdx}`;
+          {(field.options || []).map((opt, optIdx) => {
+            const optValue = typeof opt === "object" && opt !== null ? opt.value : opt;
+            const optLabel = typeof opt === "object" && opt !== null ? opt.label : opt;
+            const optKey = `${optValue}_${optIdx}`;
 
-  return (
-    <option key={optKey} value={optValue}>
-      {optLabel}
-    </option>
-  );
-})}
+            return (
+              <option key={optKey} value={optValue}>
+                {optLabel}
+              </option>
+            );
+          })}
         </select>
       )}
 
@@ -527,7 +530,7 @@ function DynamicFieldRenderer({
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
           className={baseInputClass}
-          placeholder={`Masukkan ${field.label}`}
+          placeholder={field.placeholder || `Masukkan ${field.label}`}
         />
       )}
 
@@ -538,7 +541,7 @@ function DynamicFieldRenderer({
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
           className={baseInputClass}
-          placeholder="0"
+          placeholder={field.placeholder || "0"}
         />
       )}
 
@@ -553,7 +556,7 @@ function DynamicFieldRenderer({
             value={value ?? ""}
             onChange={(e) => onChange(e.target.value)}
             className={`${baseInputClass} pl-9`}
-            placeholder="0"
+            placeholder={field.placeholder || "0"}
           />
         </div>
       )}
@@ -575,9 +578,9 @@ function DynamicFieldRenderer({
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
           className={baseInputClass}
-          placeholder={`Masukkan ${field.label}`}
+          placeholder={field.placeholder || `Masukkan ${field.label}`}
         />
       )}
     </div>
   );
-  }
+}
