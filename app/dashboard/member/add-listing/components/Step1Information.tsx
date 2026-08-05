@@ -224,6 +224,8 @@ export default function Step1Information({
                 <>
                   <option value="Kavling">Kavling</option>
                   <option value="Sawah">Sawah</option>
+                  <option value="Kebun">Kebun</option>
+                  <option value="Peternakan">Peternakan</option>
                 </>
               )}
             </select>
