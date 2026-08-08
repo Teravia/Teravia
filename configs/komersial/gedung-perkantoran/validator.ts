@@ -1,46 +1,43 @@
 // configs/komersial/gedung-perkantoran/validator.ts
+//
+// Helper untuk memvalidasi field wajib (required) pada section
+// spesifikasi gedung perkantoran. Key error mengikuti konvensi
+// fieldKey yang dipakai di Step1Information.tsx: `s{sectionIdx}_f{fieldIdx}`.
+//
+// PENTING: validator ini sengaja TIDAK pakai library eksternal (zod, dll).
+// Data field disimpan dengan key generik "s{sectionIdx}_f{fieldIdx}"
+// (bukan nama id field seperti "building_name"), karena field-nya
+// dirender dinamis dari array section di index.ts. Skema berbasis nama
+// field langsung (title, building_name, dst) tidak akan pernah cocok
+// dengan struktur data ini.
 
-import { z } from "zod";
+import gedungPerkantoran from "./index";
 
-export const gedungPerkantoranSchema = z.object({
-  // Informasi Dasar
-  title: z.string().min(5, "Judul listing minimal 5 karakter"),
-  transaction_type: z.enum(["jual", "sewa", "jual_sewa"], {
-    required_error: "Tipe transaksi harus dipilih",
-  }),
-  price: z.number().positive("Harga harus berupa angka positif"),
+export function validateGedungPerkantoranDetail(
+  detailData: Record<string, any>
+): Record<string, string> {
+  const errors: Record<string, string> = {};
 
-  // Informasi Gedung
-  building_name: z.string().min(2, "Nama gedung wajib diisi"),
-  developer_name: z.string().optional(),
-  building_management: z.string().optional(),
-  year_built: z.number().int().min(1800).max(new Date().getFullYear()).optional(),
-  occupancy_rate: z.number().min(0).max(100).optional(),
+  gedungPerkantoran.forEach((section: any, sectionIdx: number) => {
+    section.fields?.forEach((field: any, fieldIdx: number) => {
+      if (!field.required) return;
 
-  // Spesifikasi Gedung
-  land_area: z.number().positive("Luas tanah harus positif"),
-  building_area: z.number().positive("Luas bangunan harus positif"),
-  total_floors: z.number().int().positive("Jumlah lantai harus positif"),
+      const fieldKey = `s${sectionIdx}_f${fieldIdx}`;
+      const value = detailData[fieldKey];
 
-  // Parkir & Fasilitas
-  car_parking_capacity: z.number().int().nonnegative().optional(),
-  motorcycle_parking_capacity: z.number().int().nonnegative().optional(),
-  building_facilities: z.array(z.string()).optional(),
+      const isEmpty =
+        value === undefined ||
+        value === null ||
+        value === "" ||
+        (Array.isArray(value) && value.length === 0);
 
-  // Keamanan & Utilitas
-  security_features: z.array(z.string()).optional(),
-  fire_safety: z.array(z.string()).optional(),
-  water_source: z.array(z.string()).optional(),
+      if (isEmpty) {
+        errors[fieldKey] = `${field.label} wajib diisi`;
+      }
+    });
+  });
 
-  // Legalitas
-  certificate_type: z.string().min(1, "Jenis sertifikat/legalitas wajib dipilih"),
-  building_approval_permit: z.boolean().optional(),
-});
+  return errors;
+}
 
-export type GedungPerkantoranInput = z.infer<typeof gedungPerkantoranSchema>;
-
-export const validateGedungPerkantoran = (data: unknown) => {
-  return gedungPerkantoranSchema.safeParse(data);
-};
-
-export default validateGedungPerkantoran;
+export default validateGedungPerkantoranDetail;
