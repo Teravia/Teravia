@@ -56,13 +56,29 @@ const INITIAL_PENDING_MEMBERS = [
 ];
 
 export default function AdminDashboardPage() {
+  // Authentication State for Tester
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+
+  // Navigation State
   const [activeTab, setActiveTab] = useState<"overview" | "listings" | "members">(
     "overview"
   );
 
-  // States
+  // States Data
   const [listings, setListings] = useState(INITIAL_PENDING_LISTINGS);
   const [members, setMembers] = useState(INITIAL_PENDING_MEMBERS);
+
+  // Auth Handler
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (adminEmail === "admin@teravia.co.id" && adminPassword === "admin123") {
+      setIsAuthenticated(true);
+    } else {
+      alert("⚠️ Email atau Password Admin Salah! Gunakan admin@teravia.co.id & admin123");
+    }
+  };
 
   // Action Handlers
   const handleApproveListing = (id: string) => {
@@ -88,6 +104,80 @@ export default function AdminDashboardPage() {
     alert(`❌ Permohonan membership ${id} ditolak.`);
   };
 
+  // TAMPILAN 1: TAMPILAN LOGIN JIKA BELUM TER-AUTHENTICATE
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans">
+        <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full space-y-6">
+          <div className="text-center space-y-2">
+            <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-md tracking-wider">
+              ADMIN PANEL
+            </span>
+            <h1 className="text-xl font-extrabold text-slate-900">
+              Masuk Dashboard Admin
+            </h1>
+            <p className="text-xs text-slate-500">
+              Khusus pengelola & tim internal Teravia
+            </p>
+          </div>
+
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Email Admin
+              </label>
+              <input
+                type="email"
+                required
+                placeholder="admin@teravia.co.id"
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 outline-none text-slate-800"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 outline-none text-slate-800"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-md cursor-pointer"
+            >
+              Masuk ke Dashboard
+            </button>
+          </form>
+
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-500 space-y-0.5">
+            <div className="font-bold text-slate-700">Credential Tester:</div>
+            <div>Email: <code className="text-blue-600">admin@teravia.co.id</code></div>
+            <div>Pass: <code className="text-blue-600">admin123</code></div>
+          </div>
+
+          <div className="text-center border-t border-slate-100 pt-3">
+            <Link
+              href="/"
+              className="text-xs font-bold text-slate-400 hover:text-slate-600 transition"
+            >
+              ← Kembali ke Website Utama
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // TAMPILAN 2: TAMPILAN UTAMA DASHBOARD ADMIN (SESUDAH LOGIN)
   return (
     <div className="min-h-screen bg-slate-100 font-sans">
       {/* Top Navigation Admin Bar */}
@@ -102,15 +192,15 @@ export default function AdminDashboardPage() {
             </h1>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-xs text-slate-400">
-              Superadmin: <strong className="text-slate-200">admin@teravia.co.id</strong>
+            <span className="text-xs text-slate-400 hidden sm:inline">
+              Superadmin: <strong className="text-slate-200">{adminEmail}</strong>
             </span>
-            <Link
-              href="/"
-              className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition"
+            <button
+              onClick={() => setIsAuthenticated(false)}
+              className="text-xs bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-lg transition cursor-pointer"
             >
-              Lihat Website ↗
-            </Link>
+              Keluar 🚪
+            </button>
           </div>
         </div>
       </header>
