@@ -40,32 +40,45 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       
-      {/* 1. Hero Section & Quick Search */}
-      <section className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-950 text-white py-14 sm:py-20 px-4 text-center relative overflow-hidden">
-        <div className="max-w-4xl mx-auto relative z-10">
-          <span className="inline-block bg-blue-500/20 text-blue-300 text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-blue-400/30">
+      {/* 1. Hero Section & Quick Search (Background Gambar dari /public/hero-bg.jpg) */}
+      <section className="relative w-full min-h-[520px] py-16 sm:py-24 px-4 text-center text-white flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <Image
+          src="/hero-bg.jpeg" // Mengambil file hero-bg.jpg dari folder /public
+          alt="Teravia Hero Background"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+
+        {/* Overlay Gelap agar teks & search bar tetap kontras/terbaca */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-900/60 to-slate-950/80 backdrop-blur-[1px]" />
+
+        {/* Konten Hero */}
+        <div className="max-w-4xl mx-auto relative z-10 space-y-4">
+          <span className="inline-block bg-blue-500/30 text-blue-200 text-xs font-semibold px-3.5 py-1 rounded-full border border-blue-400/30 backdrop-blur-md">
             Marketplace Properti Terpadu
           </span>
-          <h1 className="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight drop-shadow-md">
             Cari Properti Impian & Bangun Ekosistemmu
           </h1>
-          <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-medium drop-shadow-sm pb-2">
             Platform jual beli properti terlengkap dengan fitur Marketing Ads, AI Copywriter, dan Jasa Konstruksi Profesional.
           </p>
 
           {/* Search Box */}
-          <div className="max-w-2xl mx-auto bg-white p-2 sm:p-2.5 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-2">
+          <div className="max-w-2xl mx-auto bg-white/95 backdrop-blur-md p-2 sm:p-2.5 rounded-2xl shadow-2xl border border-white/20 flex items-center gap-2 text-left">
             <div className="pl-3 text-slate-400">
               🔍
             </div>
             <input
               type="text"
               placeholder="Cari lokasi, kota, atau nama cluster..."
-              className="w-full px-2 py-2 text-slate-800 focus:outline-none text-sm placeholder:text-slate-400"
+              className="w-full px-2 py-2 text-slate-800 focus:outline-none text-sm placeholder:text-slate-400 bg-transparent font-medium"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 text-sm shadow-md shadow-blue-500/20">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 text-sm shadow-md shadow-blue-500/30 cursor-pointer shrink-0">
               Cari
             </button>
           </div>
@@ -185,4 +198,4 @@ export default function HomePage() {
       </main>
     </div>
   );
-              }
+}
