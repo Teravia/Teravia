@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface MediaItem {
   id: string;
@@ -14,6 +14,7 @@ interface Step5Props {
   onPublish: () => void;
   formData?: Record<string, any>;
   transactionType?: string;
+  updateFormData?: (data: Record<string, any>) => void;
 }
 
 export default function Step5Preview({
@@ -21,58 +22,88 @@ export default function Step5Preview({
   onPublish,
   formData = {},
   transactionType = "Jual",
+  updateFormData,
 }: Step5Props) {
-  // Extracting data dari Step 1
+  // Extracting data dari Step 1 - 4
   const statusTransaksi = formData.statusTransaksi || transactionType || "Jual";
   const judul = formData.judul || "-";
   const kategori = formData.kategori || "-";
   const jenisProperti = formData.jenisProperti || "-";
   const detailData = formData.detailData || {};
 
-  // Extracting data dari Step 2
   const price = formData.price ? Number(formData.price).toLocaleString("id-ID") : "0";
   const priceNegotiable = formData.priceNegotiable || "-";
-  const pricePerSqm = formData.pricePerSqm
-    ? Number(formData.pricePerSqm).toLocaleString("id-ID")
-    : null;
-  const priceNotes = formData.priceNotes || "";
 
-  // Detail Sewa / Over Kredit / Lelang
-  const rentalPeriod = formData.rentalPeriod || "";
-  const minimumRentalDuration = formData.minimumRentalDuration || "";
-  const securityDeposit = formData.securityDeposit
-    ? Number(formData.securityDeposit).toLocaleString("id-ID")
-    : "";
-  const originalBank = formData.originalBank || "";
-  const remainingInstallmentCount = formData.remainingInstallmentCount || "";
-  const monthlyInstallment = formData.monthlyInstallment
-    ? Number(formData.monthlyInstallment).toLocaleString("id-ID")
-    : "";
-  const auctionDate = formData.auctionDate || "";
-  const auctionOrganizer = formData.auctionOrganizer || "";
-  const auctionLocation = formData.auctionLocation || "";
-
-  // Extracting data dari Step 3 (Lokasi)
   const provinceName = formData.provinceName || "";
   const regencyName = formData.regencyName || "";
   const districtName = formData.districtName || "";
   const villageName = formData.villageName || "";
   const address = formData.address || "-";
-  const postalCode = formData.postalCode || "";
 
   const fullLocation = [villageName, districtName, regencyName, provinceName]
     .filter(Boolean)
     .join(", ");
 
-  // Extracting data dari Step 4 (Media)
   const images: MediaItem[] = formData.images || [];
   const coverImage =
     formData.coverImage || images.find((img) => img.isCover) || images[0];
 
-  // Selected Image untuk Lightbox / View Modal
   const [selectedImage, setSelectedImage] = useState<string>(
     coverImage?.previewUrl || ""
   );
+
+  // =========================================================================
+  // STATE & FUNGSI OTOMATIS AI COPYWRITER
+  // =========================================================================
+  const [aiDescription, setAiDescription] = useState<string>(
+    formData.aiDescription || ""
+  );
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  // Fungsi memanggil API AI Copywriter
+  const generateCopywriting = async () => {
+    setIsGenerating(true);
+    try {
+      // Panggil API Next.js /api/generate-copywriting (atau simulasi sementara)
+      const res = await fetch("/api/generate-copywriting", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          statusTransaksi,
+          judul,
+          kategori,
+          jenisProperti,
+          harga: price,
+          lokasi: fullLocation,
+          alamat: address,
+          spesifikasi: detailData,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setAiDescription(data.text);
+        if (updateFormData) updateFormData({ aiDescription: data.text });
+      } else {
+        // Fallback dummy jika API belum dibuat
+        const dummyText = `🔥 PROPERTI IMPIAN DIJUAL! 🔥\n\n${judul}\n\nNikmati hunian nyaman berjenis ${jenisProperti} yang berlokasi sangat strategis di ${fullLocation}. Properti ini menawarkan fasilitas terbaik dengan harga penawaran Rp ${price} (${priceNegotiable}).\n\n✨ Keunggulan Utama:\n- Lokasi aman, bebas banjir, dan akses mudah.\n- Lingkungan asri & bernilai investasi tinggi.\n- Kondisi bangunan siap huni.\n\nJangan lewatkan kesempatan emas ini! Segera hubungi kami untuk survei lokasi dan informasi lebih lanjut.`;
+        setAiDescription(dummyText);
+        if (updateFormData) updateFormData({ aiDescription: dummyText });
+      }
+    } catch (error) {
+      console.error("Error generating AI copywriting:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // OTOMATIS GENERATE AI saat halaman Step 5 pertama kali dibuka (jika belum ada deskripsi)
+  useEffect(() => {
+    if (!aiDescription && !isGenerating) {
+      generateCopywriting();
+    }
+  }, []);
 
   return (
     <div className="space-y-6 font-sans">
@@ -86,37 +117,30 @@ export default function Step5Preview({
           </span>
         </div>
 
-        {/* 1. SECTION GALERI FOTO (STEP 4) */}
+        {/* 1. GALERI FOTO */}
         {images.length > 0 && (
           <div className="space-y-3">
             <p className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               Foto Properti ({images.length})
             </p>
-
-            {/* Foto Utama Besar */}
             <div className="relative aspect-video w-full max-h-[360px] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
               <img
                 src={selectedImage || coverImage?.previewUrl}
                 alt={judul}
                 className="w-full h-full object-cover"
               />
-              <span className="absolute bottom-3 left-3 bg-slate-900/70 text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg backdrop-blur-sm">
-                Foto Utama / Cover
-              </span>
             </div>
-
-            {/* Grid Thumbnail Kecil */}
             {images.length > 1 && (
-              <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-thin">
+              <div className="flex gap-2.5 overflow-x-auto pb-1">
                 {images.map((img) => (
                   <button
                     key={img.id}
                     type="button"
                     onClick={() => setSelectedImage(img.previewUrl)}
-                    className={`relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
+                    className={`relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
                       (selectedImage || coverImage?.previewUrl) === img.previewUrl
-                        ? "border-blue-600 scale-95 shadow-sm"
-                        : "border-transparent opacity-70 hover:opacity-100"
+                        ? "border-blue-600 scale-95"
+                        : "border-transparent opacity-70"
                     }`}
                   >
                     <img
@@ -131,143 +155,75 @@ export default function Step5Preview({
           </div>
         )}
 
-        {/* 2. INFORMASI UTAMA & HARGA (STEP 1 & 2) */}
-        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100">
-                {kategori} • {jenisProperti}
+        {/* 2. INFORMASI HARGA & LOKASI */}
+        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+          <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100">
+            {kategori} • {jenisProperti}
+          </span>
+          <h1 className="text-lg font-bold text-slate-900">{judul}</h1>
+          <p className="text-xl font-extrabold text-emerald-600">Rp {price}</p>
+          <p className="text-xs text-slate-500">📍 {address}, {fullLocation}</p>
+        </div>
+
+        {/* 3. KARTU HASIL AI COPYWRITER (OTOMATIS) */}
+        <div className="p-5 rounded-2xl border border-purple-200 bg-gradient-to-br from-purple-50/50 via-indigo-50/30 to-white space-y-3 relative">
+          <div className="flex items-center justify-between border-b border-purple-100 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-600 text-white text-xs font-bold shadow-sm">
+                ✨
               </span>
-              <h1 className="text-lg font-bold text-slate-900 mt-1">{judul}</h1>
+              <div>
+                <h3 className="text-xs font-bold text-slate-800">
+                  Deskripsi Iklan Auto-Generated (AI Copywriter)
+                </h3>
+                <p className="text-[10px] text-slate-500">
+                  Disusun otomatis dari data spesifikasi properti Anda
+                </p>
+              </div>
             </div>
 
-            <div className="text-right">
-              <p className="text-xs text-slate-400 font-semibold">
-                {statusTransaksi === "Sewa"
-                  ? `Harga Sewa (${rentalPeriod})`
-                  : statusTransaksi === "Lelang"
-                  ? "Harga Limit Lelang"
-                  : statusTransaksi === "Over Kredit"
-                  ? "Harga Take Over"
-                  : "Harga Jual"}
-              </p>
-              <p className="text-xl font-extrabold text-emerald-600">
-                Rp {price}
-              </p>
-              <p className="text-[10px] font-medium text-slate-500">
-                {priceNegotiable} {pricePerSqm && `• Rp ${pricePerSqm}/m²`}
-              </p>
+            {/* Action Buttons AI */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsEditing(!isEditing)}
+                className="text-[11px] font-semibold text-slate-600 hover:text-slate-900 px-2.5 py-1 rounded-lg border border-slate-200 bg-white"
+              >
+                {isEditing ? "Selesai Edit" : "✏️ Edit"}
+              </button>
+              <button
+                type="button"
+                onClick={generateCopywriting}
+                disabled={isGenerating}
+                className="text-[11px] font-bold text-purple-700 hover:text-purple-900 bg-purple-100 hover:bg-purple-200 px-2.5 py-1 rounded-lg transition-all border border-purple-200 disabled:opacity-50"
+              >
+                {isGenerating ? "⏳ Menyusun..." : "🔄 Buat Ulang"}
+              </button>
             </div>
           </div>
 
-          {/* Catatan Tambahan Khusus Status Transaksi */}
-          {statusTransaksi === "Sewa" && (minimumRentalDuration || securityDeposit) && (
-            <div className="pt-2 border-t border-slate-200/60 grid grid-cols-2 gap-2 text-xs">
-              {minimumRentalDuration && (
-                <p className="text-slate-600">
-                  <strong className="text-slate-800">Min. Sewa:</strong> {minimumRentalDuration}
-                </p>
-              )}
-              {securityDeposit && (
-                <p className="text-slate-600">
-                  <strong className="text-slate-800">Deposit:</strong> Rp {securityDeposit}
-                </p>
-              )}
+          {/* Konten Deskripsi AI */}
+          {isGenerating ? (
+            <div className="py-8 flex flex-col items-center justify-center space-y-2 text-slate-400">
+              <div className="animate-spin text-2xl">✨</div>
+              <p className="text-xs font-medium">AI sedang merangkum deskripsi terbaik untuk properti Anda...</p>
             </div>
-          )}
-
-          {statusTransaksi === "Over Kredit" && (
-            <div className="pt-2 border-t border-slate-200/60 grid grid-cols-3 gap-2 text-xs">
-              {originalBank && (
-                <p className="text-slate-600">
-                  <strong className="text-slate-800">Bank:</strong> {originalBank}
-                </p>
-              )}
-              {monthlyInstallment && (
-                <p className="text-slate-600">
-                  <strong className="text-slate-800">Cicilan:</strong> Rp {monthlyInstallment}/bln
-                </p>
-              )}
-              {remainingInstallmentCount && (
-                <p className="text-slate-600">
-                  <strong className="text-slate-800">Sisa:</strong> {remainingInstallmentCount} Bln
-                </p>
-              )}
+          ) : isEditing ? (
+            <textarea
+              rows={8}
+              value={aiDescription}
+              onChange={(e) => {
+                setAiDescription(e.target.value);
+                if (updateFormData) updateFormData({ aiDescription: e.target.value });
+              }}
+              className="w-full p-3 rounded-xl border border-purple-300 text-xs font-medium focus:ring-2 focus:ring-purple-500 bg-white leading-relaxed resize-y"
+            />
+          ) : (
+            <div className="text-xs text-slate-700 whitespace-pre-line leading-relaxed font-normal bg-white/80 p-4 rounded-xl border border-purple-100/60 shadow-xs">
+              {aiDescription}
             </div>
-          )}
-
-          {statusTransaksi === "Lelang" && (
-            <div className="pt-2 border-t border-slate-200/60 grid grid-cols-2 gap-2 text-xs">
-              {auctionDate && (
-                <p className="text-slate-600">
-                  <strong className="text-slate-800">Tgl Lelang:</strong> {auctionDate}
-                </p>
-              )}
-              {auctionOrganizer && (
-                <p className="text-slate-600">
-                  <strong className="text-slate-800">Penyelenggara:</strong> {auctionOrganizer}
-                </p>
-              )}
-            </div>
-          )}
-
-          {priceNotes && (
-            <p className="text-xs text-slate-500 italic pt-1 border-t border-slate-200/60">
-              * Catatan: {priceNotes}
-            </p>
           )}
         </div>
-
-        {/* 3. LOKASI (STEP 3) */}
-        <div className="space-y-2">
-          <p className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-            Lokasi Properti
-          </p>
-          <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-1">
-            <p className="text-xs font-semibold text-slate-800">{address}</p>
-            {fullLocation && (
-              <p className="text-xs text-slate-500">{fullLocation}</p>
-            )}
-            {postalCode && (
-              <p className="text-[11px] font-medium text-slate-400">
-                Kode Pos: {postalCode}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* 4. DETAIL SPESIFIKASI DINAMIS (STEP 1) */}
-        {Object.keys(detailData).length > 0 && (
-          <div className="space-y-3">
-            <p className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-              Spesifikasi Properti
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {Object.entries(detailData).map(([key, val]) => {
-                if (val === undefined || val === null || val === "") return null;
-                const formattedVal = Array.isArray(val) ? val.join(", ") : String(val);
-
-                return (
-                  <div
-                    key={key}
-                    className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs"
-                  >
-                    <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-tight">
-                      {key.replace(/([A-Z])/g, " $1").trim()}
-                    </p>
-                    <p className="font-bold text-slate-800 mt-0.5 truncate">
-                      {formattedVal === "true"
-                        ? "Ya"
-                        : formattedVal === "false"
-                        ? "Tidak"
-                        : formattedVal}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* FOOTER NAVIGASI STEP 5 */}
