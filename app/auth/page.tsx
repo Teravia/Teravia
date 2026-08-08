@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -30,31 +29,22 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      
-      {/* Brand Header */}
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-block text-2xl font-black tracking-tight text-blue-600 mb-2">
-          TERAVIA<span className="text-slate-800">.</span>
-        </Link>
+      {/* Brand Header Minimalis */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-6">
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-          {mode === "login" ? "Masuk ke Akun Anda" : "Buat Akun Teravia Baru"}
+          {mode === "login" ? "Masuk ke Akun Anda" : "Buat Akun Baru"}
         </h2>
-        <p className="mt-1 text-xs sm:text-sm text-slate-500">
-          {mode === "login"
-            ? "Kelola iklan properti, proyek konstruksi, dan jaringan Anda"
-            : "Bergabunglah dengan ekosistem properti & konstruksi terpadu"}
-        </p>
       </div>
 
-      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="bg-white py-8 px-6 shadow-md border border-slate-200 rounded-3xl sm:px-10">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md px-4">
+        <div className="bg-white py-8 px-6 shadow-sm border border-slate-200/80 rounded-3xl sm:px-10">
           
           {/* Tab Switcher (Login / Register) */}
           <div className="flex bg-slate-100 p-1 rounded-2xl mb-6">
             <button
               type="button"
               onClick={() => setMode("login")}
-              className={`w-1/2 py-2.5 text-xs font-bold rounded-xl transition-all ${
+              className={`w-1/2 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 mode === "login"
                   ? "bg-white text-slate-900 shadow-sm"
                   : "text-slate-500 hover:text-slate-800"
@@ -65,7 +55,7 @@ export default function AuthPage() {
             <button
               type="button"
               onClick={() => setMode("register")}
-              className={`w-1/2 py-2.5 text-xs font-bold rounded-xl transition-all ${
+              className={`w-1/2 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 mode === "register"
                   ? "bg-white text-slate-900 shadow-sm"
                   : "text-slate-500 hover:text-slate-800"
@@ -152,7 +142,7 @@ export default function AuthPage() {
                   <button
                     type="button"
                     onClick={() => alert("Fitur reset password siap dihubungkan")}
-                    className="text-[11px] font-semibold text-blue-600 hover:underline"
+                    className="text-[11px] font-semibold text-blue-600 hover:underline cursor-pointer"
                   >
                     Lupa Password?
                   </button>
@@ -172,13 +162,13 @@ export default function AuthPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-blue-500/20 mt-2"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-blue-500/20 mt-2 cursor-pointer disabled:opacity-50"
             >
               {loading
                 ? "Memproses..."
                 : mode === "login"
                 ? "Masuk Sekarang"
-                : "Buat Akun Akun"}
+                : "Buat Akun"}
             </button>
           </form>
 
@@ -188,15 +178,19 @@ export default function AuthPage() {
               <div className="w-full border-t border-slate-200" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-3 text-slate-400">Atau masuk dengan</span>
+              <span className="bg-white px-3 text-slate-400">
+                Atau masuk dengan
+              </span>
             </div>
           </div>
 
           {/* Social Login Button */}
           <button
             type="button"
-            onClick={() => alert("Fitur Google Auth siap dihubungkan dengan Supabase OAuth")}
-            className="w-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"
+            onClick={() =>
+              alert("Fitur Google Auth siap dihubungkan dengan Supabase OAuth")
+            }
+            className="w-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -222,4 +216,4 @@ export default function AuthPage() {
       </div>
     </div>
   );
-            }
+}
