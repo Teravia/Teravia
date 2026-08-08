@@ -12,24 +12,18 @@ import legalitas from "./legalitas";
 import lingkungan from "./lingkungan";
 import informasiTambahan from "./informasi-tambahan";
 
-export const gedungPerkantoranConfig = {
-  propertyType: "gedung-perkantoran",
-  category: "komersial",
-  label: "Gedung Perkantoran",
-  description: "Konfigurasi formulir listing properti untuk skala gedung perkantoran utuh.",
-  sections: [
-    informasiDasar,
-    informasiGedung,
-    spesifikasiGedung,
-    fasilitasGedung,
-    parkir,
-    keamanan,
-    utilitas,
-    biayaRutin,
-    legalitas,
-    lingkungan,
-    informasiTambahan,
-  ],
-};
+const gedungPerkantoran = [
+  ...(Array.isArray(informasiDasar) ? informasiDasar : [informasiDasar]),
+  ...(Array.isArray(informasiGedung) ? informasiGedung : [informasiGedung]),
+  ...(Array.isArray(spesifikasiGedung) ? spesifikasiGedung : [spesifikasiGedung]),
+  ...(Array.isArray(fasilitasGedung) ? fasilitasGedung : [fasilitasGedung]),
+  ...(Array.isArray(parkir) ? parkir : [parkir]),
+  ...(Array.isArray(keamanan) ? keamanan : [keamanan]),
+  ...(Array.isArray(utilitas) ? utilitas : [utilitas]),
+  ...(Array.isArray(biayaRutin) ? biayaRutin : [biayaRutin]),
+  ...(Array.isArray(legalitas) ? legalitas : [legalitas]),
+  ...(Array.isArray(lingkungan) ? lingkungan : [lingkungan]),
+  ...(Array.isArray(informasiTambahan) ? informasiTambahan : [informasiTambahan]),
+].filter(Boolean);
 
-export default gedungPerkantoranConfig;
+export default gedungPerkantoran;
