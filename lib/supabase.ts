@@ -1,14 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Menggunakan URL & Anon Key langsung untuk memastikan koneksi 100% presisi
+const supabaseUrl =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  "https://goontgeilithnzirveet.supabase.co";
 
-// Client utama untuk operasi standar (Auth, Read, Write dengan RLS)
+const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdvb250Z2VpbGl0aG56aXJ2ZWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTI2NTQsImV4cCI6MjEwMTc2ODY1NH0.8AuHREfci0WSycrqVXxx_phQ3DJ7Xc7AuR4ViHwsuyw";
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// Client khusus Server/Backend (Hanya dipakai di API Routes)
-export const getServiceSupabase = () => {
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY is missing');
-  return createClient(supabaseUrl, serviceKey);
-};
