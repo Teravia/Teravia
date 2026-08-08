@@ -68,7 +68,7 @@ export default function Step5Preview({
   const generateCopywriting = async () => {
     setIsGenerating(true);
     try {
-      const res = await fetch("/api/generate-copywriting", {
+      const res = await fetch("/api/generate-description", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
