@@ -89,14 +89,14 @@ function generateMemberId(tierId: string) {
 function EyeIcon({ open }: { open: boolean }) {
   if (open) {
     return (
-      <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
         <circle cx="12" cy="12" r="3" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     );
   }
   return (
-    <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.4 5.5A9.5 9.5 0 0112 5c6 0 9.5 7 9.5 7a13.9 13.9 0 01-3.1 4.1M6.3 6.3A13.9 13.9 0 002.5 12s3.5 7 9.5 7c1.1 0 2.1-.2 3-.5" />
     </svg>
   );
@@ -560,7 +560,7 @@ export default function AuthPage() {
               ))}
             </div>
 
-            <div className="flex items-center gap-3 mt-6">
+             <div className="flex items-center gap-3 mt-6">
               <button
                 type="button"
                 onClick={() => setRegisterStep(1)}
@@ -791,5 +791,4 @@ export default function AuthPage() {
       </div>
     </div>
   );
-}
-                    
+            }
