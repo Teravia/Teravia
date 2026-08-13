@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-// 1. TAMBAHKAN IMPORT NAVBAR DI SINI
-import Navbar from "@/components/Navbar"; 
+import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Teravia - Marketplace Properti Terpercaya",
@@ -17,13 +17,10 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className="font-sans antialiased">
-        
-        {/* 2. PASANG NAVBAR DI SINI (Di atas {children}) */}
-        <Navbar />
-
-        {/* Konten halaman kamu (Home, Add Listing, dll) akan dirender di sini */}
-        <main>{children}</main>
-
+        <AuthProvider>
+          <Navbar />
+          <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );
