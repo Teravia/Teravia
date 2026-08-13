@@ -33,6 +33,9 @@ Rumah elegan dengan pencahayaan alami yang melimpah. Siap huni tanpa perlu renov
     address: "Jl. Raya Kopo No. 123 (Verified Partner)",
     phone: "6281987654321",
   },
+  // Diisi otomatis dari pengaturan Co-Broke di profil agen pemilik listing
+  coBrokeAvailable: true,
+  commissionSplit: "50 : 50",
 };
 
 export default function ListingDetailPage() {
@@ -105,9 +108,16 @@ export default function ListingDetailPage() {
         {/* 3. Info Utama & Harga */}
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
           <div>
-            <span className="text-[10px] sm:text-xs bg-blue-50 text-blue-700 border border-blue-200 font-extrabold px-2.5 py-1 rounded-md tracking-wider">
-              {property.type}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] sm:text-xs bg-blue-50 text-blue-700 border border-blue-200 font-extrabold px-2.5 py-1 rounded-md tracking-wider">
+                {property.type}
+              </span>
+              {property.coBrokeAvailable && (
+                <span className="text-[10px] sm:text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-extrabold px-2.5 py-1 rounded-md tracking-wider flex items-center gap-1">
+                  🤝 Co-Broke Available
+                </span>
+              )}
+            </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2.5 leading-snug">
               {property.title}
             </h1>
@@ -155,6 +165,25 @@ export default function ListingDetailPage() {
             {property.aiDescription}
           </div>
         </div>
+
+        {/* 4b. Info Co-Broke — hanya tampil kalau agen pemilik listing bersedia */}
+        {property.coBrokeAvailable && (
+          <div className="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl space-y-2">
+            <div className="flex items-center gap-2 text-emerald-900 font-bold text-xs sm:text-sm">
+              <span className="text-base">🤝</span>
+              <span>Terbuka untuk Co-Broke</span>
+            </div>
+            <p className="text-xs text-emerald-800/80 leading-relaxed">
+              Agen pemilik listing ini bersedia kerja sama closing bersama.
+              Skema bagi komisi default: <strong>{property.commissionSplit}</strong>{" "}
+              (bisa dinego langsung).
+            </p>
+            <p className="text-[10px] text-emerald-700/70">
+              Hubungi lewat WhatsApp co-broke di halaman profil agen untuk
+              koordinasi lebih lanjut.
+            </p>
+          </div>
+        )}
 
         {/* 5. Section Rekomendasi Ekosistem: Notaris / PPAT Terdekat */}
         <div className="bg-gradient-to-r from-amber-50 to-orange-50/50 border border-amber-200/80 p-5 rounded-2xl space-y-3">
