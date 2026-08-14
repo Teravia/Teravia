@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
 type Mode = "login" | "register";
@@ -85,7 +86,6 @@ function generateMemberId(tierId: string) {
   return `${prefix}-${yy}${mm}${dd}-${rand}`;
 }
 
-// ---- Ikon mata (show/hide password), inline SVG biar tidak nambah dependency ----
 function EyeIcon({ open }: { open: boolean }) {
   if (open) {
     return (
@@ -102,7 +102,6 @@ function EyeIcon({ open }: { open: boolean }) {
   );
 }
 
-// ---- Input password dengan tombol toggle mata terpasang ----
 function PasswordInput({
   value,
   onChange,
@@ -142,12 +141,17 @@ export default function AuthPage() {
   const [mode, setMode] = useState<Mode>("login");
   const [registerStep, setRegisterStep] = useState<RegisterStep>(1);
   const [loading, setLoading] = useState(false);
+  const [hasToggled, setHasToggled] = useState(false); // cegah animasi jalan sendiri saat halaman pertama dibuka
 
-  // Login form state
+  const switchAuthMode = (m: Mode) => {
+    setHasToggled(true);
+    setMode(m);
+    setRegisterStep(1);
+  };
+
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  // Register Step 1 state
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -155,13 +159,9 @@ export default function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
 
-  // Register Step 2 state
   const [selectedTier, setSelectedTier] = useState<string>("");
-
-  // Register Step 3 state
   const [paymentMethod, setPaymentMethod] = useState<string>("");
 
-  // Register Step 4 state
   const [memberId, setMemberId] = useState("");
   const [joinDate, setJoinDate] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
@@ -180,19 +180,19 @@ export default function AuthPage() {
   const tierData = TIERS.find((t) => t.id === selectedTier);
   const isFreeTier = selectedTier === "free";
 
-  // ---- LOGIN: sekarang benar-benar set sesi + redirect ----
+  // Tampilan flip/slide (Login <-> Register Step 1) hanya berlaku
+  // selama belum masuk ke wizard tier/payment/success
+  const isAuthToggleView = mode === "login" || (mode === "register" && registerStep === 1);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
-      // TODO: ganti dengan pemanggilan API login asli.
-      // Untuk sekarang, nama ditebak dari bagian sebelum "@" di email
-      // supaya Navbar punya sesuatu untuk ditampilkan.
       const guessedName = loginEmail.split("@")[0] || "Member";
       loginToContext({
         name: guessedName.charAt(0).toUpperCase() + guessedName.slice(1),
         email: loginEmail,
-        tier: "kavling", // TODO: ambil dari data user asli setelah backend siap
+        tier: "kavling",
         memberId: generateMemberId("kavling"),
       });
       setLoading(false);
@@ -223,18 +223,12 @@ export default function AuthPage() {
       expiry.setFullYear(expiry.getFullYear() + 1);
 
       const fmt = (d: Date) =>
-        d.toLocaleDateString("id-ID", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        });
+        d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 
       setMemberId(id);
       setJoinDate(fmt(today));
       setExpiryDate(fmt(expiry));
 
-      // Set sesi login juga di sini, supaya begitu member pindah ke
-      // Dashboard/Beranda, Navbar sudah langsung tahu dia sudah login.
       loginToContext({
         name: fullName || "Member",
         email,
@@ -252,12 +246,6 @@ export default function AuthPage() {
     finishRegistration();
   };
 
-  const resetToLogin = () => {
-    setMode("login");
-    setRegisterStep(1);
-  };
-
-  // ---- STEP INDICATOR (untuk step 1-3) ----
   const StepIndicator = () => (
     <div className="flex items-center gap-2 mb-6">
       {[1, 2, 3].map((s) => (
@@ -274,221 +262,275 @@ export default function AuthPage() {
             {registerStep > s ? "✓" : s}
           </div>
           {s < 3 && (
-            <div
-              className={`h-0.5 flex-1 rounded ${
-                registerStep > s ? "bg-green-600" : "bg-slate-200"
-              }`}
-            />
+            <div className={`h-0.5 flex-1 rounded ${registerStep > s ? "bg-green-600" : "bg-slate-200"}`} />
           )}
         </div>
       ))}
     </div>
   );
 
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-10 px-4">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Brand */}
-        <div className="text-center mb-6">
-          <div className="text-lg font-extrabold text-slate-900 tracking-tight">
-            TERAVIA
-          </div>
+  // ===================================================================
+  // KONTEN FORM (dipakai ulang di versi desktop flip & mobile slide,
+  // supaya tidak dobel nulis JSX field-field yang sama)
+  // ===================================================================
+
+  const loginFormContent = (
+    <div className="w-full max-w-sm mx-auto">
+      <h1 className="text-lg font-bold text-slate-900 mb-1">Masuk ke Akun Anda</h1>
+      <p className="text-xs text-slate-500 mb-6">Selamat datang kembali di TERAVIA.</p>
+
+      <form onSubmit={handleLogin} className="space-y-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">Alamat Email</label>
+          <input
+            type="email"
+            required
+            placeholder="nama@email.com"
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
+          />
         </div>
 
-        {/* ===================== LOGIN ===================== */}
-        {mode === "login" && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
-            <h1 className="text-lg font-bold text-slate-900 mb-1">
-              Masuk ke Akun Anda
-            </h1>
-            <p className="text-xs text-slate-500 mb-6">
-              Selamat datang kembali di TERAVIA.
-            </p>
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-xs font-semibold text-slate-700">Kata Sandi</label>
+            <button type="button" className="text-[11px] font-semibold text-green-700 hover:underline">
+              Lupa Password?
+            </button>
+          </div>
+          <PasswordInput value={loginPassword} onChange={setLoginPassword} placeholder="••••••••" />
+        </div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Alamat Email
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="nama@email.com"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
-                />
-              </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm mt-2 disabled:opacity-50"
+        >
+          {loading ? "Memproses..." : "Masuk"}
+        </button>
+      </form>
 
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-semibold text-slate-700">
-                    Kata Sandi
-                  </label>
-                  <button
-                    type="button"
-                    className="text-[11px] font-semibold text-green-700 hover:underline"
-                  >
-                    Lupa Password?
-                  </button>
+      {/* Link pindah mode ini hanya dipakai di versi mobile;
+          versi desktop pindah mode lewat panel overlay */}
+      <p className="text-center text-xs text-slate-500 mt-6 md:hidden">
+        Belum punya akun?{" "}
+        <button
+          type="button"
+          onClick={() => switchAuthMode("register")}
+          className="text-green-700 font-bold hover:underline"
+        >
+          Daftar di sini
+        </button>
+      </p>
+    </div>
+  );
+
+  const registerStep1Content = (
+    <div className="w-full max-w-sm mx-auto">
+      <h1 className="text-lg font-bold text-slate-900 mb-1">Buat Akun Baru</h1>
+      <p className="text-xs text-slate-500 mb-6">Langkah 1 dari 3 — Informasi Akun</p>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap</label>
+          <input
+            type="text"
+            placeholder="Contoh: Budi Pratama"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">Nomor WhatsApp / HP</label>
+          <input
+            type="tel"
+            placeholder="Contoh: 081234567890"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">Alamat Email</label>
+          <input
+            type="email"
+            placeholder="nama@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
+          <PasswordInput value={password} onChange={setPassword} placeholder="Minimal 8 karakter" />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">Konfirmasi Kata Sandi</label>
+          <PasswordInput value={confirmPassword} onChange={setConfirmPassword} placeholder="Ulangi kata sandi" />
+          {confirmPassword && password !== confirmPassword && (
+            <p className="text-red-500 text-[10px] font-medium mt-1">Kata sandi tidak sama</p>
+          )}
+        </div>
+
+        <label className="flex items-start gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={agreeTerms}
+            onChange={(e) => setAgreeTerms(e.target.checked)}
+            className="mt-0.5 accent-green-600 w-3.5 h-3.5"
+          />
+          <span className="text-[11px] text-slate-600">
+            Saya setuju dengan Syarat & Ketentuan serta Kebijakan Privasi TERAVIA
+          </span>
+        </label>
+
+        <button
+          type="button"
+          onClick={goToStep2}
+          disabled={!step1Valid}
+          className={`w-full font-bold py-3 rounded-xl text-sm transition shadow-sm mt-2 ${
+            step1Valid
+              ? "bg-green-700 hover:bg-green-800 text-white cursor-pointer"
+              : "bg-slate-200 text-slate-400 cursor-not-allowed"
+          }`}
+        >
+          Lanjutkan &rarr;
+        </button>
+      </div>
+
+      <p className="text-center text-xs text-slate-500 mt-6 md:hidden">
+        Sudah punya akun?{" "}
+        <button
+          type="button"
+          onClick={() => switchAuthMode("login")}
+          className="text-green-700 font-bold hover:underline"
+        >
+          Masuk di sini
+        </button>
+      </p>
+    </div>
+  );
+
+  return (
+    <div className="relative min-h-screen flex flex-col justify-center py-8 px-4 overflow-hidden">
+      {/* Background gambar hero — sama dengan yang dipakai di halaman utama */}
+      <Image
+        src="/hero-bg.jpeg"
+        alt="Teravia Background"
+        fill
+        priority
+        className="object-cover object-center"
+      />
+      {/* Overlay gelap agar form tetap kontras & terbaca (konsisten dengan hero homepage) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-900/60 to-slate-950/80 backdrop-blur-[1px]" />
+
+      {/* Konten form di atas background, dibungkus relative + z-10 */}
+      <div className="relative z-10 flex flex-col justify-center">
+      {isAuthToggleView && (
+        <>
+          <div className="text-center mb-5">
+            <div className="text-lg font-extrabold text-white tracking-tight drop-shadow-sm">TERAVIA</div>
+          </div>
+
+          {/* ---------- DESKTOP: split-card dengan animasi flip 3D ---------- */}
+          <div className="hidden md:block mx-auto w-full max-w-4xl">
+            <div className="auth-flip-card relative w-full min-h-[560px] rounded-3xl overflow-hidden border border-white/20 shadow-2xl bg-white/95 backdrop-blur-md">
+              {/* Panel form statis: kiri = Login, kanan = Register */}
+              <div className="absolute inset-0 grid grid-cols-2">
+                <div className="flex items-center justify-center p-10 overflow-y-auto">
+                  {loginFormContent}
                 </div>
-                <PasswordInput
-                  value={loginPassword}
-                  onChange={setLoginPassword}
-                  placeholder="••••••••"
-                />
+                <div className="flex items-center justify-center p-10 overflow-y-auto">
+                  {registerStep1Content}
+                </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm mt-2 disabled:opacity-50"
-              >
-                {loading ? "Memproses..." : "Masuk"}
-              </button>
-            </form>
-
-            <p className="text-center text-xs text-slate-500 mt-6">
-              Belum punya akun?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("register");
-                  setRegisterStep(1);
-                }}
-                className="text-green-700 font-bold hover:underline"
-              >
-                Daftar di sini
-              </button>
-            </p>
-          </div>
-        )}
-
-        {/* ===================== REGISTER STEP 1: AKUN ===================== */}
-        {mode === "register" && registerStep === 1 && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
-            <StepIndicator />
-            <h1 className="text-lg font-bold text-slate-900 mb-1">
-              Buat Akun Baru
-            </h1>
-            <p className="text-xs text-slate-500 mb-6">
-              Langkah 1 dari 3 — Informasi Akun
-            </p>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Nama Lengkap
-                </label>
-                <input
-                  type="text"
-                  placeholder="Contoh: Budi Pratama"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Nomor WhatsApp / HP
-                </label>
-                <input
-                  type="tel"
-                  placeholder="Contoh: 081234567890"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Alamat Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="nama@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-green-500 outline-none text-slate-800"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Kata Sandi
-                </label>
-                <PasswordInput
-                  value={password}
-                  onChange={setPassword}
-                  placeholder="Minimal 8 karakter"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Konfirmasi Kata Sandi
-                </label>
-                <PasswordInput
-                  value={confirmPassword}
-                  onChange={setConfirmPassword}
-                  placeholder="Ulangi kata sandi"
-                />
-                {confirmPassword && password !== confirmPassword && (
-                  <p className="text-red-500 text-[10px] font-medium mt-1">
-                    Kata sandi tidak sama
-                  </p>
-                )}
-              </div>
-
-              <label className="flex items-start gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={agreeTerms}
-                  onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="mt-0.5 accent-green-600 w-3.5 h-3.5"
-                />
-                <span className="text-[11px] text-slate-600">
-                  Saya setuju dengan Syarat & Ketentuan serta Kebijakan
-                  Privasi TERAVIA
-                </span>
-              </label>
-
-              <button
-                type="button"
-                onClick={goToStep2}
-                disabled={!step1Valid}
-                className={`w-full font-bold py-3 rounded-xl text-sm transition shadow-sm mt-2 ${
-                  step1Valid
-                    ? "bg-green-700 hover:bg-green-800 text-white cursor-pointer"
-                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
+              {/* Panel overlay hijau yang "terbang" pindah sisi */}
+              <div
+                className={`auth-overlay absolute inset-y-0 w-1/2 flex items-center justify-center p-10 text-white ${
+                  !hasToggled
+                    ? mode === "login"
+                      ? "auth-rest-right"
+                      : "auth-rest-left"
+                    : mode === "register"
+                    ? "auth-turn-left"
+                    : "auth-turn-right"
                 }`}
+                style={{
+                  background: "linear-gradient(135deg, #15803D 0%, #14532D 60%, #0F172A 100%)",
+                }}
               >
-                Lanjutkan &rarr;
-              </button>
+                <div className="text-center max-w-xs">
+                  <div className="w-16 h-16 rounded-2xl bg-white/15 mx-auto mb-5 flex items-center justify-center text-3xl">
+                    {mode === "login" ? "🏡" : "👋"}
+                  </div>
+                  {mode === "login" ? (
+                    <>
+                      <h2 className="text-xl font-extrabold mb-2">Baru di TERAVIA?</h2>
+                      <p className="text-xs text-white/80 leading-relaxed mb-6">
+                        Buat akun gratis, pasang listing, dan nikmati benefit membership
+                        eksklusif.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => switchAuthMode("register")}
+                        className="border-2 border-white/70 hover:bg-white hover:text-green-800 text-white font-bold text-xs px-6 py-2.5 rounded-xl transition"
+                      >
+                        Buat Akun &rarr;
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="text-xl font-extrabold mb-2">Sudah Punya Akun?</h2>
+                      <p className="text-xs text-white/80 leading-relaxed mb-6">
+                        Masuk untuk melanjutkan aktivitas dan mengelola listing kamu.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => switchAuthMode("login")}
+                        className="border-2 border-white/70 hover:bg-white hover:text-green-800 text-white font-bold text-xs px-6 py-2.5 rounded-xl transition"
+                      >
+                        &larr; Masuk di Sini
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-
-            <p className="text-center text-xs text-slate-500 mt-6">
-              Sudah punya akun?{" "}
-              <button
-                type="button"
-                onClick={resetToLogin}
-                className="text-green-700 font-bold hover:underline"
-              >
-                Masuk di sini
-              </button>
-            </p>
           </div>
-        )}
 
-        {/* ===================== REGISTER STEP 2: PILIH TIER ===================== */}
-        {mode === "register" && registerStep === 2 && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          {/* ---------- MOBILE: kartu dengan animasi slide horizontal ---------- */}
+          <div className="md:hidden mx-auto w-full max-w-sm">
+            <div className="bg-white/95 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+              <div className="relative overflow-hidden">
+                <div
+                  className="flex w-[200%] transition-transform duration-500 ease-out"
+                  style={{ transform: mode === "login" ? "translateX(0%)" : "translateX(-50%)" }}
+                >
+                  <div className="w-1/2 shrink-0 p-6">{loginFormContent}</div>
+                  <div className="w-1/2 shrink-0 p-6">{registerStep1Content}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ===================== REGISTER STEP 2: PILIH TIER ===================== */}
+      {mode === "register" && registerStep === 2 && (
+        <div className="sm:mx-auto sm:w-full sm:max-w-md auth-step-enter">
+          <div className="text-center mb-5">
+            <div className="text-lg font-extrabold text-white tracking-tight drop-shadow-sm">TERAVIA</div>
+          </div>
+          <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-white/20 shadow-2xl">
             <StepIndicator />
-            <h1 className="text-lg font-bold text-slate-900 mb-1">
-              Pilih Tier Membership
-            </h1>
+            <h1 className="text-lg font-bold text-slate-900 mb-1">Pilih Tier Membership</h1>
             <p className="text-xs text-slate-500 mb-6">
               Langkah 2 dari 3 — Bisa upgrade/downgrade kapan saja nanti
             </p>
@@ -500,17 +542,13 @@ export default function AuthPage() {
                   type="button"
                   onClick={() => setSelectedTier(tier.id)}
                   className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
-                    selectedTier === tier.id
-                      ? "border-green-600 bg-green-50/60"
-                      : "border-slate-200 hover:border-slate-300"
+                    selectedTier === tier.id ? "border-green-600 bg-green-50/60" : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-900">
-                          {tier.name}
-                        </span>
+                        <span className="text-sm font-bold text-slate-900">{tier.name}</span>
                         {tier.discount && (
                           <span className="text-[9px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded">
                             DISKON {tier.discount}
@@ -518,39 +556,26 @@ export default function AuthPage() {
                         )}
                       </div>
                       <div className="flex items-baseline gap-2 mt-1">
-                        <span className="text-base font-extrabold text-green-700">
-                          {formatRupiah(tier.price)}
-                        </span>
+                        <span className="text-base font-extrabold text-green-700">{formatRupiah(tier.price)}</span>
                         {tier.strikePrice && (
                           <span className="text-[11px] text-slate-400 line-through">
                             {formatRupiah(tier.strikePrice)}
                           </span>
                         )}
-                        {tier.price > 0 && (
-                          <span className="text-[10px] text-slate-400">
-                            /bulan
-                          </span>
-                        )}
+                        {tier.price > 0 && <span className="text-[10px] text-slate-400">/bulan</span>}
                       </div>
                     </div>
                     <div
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                        selectedTier === tier.id
-                          ? "border-green-600 bg-green-600"
-                          : "border-slate-300"
+                        selectedTier === tier.id ? "border-green-600 bg-green-600" : "border-slate-300"
                       }`}
                     >
-                      {selectedTier === tier.id && (
-                        <span className="text-white text-[10px]">✓</span>
-                      )}
+                      {selectedTier === tier.id && <span className="text-white text-[10px]">✓</span>}
                     </div>
                   </div>
                   <ul className="space-y-1 mt-2">
                     {tier.benefits.map((b, i) => (
-                      <li
-                        key={i}
-                        className="text-[11px] text-slate-600 flex items-center gap-1.5"
-                      >
+                      <li key={i} className="text-[11px] text-slate-600 flex items-center gap-1.5">
                         <span className="text-green-600 font-bold">✓</span>
                         {b}
                       </li>
@@ -560,7 +585,7 @@ export default function AuthPage() {
               ))}
             </div>
 
-             <div className="flex items-center gap-3 mt-6">
+            <div className="flex items-center gap-3 mt-6">
               <button
                 type="button"
                 onClick={() => setRegisterStep(1)}
@@ -578,70 +603,52 @@ export default function AuthPage() {
                     : "bg-slate-200 text-slate-400 cursor-not-allowed"
                 }`}
               >
-                {loading
-                  ? "Memproses..."
-                  : isFreeTier
-                  ? "Selesaikan Pendaftaran"
-                  : "Lanjut ke Pembayaran →"}
+                {loading ? "Memproses..." : isFreeTier ? "Selesaikan Pendaftaran" : "Lanjut ke Pembayaran →"}
               </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ===================== REGISTER STEP 3: PEMBAYARAN ===================== */}
-        {mode === "register" && registerStep === 3 && tierData && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+      {/* ===================== REGISTER STEP 3: PEMBAYARAN ===================== */}
+      {mode === "register" && registerStep === 3 && tierData && (
+        <div className="sm:mx-auto sm:w-full sm:max-w-md auth-step-enter">
+          <div className="text-center mb-5">
+            <div className="text-lg font-extrabold text-white tracking-tight drop-shadow-sm">TERAVIA</div>
+          </div>
+          <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-white/20 shadow-2xl">
             <StepIndicator />
-            <h1 className="text-lg font-bold text-slate-900 mb-1">
-              Pembayaran
-            </h1>
+            <h1 className="text-lg font-bold text-slate-900 mb-1">Pembayaran</h1>
             <p className="text-xs text-slate-500 mb-6">
-              Langkah 3 dari 3 — Selesaikan pembayaran untuk mengaktifkan
-              membership
+              Langkah 3 dari 3 — Selesaikan pembayaran untuk mengaktifkan membership
             </p>
 
-            {/* Ringkasan Order */}
             <div className="bg-slate-50 rounded-2xl p-4 mb-5 border border-slate-200">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-slate-600">
-                  Membership {tierData.name}
-                </span>
-                <span className="text-xs font-bold text-slate-900">
-                  {formatRupiah(tierData.price)}
-                </span>
+                <span className="text-xs font-semibold text-slate-600">Membership {tierData.name}</span>
+                <span className="text-xs font-bold text-slate-900">{formatRupiah(tierData.price)}</span>
               </div>
               {tierData.strikePrice && (
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] text-slate-400">
-                    Harga normal
-                  </span>
+                  <span className="text-[11px] text-slate-400">Harga normal</span>
                   <span className="text-[11px] text-slate-400 line-through">
                     {formatRupiah(tierData.strikePrice)}
                   </span>
                 </div>
               )}
               <div className="border-t border-slate-200 mt-2 pt-2 flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-900">
-                  Total Bayar
-                </span>
-                <span className="text-sm font-extrabold text-green-700">
-                  {formatRupiah(tierData.price)}
-                </span>
+                <span className="text-xs font-bold text-slate-900">Total Bayar</span>
+                <span className="text-sm font-extrabold text-green-700">{formatRupiah(tierData.price)}</span>
               </div>
             </div>
 
-            {/* Metode Pembayaran */}
-            <label className="block text-xs font-semibold text-slate-700 mb-2">
-              Pilih Metode Pembayaran
-            </label>
+            <label className="block text-xs font-semibold text-slate-700 mb-2">Pilih Metode Pembayaran</label>
             <div className="space-y-2 mb-6">
               {PAYMENT_METHODS.map((m) => (
                 <label
                   key={m.id}
                   className={`flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
-                    paymentMethod === m.id
-                      ? "border-green-600 bg-green-50/60"
-                      : "border-slate-200 hover:border-slate-300"
+                    paymentMethod === m.id ? "border-green-600 bg-green-50/60" : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   <input
@@ -652,9 +659,7 @@ export default function AuthPage() {
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="accent-green-600 w-4 h-4"
                   />
-                  <span className="text-xs font-semibold text-slate-800">
-                    {m.label}
-                  </span>
+                  <span className="text-xs font-semibold text-slate-800">{m.label}</span>
                 </label>
               ))}
             </div>
@@ -681,11 +686,16 @@ export default function AuthPage() {
               </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ===================== REGISTER STEP 4: SUKSES ===================== */}
-        {mode === "register" && registerStep === 4 && tierData && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm text-center">
+      {/* ===================== REGISTER STEP 4: SUKSES ===================== */}
+      {mode === "register" && registerStep === 4 && tierData && (
+        <div className="sm:mx-auto sm:w-full sm:max-w-md auth-step-enter">
+          <div className="text-center mb-5">
+            <div className="text-lg font-extrabold text-white tracking-tight drop-shadow-sm">TERAVIA</div>
+          </div>
+          <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-white/20 shadow-2xl text-center">
             <div className="flex justify-center mb-4">
               <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
                 <div className="w-14 h-14 rounded-full bg-green-600 flex items-center justify-center">
@@ -703,63 +713,39 @@ export default function AuthPage() {
               Selamat bergabung di TERAVIA.
             </p>
 
-            {/* Membership Card */}
             <div className="bg-white border border-slate-200 rounded-2xl p-4 text-left shadow-sm mb-5">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] text-slate-500">
-                  Membership Anda
-                </span>
+                <span className="text-[11px] text-slate-500">Membership Anda</span>
                 <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
                   AKTIF
                 </span>
               </div>
-              <div className="text-lg font-extrabold text-green-700 mb-3">
-                {tierData.name}
-              </div>
+              <div className="text-lg font-extrabold text-green-700 mb-3">{tierData.name}</div>
 
               <div className="border-t border-slate-100 pt-3 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">
-                    ID Member
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-800">
-                    {memberId}
-                  </span>
+                  <span className="text-[11px] text-slate-500">ID Member</span>
+                  <span className="text-[11px] font-bold text-slate-800">{memberId}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">
-                    Tanggal Bergabung
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-800">
-                    {joinDate}
-                  </span>
+                  <span className="text-[11px] text-slate-500">Tanggal Bergabung</span>
+                  <span className="text-[11px] font-bold text-slate-800">{joinDate}</span>
                 </div>
                 {!isFreeTier && (
                   <>
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-slate-500">
-                        Berakhir Pada
-                      </span>
+                      <span className="text-[11px] text-slate-500">Berakhir Pada</span>
+                      <span className="text-[11px] font-bold text-slate-800">{expiryDate}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] text-slate-500">Metode Pembayaran</span>
                       <span className="text-[11px] font-bold text-slate-800">
-                        {expiryDate}
+                        {PAYMENT_METHODS.find((m) => m.id === paymentMethod)?.label || "-"}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-slate-500">
-                        Metode Pembayaran
-                      </span>
-                      <span className="text-[11px] font-bold text-slate-800">
-                        {PAYMENT_METHODS.find((m) => m.id === paymentMethod)
-                          ?.label || "-"}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-slate-500">
-                        Total Dibayar
-                      </span>
-                      <span className="text-[11px] font-bold text-slate-800">
-                        {formatRupiah(tierData.price)}
-                      </span>
+                      <span className="text-[11px] text-slate-500">Total Dibayar</span>
+                      <span className="text-[11px] font-bold text-slate-800">{formatRupiah(tierData.price)}</span>
                     </div>
                   </>
                 )}
@@ -787,8 +773,56 @@ export default function AuthPage() {
               <span>🛡️</span> Data Anda aman bersama TERAVIA
             </p>
           </div>
-        )}
+        </div>
+      )}
       </div>
+
+      {/* ===================== CSS Animasi ===================== */}
+      <style jsx global>{`
+        .auth-overlay {
+          transform-style: preserve-3d;
+          backface-visibility: hidden;
+          will-change: transform;
+          right: 0;
+        }
+        /* Posisi diam sebelum user pernah klik toggle sama sekali */
+        .auth-overlay.auth-rest-right {
+          transform: translate3d(0, 0, 0);
+        }
+        .auth-overlay.auth-rest-left {
+          transform: translate3d(-100%, 0, 0);
+        }
+        /* Resting position: menutupi sisi kanan (mode login) */
+        .auth-overlay.auth-turn-right {
+          right: 0;
+          animation: turn-right 700ms ease forwards;
+        }
+        /* Resting position: menutupi sisi kiri (mode register) */
+        .auth-overlay.auth-turn-left {
+          right: 0;
+          animation: turn-left 700ms ease forwards;
+        }
+        .auth-flip-card {
+          perspective: 1600px;
+        }
+        @keyframes turn-left {
+          0% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+          50% { transform: translate3d(-50%, 0, 0) rotateY(-6deg); }
+          100% { transform: translate3d(-100%, 0, 0) rotateY(0deg); }
+        }
+        @keyframes turn-right {
+          0% { transform: translate3d(-100%, 0, 0) rotateY(0deg); }
+          50% { transform: translate3d(-50%, 0, 0) rotateY(6deg); }
+          100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+        }
+        .auth-step-enter {
+          animation: stepEnter 400ms ease both;
+        }
+        @keyframes stepEnter {
+          0% { opacity: 0; transform: translateY(14px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
-            }
+}
