@@ -107,7 +107,7 @@ export default function Step1Information({
                 key={item}
                 className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
                   statusTransaksi === item
-                    ? "bg-blue-50 border-blue-600 text-blue-600 shadow-sm"
+                    ? "bg-green-50 border-green-600 text-green-600 shadow-sm"
                     : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -121,7 +121,7 @@ export default function Step1Information({
                     if (errors.statusTransaksi)
                       setErrors((prev) => ({ ...prev, statusTransaksi: "" }));
                   }}
-                  className="accent-blue-600 w-3.5 h-3.5"
+                  className="accent-green-600 w-3.5 h-3.5"
                 />
                 {item}
               </label>
@@ -147,7 +147,7 @@ export default function Step1Information({
               if (errors.judul) setErrors((prev) => ({ ...prev, judul: "" }));
             }}
             placeholder="Masukkan judul listing"
-            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 transition-all ${
               errors.judul ? "border-red-400 bg-red-50/50" : "border-slate-300"
             }`}
           />
@@ -166,7 +166,7 @@ export default function Step1Information({
             <select
               value={kategori}
               onChange={handleKategoriChange}
-              className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all ${
+              className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all ${
                 errors.kategori ? "border-red-400 bg-red-50/50" : "border-slate-300"
               }`}
             >
@@ -194,7 +194,7 @@ export default function Step1Information({
                 if (errors.jenisProperti)
                   setErrors((prev) => ({ ...prev, jenisProperti: "" }));
               }}
-              className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+              className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 transition-all ${
                 !kategori
                   ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
                   : errors.jenisProperti
@@ -309,7 +309,7 @@ export default function Step1Information({
         <button
           type="button"
           onClick={handleLanjut}
-          className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-colors"
+          className="px-6 py-2.5 rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-bold shadow-sm transition-colors"
         >
           Lanjut &rarr;
         </button>
@@ -335,7 +335,7 @@ function DynamicFieldRenderer({
   const [tagInput, setTagInput] = useState("");
 
   const baseInputClass =
-    "w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all";
+    "w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all";
 
   // Field Hidden - tidak perlu tampil ke user, tidak makan slot grid
   if (field.type === "hidden") {
@@ -351,7 +351,7 @@ function DynamicFieldRenderer({
           type="checkbox"
           checked={!!value}
           onChange={(e) => onChange(e.target.checked)}
-          className="w-4 h-4 accent-blue-600 rounded shrink-0 cursor-pointer"
+          className="w-4 h-4 accent-green-600 rounded shrink-0 cursor-pointer"
         />
         <label
           htmlFor={fieldKey}
@@ -387,7 +387,7 @@ function DynamicFieldRenderer({
                   value={optValue}
                   checked={value === optValue}
                   onChange={() => onChange(optValue)}
-                  className="accent-blue-600 w-3.5 h-3.5"
+                  className="accent-green-600 w-3.5 h-3.5"
                 />
                 {optLabel}
               </label>
@@ -427,7 +427,7 @@ function DynamicFieldRenderer({
                 onClick={() => toggleOption(optValue)}
                 className={`px-3 py-1.5 rounded-lg border text-[11px] font-semibold transition-all ${
                   active
-                    ? "bg-blue-50 border-blue-600 text-blue-600 shadow-sm"
+                    ? "bg-green-50 border-green-600 text-green-600 shadow-sm"
                     : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -477,13 +477,13 @@ function DynamicFieldRenderer({
             {tagsArr.map((tag, tagIdx) => (
               <span
                 key={`${tag}_${tagIdx}`}
-                className="flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 border border-blue-200 text-[10px] font-semibold text-blue-700"
+                className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-50 border border-green-200 text-[10px] font-semibold text-green-700"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
-                  className="text-blue-400 hover:text-blue-700"
+                  className="text-green-400 hover:text-green-700"
                 >
                   ×
                 </button>
@@ -534,7 +534,7 @@ function DynamicFieldRenderer({
         />
       )}
 
-      {/* Input Number */}
+       {/* Input Number */}
       {field.type === "number" && (
         <input
           type="number"
