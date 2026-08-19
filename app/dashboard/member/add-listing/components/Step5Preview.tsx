@@ -159,7 +159,7 @@ export default function Step5Preview({
           <h2 className="text-sm font-bold text-slate-900">
             Step 5: Ringkasan & Pratinjau Listing
           </h2>
-          <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 font-bold text-[11px] border border-blue-200">
+          <span className="px-3 py-1 rounded-full bg-green-50 text-green-600 font-bold text-[11px] border border-green-200">
             Status: {statusTransaksi}
           </span>
         </div>
@@ -186,7 +186,7 @@ export default function Step5Preview({
                     onClick={() => setSelectedImage(img.previewUrl)}
                     className={`relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
                       (selectedImage || coverImage?.previewUrl) === img.previewUrl
-                        ? "border-blue-600 scale-95"
+                        ? "border-green-600 scale-95"
                         : "border-transparent opacity-70 hover:opacity-100"
                     }`}
                   >
@@ -204,11 +204,11 @@ export default function Step5Preview({
 
         {/* 2. INFORMASI HARGA & LOKASI */}
         <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
-          <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100">
+          <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2.5 py-0.5 rounded-md border border-green-100">
             {kategori} • {jenisProperti}
           </span>
           <h1 className="text-lg font-bold text-slate-900">{judul}</h1>
-          <p className="text-xl font-extrabold text-emerald-600">
+          <p className="text-xl font-extrabold text-green-700">
             Rp {priceFormatted}
           </p>
           <p className="text-xs text-slate-500">
@@ -293,7 +293,7 @@ export default function Step5Preview({
           type="button"
           onClick={handlePublishToSupabase}
           disabled={isPublishing}
-          className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-2"
+          className="px-6 py-2.5 rounded-xl bg-green-700 hover:bg-green-800 text-white text-xs font-bold shadow-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-2"
         >
           {isPublishing ? (
             <>
