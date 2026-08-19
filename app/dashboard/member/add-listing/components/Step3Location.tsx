@@ -213,7 +213,7 @@ export default function Step3Location({
   };
 
   const selectClass = (key: string, disabled: boolean = false) =>
-    `w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+    `w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 transition-all ${
       disabled
         ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
         : showError(key)
@@ -401,7 +401,7 @@ export default function Step3Location({
               onChange={(e) => setAddress(e.target.value)}
               onBlur={() => markTouched("address")}
               placeholder="Masukkan jalan, nomor rumah, RT/RW, atau nama perumahan/komplek..."
-              className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all resize-none ${
+              className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all resize-none ${
                 showError("address")
                   ? "border-red-400 bg-red-50/50"
                   : "border-slate-300"
@@ -423,7 +423,7 @@ export default function Step3Location({
               value={postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
               placeholder="Contoh: 12345"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
             />
           </div>
         </div>
@@ -444,7 +444,7 @@ export default function Step3Location({
           disabled={!isFormValid}
           className={`px-6 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors ${
             isFormValid
-              ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+              ? "bg-green-600 hover:bg-green-700 text-white cursor-pointer"
               : "bg-slate-200 text-slate-400 cursor-not-allowed"
           }`}
         >
@@ -454,3 +454,4 @@ export default function Step3Location({
     </div>
   );
 }
+                  
