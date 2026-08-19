@@ -56,10 +56,15 @@ const INITIAL_PENDING_MEMBERS = [
 ];
 
 export default function AdminDashboardPage() {
-  // Authentication State for Tester
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
+  const router = useRouter();
+  const { admin, isLoading, logoutAdmin } = useAdminAuth();
+
+  // Gerbang proteksi: kalau belum login sebagai admin, lempar ke /admin/login
+  useEffect(() => {
+    if (!isLoading && !admin) {
+      router.push("/admin/login");
+    }
+  }, [isLoading, admin, router]);
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<"overview" | "listings" | "members">(
@@ -69,16 +74,6 @@ export default function AdminDashboardPage() {
   // States Data
   const [listings, setListings] = useState(INITIAL_PENDING_LISTINGS);
   const [members, setMembers] = useState(INITIAL_PENDING_MEMBERS);
-
-  // Auth Handler
-  const handleAdminLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (adminEmail === "admin@teravia.co.id" && adminPassword === "admin123") {
-      setIsAuthenticated(true);
-    } else {
-      alert("⚠️ Email atau Password Admin Salah! Gunakan admin@teravia.co.id & admin123");
-    }
-  };
 
   // Action Handlers
   const handleApproveListing = (id: string) => {
@@ -104,74 +99,13 @@ export default function AdminDashboardPage() {
     alert(`❌ Permohonan membership ${id} ditolak.`);
   };
 
-  // TAMPILAN 1: TAMPILAN LOGIN JIKA BELUM TER-AUTHENTICATE
-  if (!isAuthenticated) {
+  // Selagi memeriksa sesi admin, atau sedang di-redirect ke /admin/login,
+  // tampilkan loading ringan saja (bukan render dashboard sebelum yakin admin login)
+  if (isLoading || !admin) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans">
-        <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full space-y-6">
-          <div className="text-center space-y-2">
-            <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-md tracking-wider">
-              ADMIN PANEL
-            </span>
-            <h1 className="text-xl font-extrabold text-slate-900">
-              Masuk Dashboard Admin
-            </h1>
-            <p className="text-xs text-slate-500">
-              Khusus pengelola & tim internal Teravia
-            </p>
-          </div>
-
-          <form onSubmit={handleAdminLogin} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Email Admin
-              </label>
-              <input
-                type="email"
-                required
-                placeholder="admin@teravia.co.id"
-                value={adminEmail}
-                onChange={(e) => setAdminEmail(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 outline-none text-slate-800"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                required
-                placeholder="••••••••"
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 outline-none text-slate-800"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-md cursor-pointer"
-            >
-              Masuk ke Dashboard
-            </button>
-          </form>
-
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-500 space-y-0.5">
-            <div className="font-bold text-slate-700">Credential Tester:</div>
-            <div>Email: <code className="text-blue-600">admin@teravia.co.id</code></div>
-            <div>Pass: <code className="text-blue-600">admin123</code></div>
-          </div>
-
-          <div className="text-center border-t border-slate-100 pt-3">
-            <Link
-              href="/"
-              className="text-xs font-bold text-slate-400 hover:text-slate-600 transition"
-            >
-              ← Kembali ke Website Utama
-            </Link>
-          </div>
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="text-slate-400 text-xs font-semibold animate-pulse">
+          Memeriksa sesi admin...
         </div>
       </div>
     );
@@ -184,7 +118,7 @@ export default function AdminDashboardPage() {
       <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="bg-blue-600 text-white text-xs font-black px-2.5 py-1 rounded-md tracking-wider">
+            <span className="bg-green-600 text-white text-xs font-black px-2.5 py-1 rounded-md tracking-wider">
               ADMIN PANEL
             </span>
             <h1 className="text-base font-bold text-slate-100">
@@ -193,10 +127,13 @@ export default function AdminDashboardPage() {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-xs text-slate-400 hidden sm:inline">
-              Superadmin: <strong className="text-slate-200">{adminEmail}</strong>
+              Superadmin: <strong className="text-slate-200">{admin?.email}</strong>
             </span>
             <button
-              onClick={() => setIsAuthenticated(false)}
+              onClick={() => {
+                logoutAdmin();
+                router.push("/admin/login");
+              }}
               className="text-xs bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-lg transition cursor-pointer"
             >
               Keluar 🚪
@@ -244,7 +181,7 @@ export default function AdminDashboardPage() {
           >
             👤 Membership
             {members.length > 0 && (
-              <span className="ml-1.5 bg-blue-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">
+              <span className="ml-1.5 bg-green-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">
                 {members.length}
               </span>
             )}
@@ -283,7 +220,7 @@ export default function AdminDashboardPage() {
                   Total Agen & Partner
                 </p>
                 <div className="text-3xl font-black text-slate-900">342</div>
-                <span className="text-[11px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded">
+                <span className="text-[11px] text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded">
                   Verified Partners
                 </span>
               </div>
@@ -386,7 +323,7 @@ export default function AdminDashboardPage() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                        <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded border border-green-100">
                           {item.category}
                         </span>
                         <h3 className="text-sm font-bold text-slate-900">
@@ -438,7 +375,7 @@ export default function AdminDashboardPage() {
                   Verifikasi legalitas dan identitas agen/notaris/vendor untuk pemberian lencana centang biru.
                 </p>
               </div>
-              <span className="text-xs bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded-full border border-blue-200">
+              <span className="text-xs bg-green-100 text-green-800 font-bold px-3 py-1 rounded-full border border-green-200">
                 {members.length} Permohonan
               </span>
             </div>
@@ -467,7 +404,7 @@ export default function AdminDashboardPage() {
                       <tr key={member.id} className="hover:bg-slate-50/80 transition">
                         <td className="p-4">
                           <div className="font-bold text-slate-900">{member.name}</div>
-                          <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                          <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded border border-green-100">
                             {member.role}
                           </span>
                         </td>
@@ -488,7 +425,7 @@ export default function AdminDashboardPage() {
                           </button>
                           <button
                             onClick={() => handleApproveMember(member.id)}
-                            className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition cursor-pointer shadow-xs"
+                            className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-bold hover:bg-green-700 transition cursor-pointer shadow-xs"
                           >
                             Setujui Verified Partner
                           </button>
