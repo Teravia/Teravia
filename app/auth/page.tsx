@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
 type Mode = "login" | "register";
@@ -141,10 +142,8 @@ export default function AuthPage() {
   const [mode, setMode] = useState<Mode>("login");
   const [registerStep, setRegisterStep] = useState<RegisterStep>(1);
   const [loading, setLoading] = useState(false);
-  const [hasToggled, setHasToggled] = useState(false); // cegah animasi jalan sendiri saat halaman pertama dibuka
 
   const switchAuthMode = (m: Mode) => {
-    setHasToggled(true);
     setMode(m);
     setRegisterStep(1);
   };
@@ -161,6 +160,9 @@ export default function AuthPage() {
 
   const [selectedTier, setSelectedTier] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [showPaymentInstructions, setShowPaymentInstructions] = useState(false);
+  const [vaNumber, setVaNumber] = useState("");
+  const [countdownSeconds, setCountdownSeconds] = useState(900); // 15 menit
 
   const [memberId, setMemberId] = useState("");
   const [joinDate, setJoinDate] = useState("");
@@ -241,9 +243,42 @@ export default function AuthPage() {
     }, 1200);
   };
 
+  const generateVaNumber = () => {
+    const prefix = "8808";
+    const rand = Math.floor(100000000000 + Math.random() * 900000000000);
+    return `${prefix}${rand}`.slice(0, 16);
+  };
+
   const handlePay = () => {
     if (!paymentMethod) return;
+    setVaNumber(generateVaNumber());
+    setCountdownSeconds(900);
+    setShowPaymentInstructions(true);
+  };
+
+  // Dipanggil dari tombol "Saya Sudah Bayar (Simulasi)" di layar instruksi
+  const handlePay2Finish = () => {
     finishRegistration();
+  };
+
+  // Countdown mundur selama layar instruksi pembayaran terbuka
+  useEffect(() => {
+    if (!showPaymentInstructions) return;
+    if (countdownSeconds <= 0) return;
+    const interval = setInterval(() => {
+      setCountdownSeconds((s) => Math.max(0, s - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [showPaymentInstructions, countdownSeconds]);
+
+  const formatCountdown = (totalSeconds: number) => {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  const copyVaNumber = () => {
+    navigator.clipboard?.writeText(vaNumber);
   };
 
   const StepIndicator = () => (
@@ -386,7 +421,23 @@ export default function AuthPage() {
             className="mt-0.5 accent-green-600 w-3.5 h-3.5"
           />
           <span className="text-[11px] text-slate-600">
-            Saya setuju dengan Syarat & Ketentuan serta Kebijakan Privasi TERAVIA
+            Saya setuju dengan{" "}
+            <Link
+              href="/syarat-ketentuan"
+              target="_blank"
+              className="text-green-700 font-semibold hover:underline"
+            >
+              Syarat & Ketentuan
+            </Link>{" "}
+            serta{" "}
+            <Link
+              href="/kebijakan-privasi"
+              target="_blank"
+              className="text-green-700 font-semibold hover:underline"
+            >
+              Kebijakan Privasi
+            </Link>{" "}
+            TERAVIA
           </span>
         </label>
 
@@ -454,13 +505,7 @@ export default function AuthPage() {
               {/* Panel overlay hijau yang "terbang" pindah sisi */}
               <div
                 className={`auth-overlay absolute inset-y-0 w-1/2 flex items-center justify-center p-10 text-white ${
-                  !hasToggled
-                    ? mode === "login"
-                      ? "auth-rest-right"
-                      : "auth-rest-left"
-                    : mode === "register"
-                    ? "auth-turn-left"
-                    : "auth-turn-right"
+                  mode === "register" ? "auth-pos-left" : "auth-pos-right"
                 }`}
                 style={{
                   background: "linear-gradient(135deg, #15803D 0%, #14532D 60%, #0F172A 100%)",
@@ -611,7 +656,7 @@ export default function AuthPage() {
       )}
 
       {/* ===================== REGISTER STEP 3: PEMBAYARAN ===================== */}
-      {mode === "register" && registerStep === 3 && tierData && (
+      {mode === "register" && registerStep === 3 && tierData && !showPaymentInstructions && (
         <div className="sm:mx-auto sm:w-full sm:max-w-md auth-step-enter">
           <div className="text-center mb-5">
             <div className="text-lg font-extrabold text-white tracking-tight drop-shadow-sm">TERAVIA</div>
@@ -675,14 +720,149 @@ export default function AuthPage() {
               <button
                 type="button"
                 onClick={handlePay}
-                disabled={!paymentMethod || loading}
+                disabled={!paymentMethod}
                 className={`flex-1 font-bold py-3 rounded-xl text-sm transition shadow-sm ${
-                  paymentMethod && !loading
+                  paymentMethod
                     ? "bg-green-700 hover:bg-green-800 text-white cursor-pointer"
                     : "bg-slate-200 text-slate-400 cursor-not-allowed"
                 }`}
               >
-                {loading ? "Memproses Pembayaran..." : "Bayar Sekarang"}
+                Bayar Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===================== REGISTER STEP 3b: INSTRUKSI PEMBAYARAN (UI saja, belum gateway asli) ===================== */}
+      {mode === "register" && registerStep === 3 && tierData && showPaymentInstructions && (
+        <div className="sm:mx-auto sm:w-full sm:max-w-md auth-step-enter">
+          <div className="text-center mb-5">
+            <div className="text-lg font-extrabold text-white tracking-tight drop-shadow-sm">TERAVIA</div>
+          </div>
+          <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-white/20 shadow-2xl">
+            <div className="flex items-center justify-between mb-5">
+              <h1 className="text-lg font-bold text-slate-900">Selesaikan Pembayaran</h1>
+              <span
+                className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
+                  countdownSeconds > 120 ? "bg-slate-100 text-slate-600" : "bg-red-50 text-red-600"
+                }`}
+              >
+                ⏱ {formatCountdown(countdownSeconds)}
+              </span>
+            </div>
+
+            {countdownSeconds === 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4">
+                <p className="text-xs text-red-700 font-semibold">
+                  Waktu pembayaran habis. Silakan pilih metode pembayaran ulang.
+                </p>
+              </div>
+            )}
+
+            {paymentMethod === "bank_transfer" && (
+              <div className="space-y-4 mb-6">
+                <div className="bg-slate-900 rounded-2xl p-5 text-white">
+                  <p className="text-[11px] text-slate-400 mb-1">Nomor Virtual Account</p>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-lg font-extrabold tracking-wider font-mono">
+                      {vaNumber}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={copyVaNumber}
+                      className="text-[10px] font-bold bg-white/10 hover:bg-white/20 px-2.5 py-1.5 rounded-lg transition shrink-0"
+                    >
+                      Salin
+                    </button>
+                  </div>
+                  <div className="border-t border-white/10 mt-3 pt-3 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400">Total Transfer</span>
+                    <span className="text-sm font-bold">{formatRupiah(tierData.price)}</span>
+                  </div>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                  <p className="text-xs font-semibold text-slate-700 mb-2">Cara Pembayaran:</p>
+                  <ol className="text-[11px] text-slate-600 space-y-1.5 list-decimal pl-4">
+                    <li>Buka aplikasi mobile banking atau ATM.</li>
+                    <li>Pilih menu Transfer &rarr; Virtual Account.</li>
+                    <li>Masukkan nomor VA di atas, lalu konfirmasi nominal.</li>
+                    <li>Simpan bukti transfer sebagai referensi.</li>
+                  </ol>
+                </div>
+              </div>
+            )}
+
+            {paymentMethod === "qris" && (
+              <div className="space-y-4 mb-6">
+                <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col items-center">
+                  <div className="w-44 h-44 bg-white border-2 border-slate-900 rounded-xl relative flex items-center justify-center">
+                    <div className="absolute top-2 left-2 w-8 h-8 border-4 border-slate-900 rounded" />
+                    <div className="absolute top-2 right-2 w-8 h-8 border-4 border-slate-900 rounded" />
+                    <div className="absolute bottom-2 left-2 w-8 h-8 border-4 border-slate-900 rounded" />
+                    <span className="text-[10px] text-slate-400 font-semibold">
+                      QRIS (placeholder)
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-4">
+                    Scan kode ini pakai aplikasi e-wallet/m-banking mana pun
+                  </p>
+                  <p className="text-sm font-extrabold text-slate-900 mt-1">
+                    {formatRupiah(tierData.price)}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {paymentMethod === "ewallet" && (
+              <div className="space-y-3 mb-6">
+                <p className="text-xs text-slate-500 mb-1">
+                  Pilih aplikasi e-wallet untuk melanjutkan:
+                </p>
+                {["GoPay", "OVO", "DANA"].map((wallet) => (
+                  <button
+                    key={wallet}
+                    type="button"
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl border-2 border-slate-200 hover:border-green-600 hover:bg-green-50/60 transition-all"
+                  >
+                    <span className="text-xs font-bold text-slate-800">{wallet}</span>
+                    <span className="text-[10px] font-semibold text-green-700">
+                      Buka Aplikasi &rarr;
+                    </span>
+                  </button>
+                ))}
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-xs text-slate-500">Total Bayar</span>
+                  <span className="text-sm font-extrabold text-slate-900">
+                    {formatRupiah(tierData.price)}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-5">
+              <p className="text-[10px] text-amber-800 leading-relaxed">
+                ⚠️ Ini masih tampilan simulasi (belum tersambung ke payment
+                gateway asli). Klik tombol di bawah untuk mensimulasikan
+                pembayaran berhasil.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowPaymentInstructions(false)}
+                className="px-5 py-3 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-bold transition"
+              >
+                &larr; Ganti Metode
+              </button>
+              <button
+                type="button"
+                onClick={handlePay2Finish}
+                disabled={loading}
+                className="flex-1 font-bold py-3 rounded-xl text-sm transition shadow-sm bg-green-700 hover:bg-green-800 text-white disabled:opacity-50"
+              >
+                {loading ? "Memproses..." : "Saya Sudah Bayar (Simulasi)"}
               </button>
             </div>
           </div>
@@ -780,40 +960,20 @@ export default function AuthPage() {
       {/* ===================== CSS Animasi ===================== */}
       <style jsx global>{`
         .auth-overlay {
-          transform-style: preserve-3d;
-          backface-visibility: hidden;
-          will-change: transform;
           right: 0;
+          transform: translate3d(0, 0, 0);
+          transition: transform 550ms cubic-bezier(0.65, 0, 0.35, 1);
+          will-change: transform;
+          backface-visibility: hidden;
         }
-        /* Posisi diam sebelum user pernah klik toggle sama sekali */
-        .auth-overlay.auth-rest-right {
+        .auth-overlay.auth-pos-right {
           transform: translate3d(0, 0, 0);
         }
-        .auth-overlay.auth-rest-left {
+        .auth-overlay.auth-pos-left {
           transform: translate3d(-100%, 0, 0);
-        }
-        /* Resting position: menutupi sisi kanan (mode login) */
-        .auth-overlay.auth-turn-right {
-          right: 0;
-          animation: turn-right 700ms ease forwards;
-        }
-        /* Resting position: menutupi sisi kiri (mode register) */
-        .auth-overlay.auth-turn-left {
-          right: 0;
-          animation: turn-left 700ms ease forwards;
         }
         .auth-flip-card {
           perspective: 1600px;
-        }
-        @keyframes turn-left {
-          0% { transform: translate3d(0, 0, 0) rotateY(0deg); }
-          50% { transform: translate3d(-50%, 0, 0) rotateY(-6deg); }
-          100% { transform: translate3d(-100%, 0, 0) rotateY(0deg); }
-        }
-        @keyframes turn-right {
-          0% { transform: translate3d(-100%, 0, 0) rotateY(0deg); }
-          50% { transform: translate3d(-50%, 0, 0) rotateY(6deg); }
-          100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
         }
         .auth-step-enter {
           animation: stepEnter 400ms ease both;
