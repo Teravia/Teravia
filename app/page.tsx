@@ -16,8 +16,8 @@ const MOCK_PROPERTIES = [
     baths: 2,
     landArea: 90,
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
-    badge: "Emerald Member",
-    badgeColor: "bg-emerald-600",
+    badge: "Penthouse Member",
+    badgeColor: "bg-green-700",
   },
   {
     id: "2",
@@ -29,7 +29,7 @@ const MOCK_PROPERTIES = [
     baths: 2,
     landArea: 120,
     image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=800&q=80",
-    badge: "Gold Member",
+    badge: "Cluster Member",
     badgeColor: "bg-amber-500",
   },
 ];
@@ -56,7 +56,7 @@ export default function HomePage() {
 
         {/* Konten Hero */}
         <div className="max-w-4xl mx-auto relative z-10 space-y-4">
-          <span className="inline-block bg-blue-500/30 text-blue-200 text-xs font-semibold px-3.5 py-1 rounded-full border border-blue-400/30 backdrop-blur-md">
+          <span className="inline-block bg-green-500/30 text-green-200 text-xs font-semibold px-3.5 py-1 rounded-full border border-green-400/30 backdrop-blur-md">
             Marketplace Properti Terpadu
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight drop-shadow-md">
@@ -78,7 +78,7 @@ export default function HomePage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 text-sm shadow-md shadow-blue-500/30 cursor-pointer shrink-0">
+            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 text-sm shadow-md shadow-green-500/30 cursor-pointer shrink-0">
               Cari
             </button>
           </div>
@@ -92,7 +92,7 @@ export default function HomePage() {
           {/* Menu 1: Jasa Konstruksi */}
           <Link 
             href="/jasa-konstruksi" 
-            className="p-3 rounded-xl hover:bg-blue-50/80 transition-all duration-200 group border border-transparent hover:border-blue-100"
+            className="p-3 rounded-xl hover:bg-green-50/80 transition-all duration-200 group border border-transparent hover:border-green-100"
           >
             <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">🏗️</div>
             <div className="text-xs sm:text-sm font-bold text-slate-800">Jasa Konstruksi</div>
@@ -166,10 +166,10 @@ export default function HomePage() {
               {/* Detail Properti */}
               <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                 <div>
-                  <div className="text-xl font-extrabold text-blue-600 mb-1">
+                  <div className="text-xl font-extrabold text-green-600 mb-1">
                     Rp {item.price.toLocaleString("id-ID")}
                   </div>
-                  <h3 className="font-bold text-slate-800 text-sm sm:text-base line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
+                  <h3 className="font-bold text-slate-800 text-sm sm:text-base line-clamp-2 leading-snug group-hover:text-green-600 transition-colors">
                     {item.title}
                   </h3>
                   <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
@@ -186,7 +186,7 @@ export default function HomePage() {
 
                   <Link
                     href={`/listing/${item.id}`}
-                    className="block text-center bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-700 font-semibold text-xs py-2.5 rounded-xl transition-all duration-200 border border-slate-200/80 hover:border-blue-600"
+                    className="block text-center bg-slate-50 hover:bg-green-600 hover:text-white text-slate-700 font-semibold text-xs py-2.5 rounded-xl transition-all duration-200 border border-slate-200/80 hover:border-green-600"
                   >
                     Lihat Detail Properti
                   </Link>
