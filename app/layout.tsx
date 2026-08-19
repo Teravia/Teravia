@@ -3,6 +3,7 @@ import "./globals.css";
 
 import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 
 export const metadata: Metadata = {
   title: "Teravia - Marketplace Properti Terpercaya",
@@ -17,10 +18,12 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className="font-sans antialiased">
-        <AuthProvider>
-          <Navbar />
-          <main>{children}</main>
-        </AuthProvider>
+        <AdminAuthProvider>
+          <AuthProvider>
+            <Navbar />
+            <main>{children}</main>
+          </AuthProvider>
+        </AdminAuthProvider>
       </body>
     </html>
   );
