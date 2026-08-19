@@ -143,7 +143,7 @@ export default function Step2Pricing({
   };
 
   const inputClass = (key: string) =>
-    `w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all ${
+    `w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all ${
       showError(key) ? "border-red-400 bg-red-50/50" : "border-slate-300"
     }`;
 
@@ -193,7 +193,7 @@ export default function Step2Pricing({
                 value={pricePerSqm}
                 onChange={(e) => setPricePerSqm(e.target.value)}
                 placeholder="0"
-                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
               />
             </div>
           </div>
@@ -210,7 +210,7 @@ export default function Step2Pricing({
                 key={item}
                 className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
                   priceNegotiable === item
-                    ? "bg-blue-50 border-blue-600 text-blue-600 shadow-sm"
+                    ? "bg-green-50 border-green-600 text-green-600 shadow-sm"
                     : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -223,7 +223,7 @@ export default function Step2Pricing({
                     setPriceNegotiable(e.target.value);
                     markTouched("priceNegotiable");
                   }}
-                  className="accent-blue-600 w-3.5 h-3.5"
+                  className="accent-green-600 w-3.5 h-3.5"
                 />
                 {item}
               </label>
@@ -276,7 +276,7 @@ export default function Step2Pricing({
                 value={minimumRentalDuration}
                 onChange={(e) => setMinimumRentalDuration(e.target.value)}
                 placeholder="Contoh: 1 Tahun"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
               />
             </div>
 
@@ -293,7 +293,7 @@ export default function Step2Pricing({
                   value={securityDeposit}
                   onChange={(e) => setSecurityDeposit(e.target.value)}
                   placeholder="0"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
                 />
               </div>
             </div>
@@ -318,7 +318,7 @@ export default function Step2Pricing({
                 value={originalBank}
                 onChange={(e) => setOriginalBank(e.target.value)}
                 placeholder="Masukkan Nama Bank"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
               />
             </div>
 
@@ -331,7 +331,7 @@ export default function Step2Pricing({
                 value={remainingInstallmentCount}
                 onChange={(e) => setRemainingInstallmentCount(e.target.value)}
                 placeholder="Contoh: 24 (bulan)"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
               />
             </div>
 
@@ -348,7 +348,7 @@ export default function Step2Pricing({
                   value={monthlyInstallment}
                   onChange={(e) => setMonthlyInstallment(e.target.value)}
                   placeholder="0"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
                 />
               </div>
             </div>
@@ -391,7 +391,7 @@ export default function Step2Pricing({
                 value={auctionOrganizer}
                 onChange={(e) => setAuctionOrganizer(e.target.value)}
                 placeholder="Contoh: KPKNL / Balai Lelang Swasta"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
               />
             </div>
 
@@ -404,7 +404,7 @@ export default function Step2Pricing({
                 value={auctionLocation}
                 onChange={(e) => setAuctionLocation(e.target.value)}
                 placeholder="Masukkan Lokasi Pelaksanaan Lelang"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all"
               />
             </div>
           </div>
@@ -420,7 +420,7 @@ export default function Step2Pricing({
             onChange={(e) => setPriceNotes(e.target.value)}
             rows={3}
             placeholder="Contoh: Harga sudah termasuk PPN, belum termasuk biaya balik nama, dll."
-            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all resize-none"
+            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium outline-none focus:ring-2 focus:ring-green-500 bg-white transition-all resize-none"
           />
         </div>
       </div>
@@ -439,7 +439,7 @@ export default function Step2Pricing({
           disabled={!isFormValid}
           className={`px-6 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors ${
             isFormValid
-              ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+              ? "bg-green-600 hover:bg-green-700 text-white cursor-pointer"
               : "bg-slate-200 text-slate-400 cursor-not-allowed"
           }`}
         >
@@ -449,3 +449,4 @@ export default function Step2Pricing({
     </div>
   );
 }
+                
