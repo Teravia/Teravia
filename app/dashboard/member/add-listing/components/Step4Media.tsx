@@ -172,10 +172,10 @@ export default function Step4Media({
           onDrop={handleDrop}
           className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer ${
             isDragging
-              ? "border-blue-500 bg-blue-50/50"
+              ? "border-green-500 bg-green-50/50"
               : touched && !isFormValid
               ? "border-red-400 bg-red-50/20"
-              : "border-slate-300 hover:border-blue-400 bg-slate-50/50"
+              : "border-slate-300 hover:border-green-400 bg-slate-50/50"
           }`}
         >
           <input
@@ -187,7 +187,7 @@ export default function Step4Media({
           />
 
           <div className="flex flex-col items-center justify-center space-y-2 pointer-events-none">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-600">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -239,7 +239,7 @@ export default function Step4Media({
                   key={item.id}
                   className={`group relative rounded-xl overflow-hidden border bg-slate-100 transition-all ${
                     item.isCover
-                      ? "ring-2 ring-blue-600 border-transparent"
+                      ? "ring-2 ring-green-600 border-transparent"
                       : "border-slate-200"
                   }`}
                 >
@@ -253,7 +253,7 @@ export default function Step4Media({
 
                     {/* Badge Sampul/Cover */}
                     {item.isCover && (
-                      <span className="absolute top-2 left-2 bg-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                      <span className="absolute top-2 left-2 bg-green-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm">
                         Foto Utama
                       </span>
                     )}
@@ -279,7 +279,7 @@ export default function Step4Media({
                       <button
                         type="button"
                         onClick={() => handleSetCover(item.id)}
-                        className="text-blue-600 hover:text-blue-800 font-semibold"
+                        className="text-green-600 hover:text-green-800 font-semibold"
                       >
                         Jadikan Utama
                       </button>
@@ -307,7 +307,7 @@ export default function Step4Media({
           disabled={!isFormValid}
           className={`px-6 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors ${
             isFormValid
-              ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+              ? "bg-green-600 hover:bg-green-700 text-white cursor-pointer"
               : "bg-slate-200 text-slate-400 cursor-not-allowed"
           }`}
         >
@@ -317,3 +317,4 @@ export default function Step4Media({
     </div>
   );
 }
+
