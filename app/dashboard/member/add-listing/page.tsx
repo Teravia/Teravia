@@ -50,7 +50,7 @@ export default function AddListingPage() {
                   onClick={() => setTransactionType(type)}
                   className={`py-2 px-5 text-xs font-bold rounded-xl transition-all duration-200 ${
                     transactionType === type
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20 scale-[1.02]"
+                      ? "bg-green-600 text-white shadow-md shadow-green-500/20 scale-[1.02]"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
@@ -78,9 +78,9 @@ export default function AddListingPage() {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all ${
                       isActive
-                        ? "bg-blue-600 text-white ring-4 ring-blue-100"
+                        ? "bg-green-600 text-white ring-4 ring-green-100"
                         : isPassed
-                        ? "bg-emerald-600 text-white"
+                        ? "bg-green-500 text-white"
                         : "bg-slate-200 text-slate-600"
                     }`}
                   >
@@ -88,7 +88,7 @@ export default function AddListingPage() {
                   </div>
                   <span
                     className={`text-[10px] sm:text-[11px] mt-1 text-center leading-tight ${
-                      isActive ? "font-bold text-blue-600" : "font-medium text-slate-600"
+                      isActive ? "font-bold text-green-600" : "font-medium text-slate-600"
                     }`}
                   >
                     {step.label}
